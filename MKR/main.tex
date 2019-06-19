@@ -77,10 +77,32 @@ Máme nějaké $n \in \mathbb{N}$, pak čísla $a, b \in \mathbb{Z}$ jsou \textb
 
 \textit{Máme homogenní řešení $12\times(-15) + 45\times 4 = 0$ a partikulární řešení $12\times4 + 45\times(-1) = 3$. Druhou rovnici ale musíme vynásobit dvěma, abychom dostali na pravé straně 6 (odtud požadavek, aby $3\mid6$), tím dostaneme partikulární řešení $12\times8 + 45\times(-2) = 6$. Řešení se zapisuje ve tvaru $(x,y) = (x_p,y_p) + k(x_0,y_0)$, a řešení diofantické rovnice je $(x,y) = (8, -2) + k(-15,4)$. V zadání jsme ale měli řešit pouze rovnici pro $x$, a tak výsledek je $x = 8 - 15k$.}
 
-\subsection{Grupy a jiné struktury}
+\subsection{Grupy}
+Máme množinu $A$ a operaci $\cdot$~. Dvojice $(A,\cdot)$ je grupa, pokud:
+\begin{itemize}
+\item Platí asociativita, tj $x\cdot(y\cdot z) = (x\cdot y)\cdot z$
+\item Existuje neutrální prvek $e \in A$ (jednotka), pro který platí, že $\forall x \in A: e\cdot x = x = x \cdot e$.
+\item Všechny prvky mají inverze, tj $\forall x ~\exists y: x\cdot y = e = y \cdot x$.
+\end{itemize}
+Řekneme, že $(A,\cdot)$ je Abelova grupa, když je navíc operace $\cdot$ komutativní, tedy $x\cdot y = y \cdot x$.
+Dvojice $(\mathbb{Z}, +)$,  $(\mathbb{R}^+, \times)$,  $(\mathbb{Z}_n, +)$ jsou grupy. $(\mathbb{Z}_n^*, \times)$, kde $\mathbb{Z}_n^*$ je podmnožina prvků ze $\mathbb{Z}_n$ nesoudělných s $n$, je taky grupa.
+
+\textbf{Řád grupy} je počet prvků v $A$. Grupy mohou být konečné i nekonečné.
+
+\subsubsection{Cyklické grupy}
+
+Nechť $(G,\cdot)$ je grupa s neutrálem 1, $a \in G$. Nejmenší $r \in \mathbb{N}$ takové, že $a^r = 1$ v $G$ se nazývá \textbf{řád prvku} $a$, značí se $r(a)$. Pokud takové číslo neexistuje, je řád nekonečný.
+
+Pro prvek $a \in G$ je množina $P = \{a^i~|~i = 1 \ldots r(a)\}$ \textbf{cyklickou podgrupou} grupy $G$. Cyklickou podgrupu generovanou prvkem $a$ značíme $\langle a \rangle$. Pokud pro nějaký prvek $a \in G$ platí $\langle a \rangle  = G$, pak řekneme, že grupa $G$ je \textbf{cyklická} a prvek $a$ je její \textbf{generátor}.
+
+Grupy $(\mathbb{Z}, +)$ a $(\mathbb{Z}_n, +)$ jsou cyklické a jejich generátorem je např. prvek 1. Grupy $(\mathbb{Z}_n^*, \times)$ jsou cyklické pro $n$ prvočíslo, mocninu prvočísla, nebo $n$ ve tvaru $2p^e$ pro liché prvočíslo $p$.
+
+Nejmenší $m$ takové, že $\forall a \in G: a^m = 0$ se nazývá \textbf{exponent grupy}.
+
+Cyklické grupy jsou specifické tím, že mají jasné velikosti podgrup a od každé velikosti existuje jen jedna podgrupa.
 
 \subsection{Euler-Fermatova věta}
-Nechť $(G,\cdot)$ je konečná grupa o $n$ prvcích s neutrálem 1. Pak $\forall a \in G: a^n = a\cdot a\cdot a\cdots a = 1$ v $G$.
+Nechť $(G,\cdot)$ je konečná grupa s neutrálem 1. Pak $\forall a \in G: a^{|G|} = a\cdot a\cdot a\cdots a = 1$ v $G$.
 
 To nám říká, že když umocníme na velikost grupy, dostaneme jednotku. Pro grupy $\mathbb{Z}_n*$, které obsahují pouze čísla nesoudělná s $n$, pomůže s výpočtem velikosti grupy \textbf{Eulerova funkce} $\varphi(n)$.
 \begin{itemize}
@@ -88,9 +110,30 @@ To nám říká, že když umocníme na velikost grupy, dostaneme jednotku. Pro 
 \item $\varphi(p^k) = p^k - p^{k-1} = p^{k-1}(p-1)$ pro $k$-tou mocninu prvočísla $p$.
 \item $\varphi(n\cdot m) = \varphi(n)\cdot\varphi(m)$ pro nesoudělná čísla $m,n$.
 \end{itemize}
+Euler-Fermatova věta se používá při počítání velkých mocnin, protože umožňuje zmenšit exponent.
 
 \subsection{Algoritmus opakovaných čtverců}
+Algoritmus opakovaných čtverců taky zrychluje počítání mocnin. Fungování je nejlépe vidět na příkladu, spočítáme $5^{17}$ v $\mathbb{Z}_{27}$.
+\begin{enumerate}
+\item Exponent napíšeme jako binární číslo:\\ $17 = 16 + 1 = 10001_{bin}$
+\item Do mezer mezi cifry vložíme znak $S$, nuly smažeme, jedničky nahradíme znakem $X$:\\ $10001 = 1S0S0S0S1 = 1SSSS1 = XSSSSX$.
+\item Začneme s číslem 1 a postupně zpracováváme znaky $S$ a $X$. Po přečtení znaku $S$ mezivýsledek umocníme na druhou, po přečtení znaku $X$ mezivýsledek vynásobíme základem. Přitom pořád si mezivýsledek udržujeme v modulu $n$:\\ $1XSSSSX \rightarrow 5SSSSX \rightarrow 25SSSX = -2SSSX \rightarrow 4SSX \rightarrow 16SX \rightarrow 256X = 13X \rightarrow 65 = 11$ v $\mathbb{Z}_{27}$.
+\end{enumerate}
+
 \subsection{Čínská věta o zbytcích}
+Díky čínské větě umíme řešit soustavy rovnic. Mějme po dvou nesoudělná přirozená čísla $n_1, \ldots, n_k$ a k nim libovolná přirozená čísla $a_1,\ldots,a_k$. Pak soustava rovnic $x_i \equiv a_i \mod n_i, i = 1,\ldots,k$ má právě jedno řešení modulo $n = \prod_{i=1}^{k}n_i$.
+
+Řešení se najde tak, že pro každou rovnici najdeme takové $q_i$, aby platil vztah $q_i \equiv 1 \mod q_i$ a zároveň $q_i \equiv 0 \mod q_j, j \neq i$ (tedy $q_i$ je nulové ve všech modulech vyjma svého vlastního, kde má hodnotu jedna).
+
+Takové $q_i$ můžeme najít tak, že vynásobíme všechny moduly (vyjma $n_i$), výsledek označme $m_i$, a najdeme nějaké $t_i$ tak, aby $m_iq_i \equiv 1 \mod n_i$. Tato soustava určitě bude mít řešení, protože $n_i$ jsou nesoudělná.
+
+Řešení soustavy pak je $x = \sum_{i=1}^{k}q_ia_i$.
+
+Př.: Řešte soustavu: $x \equiv 2 \mod 4$, $x \equiv 0 \mod 5$, $x \equiv 1 \mod 9$, $x \equiv 2 \mod 11$.
+
+Spočítáme koeficient $q$ pro modul 4. $q_4 = 5\cdot9\cdot11\cdot t = 495t$. Chceme, aby $495t \equiv 1 \mod 4$, což si můžeme ještě upravit na $3t \equiv 1 \mod 4$. Vidíme, že vhodné $t$ je 3, protože $3\times 3 = 9 \equiv 1 \mod 4$. Dosazením hodnoty $t$ dostaneme $q_4 = 495t = 495 \times 3 = 1485$. Obdobně dostaneme $q_5 = 396$, $q_9 = 1540$, $q_{11} = 540$.
+
+Z koeficientů dostaneme výsledek: $x = 2q_4 + 0q_5 + 1q_9 + 2q_{11} = 2970 + 0 + 1540 + 540 = 5590$. Ale my pracujeme modulo $n = 4\cdot5\cdot9\cdot11 = 1980$, proto je výsledek $x = 5590 \equiv 3610 \equiv 1630 \mod 1980$.
 
 \section{Těžké matematické problémy}
 \subsection{Faktorizace čísel}
