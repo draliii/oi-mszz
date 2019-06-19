@@ -24,7 +24,7 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 2. ⛔ Formální popis uživatelských rozhraní. Modely lidského chování ve vztahu k uživatelskému rozhraní. Formativní evaluace a prototypování. **B4M39NUR**
 3. ⛔ Uživatelský výzkum a jeho role v HCI. Kognitivně-psychologické koncepty a jejich využití v HCI. **B4M39PUR1**
 4. ⛔ Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování. Analýza časových řad. **B4M36SAN**
-5. ⛔ Zákony tvarové psychologie, kompoziční a formotvorné principy. Prostorová tvorba**
+5. ⛔ Zákony tvarové psychologie, kompoziční a formotvorné principy. Prostorová tvorba. **B4M39PTV**
 6. ⛔ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
 
 ## Okruhy oboru Softwarové inženýrství
@@ -64,8 +64,8 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 2. ⛔ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
 3. ⛔ Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení. **B4M36BSY**
 4. ⛔ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
-5. ⛔ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. A0M32PST**
-6. ⛔ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36K**BE**
+5. ⛔ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. **A0M32PST**
+6. ⛔ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36KBE**
 
 ## Okruhy oboru Počítačové inženýrství
 1. ⛔ Integrované systémy, návrh a realizace, aplikačně specifické systémy. **B4M34ISC**
