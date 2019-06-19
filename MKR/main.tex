@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{delarray}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \title{B4M01MKR - Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování.}
 \date{}
@@ -13,7 +14,83 @@
 \section{Symetrická a asymetrická kryptografie}
 Symetrická a asymetrická kryptografie se liší vlastnostmi a způsobem použití klíčů. Zatímco v symetrické kryptografii používají obě komunikující strany stejný klíč, u asymetrické kryptografie jsou klíče dva: soukromý klíč (často značený $d$), a veřejný klíč (často značený $e$).
 
-\section{Matematika používaná v kryptografii - letem světem}
+Symetrická kryptografie je rychlejší a proto se používá pro většinu komunikace, ale vyžaduje bezpečnou výměnu klíče. Asymetrická kryptografie je pomalejší, a podle použití klíčů umožňuje dvě věci:
+\begin{itemize}
+\item Kdokoliv může zašifrovat zprávu veřejným klíčem, a zprávu si pak může přečíst jen ten, komu je určena (majitel soukromého klíče)
+\item Majitel klíče pošle zprávu a k ní hash zašifrovaný soukromým klíčem. Takovou zprávu si může kdokoliv přečíst, ale zprávu nelze zfalšovat (je jasné, že autorem může být jedině majitel klíče).
+\end{itemize}
+
+Díky tomu mohla vzniknout hierarchie certifikačních autorit a certifikátů. Uživatel může ověřit (podle certifikační autority, které věří), že server na druhé straně komunikace se za nikoho nevydává, a skutečně jde třeba o webovou stránku banky. S použitím asymetrické kryptografie si uživatel se serverem vymění hesla a dál mohou používat rychlejší symetrickou kryptografii.
+
+\section{Matematika používaná v kryptografii}
+\subsection{Dělitelnost, modulo, rovnice}
+
+Základní věta aritmetiky: Každé přirozené číslo $n$ jde zapsat jako jednoznačný součin prvočísel, kde \textbf{prvočíslo} je číslo, které je dělitelné jen jedničkou a sebou samým.
+
+\subsubsection{Počítání modulo}
+
+\textbf{Dělení se zbytkem}: $\forall a, b \in \mathbb{Z}, a, b > 0, \exists q, r \in \mathbb{Z},$ že $ a = qb + r$, a přitom $0 \leq r \le b$, a $q, r$ jsou jednoznačné. Když je $r$ (zbytek) nulový, řekneme, že $a$ je dělitelné $b$ nebo že $b$ dělí $a$, značíme $b \mid a$. Relace dělitelnosti na $\mathbb{Z}$ je reflexivní, tranzitivní a antisymetrická, dá se znázornit Hasseho diagramem.
+
+\textbf{Největší společný dělitel} dvou čísel $a, b$ (značíme $gcd(a,b)$) je takové číslo $d$, kde:
+\begin{itemize}
+\item $d \mid a \wedge d \mid b$
+\item $d$ je dělitelné všemi společnými děliteli obou čísel
+\item $d \geq 0$
+\end{itemize}
+
+\textbf{Nejmenší společný násobek} čísel $a, b$ (značíme $lcm(a, b)$) je nejmenší takové $d$, které je dělitelné číslem $a$ a zároveň je dělitelné číslem $b$.
+
+Máme nějaké $n \in \mathbb{N}$, pak čísla $a, b \in \mathbb{Z}$ jsou \textbf{kongruentní modulo} $n$, pokud $n \mid (b-a)$. Kongruence se značí $a \equiv b\mod n$, je to ekvivalence a rozdělí celá čísla na $n$ tříd, kde všechny prvky ve třídě mají stejný zbytek po dělení číslem $n$. Přirozená čísla rozdělená na třídy ekvivalence podle $n$ značíme $\mathbb{Z}_n$. Relace kongruence je zachovaná při sčítání i násobení.
+
+\subsubsection{Eulerův algoritmus}
+\textbf{Euklidův algoritmus} umožňuje v lineárním čase najít $gcd(a,b)$. Dělá to tak, že rozkládá $a$ jako $a = qb + r$, a dokud je zbytek $r$ nenulový, rekurzivně spouští $gcd(b,r)$. Výhodné je použít místo tohoto postupu výpočet přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
+
+\subsubsection{Bezoutova věta}
+\textbf{Bezoutova věta} říká, že největší společný dělitel jde zapsat jako vztah $a,b$, tedy: $gcd(a, b) = sa + tb$, kde $s,t$ jsou celá čísla.
+
+\subsubsection{Diofantické rovnice}
+\textbf{Diofantická rovnice} je rovnice ve tvaru $ax + by = c$, kde $a,b,c \in \mathbb{Z}$. Diofantická rovnice má řešení, právě když $gcd(a,b) \mid c$. Řešení má partikulární a homogenní část.
+
+\textbf{Př.:} V $\mathbb{Z}_{45}$ chceme řešit rovnici $12x = 6$.
+
+\textit{Rovnici si nejprve převedeme na diofantickou, tj dostaneme $12x + 45y = 6$. Vyrobíme si jednotkovou matici o dvou sloupcích, kde první sloupec odpovídá neznámé $x$ a druhý sloupec neznámé $y$. Příslušné hodnoty v rovnici napíšeme do pravého sloupce a matici upravíme.}
+\[ \left( \begin{array}{cc|c}
+1 & 0 & 12\\
+0 & 1 & 45
+\end{array} \right)
+%
+\sim
+%
+\left( \begin{array}{cc|c}
+1 & 0 & 12\\
+-4 & 1 & -3
+\end{array} \right)
+%
+\sim
+%
+\left( \begin{array}{cc|c}
+-15 & 4 & 0\\
+-4 & 1 & -3
+\end{array} \right)
+\]
+\textit{Úpravy skončí, když se v pravém sloupci objeví nula. Druhá hodnota je největší společný dělitel čísel 12 a 45, po přenásobení řádku $-1$ vidíme, že $gcd(12,45)=3$. Protože $3 \mid 6$, bude mít diofantická rovnice řešení.}
+
+\textit{Máme homogenní řešení $12\times(-15) + 45\times 4 = 0$ a partikulární řešení $12\times4 + 45\times(-1) = 3$. Druhou rovnici ale musíme vynásobit dvěma, abychom dostali na pravé straně 6 (odtud požadavek, aby $3\mid6$), tím dostaneme partikulární řešení $12\times8 + 45\times(-2) = 6$. Řešení se zapisuje ve tvaru $(x,y) = (x_p,y_p) + k(x_0,y_0)$, a řešení diofantické rovnice je $(x,y) = (8, -2) + k(-15,4)$. V zadání jsme ale měli řešit pouze rovnici pro $x$, a tak výsledek je $x = 8 - 15k$.}
+
+\subsection{Grupy a jiné struktury}
+
+\subsection{Euler-Fermatova věta}
+Nechť $(G,\cdot)$ je konečná grupa o $n$ prvcích s neutrálem 1. Pak $\forall a \in G: a^n = a\cdot a\cdot a\cdots a = 1$ v $G$.
+
+To nám říká, že když umocníme na velikost grupy, dostaneme jednotku. Pro grupy $\mathbb{Z}_n*$, které obsahují pouze čísla nesoudělná s $n$, pomůže s výpočtem velikosti grupy \textbf{Eulerova funkce} $\varphi(n)$.
+\begin{itemize}
+\item $\varphi(p) = p-1$ pro prvočíslo $p$.
+\item $\varphi(p^k) = p^k - p^{k-1} = p^{k-1}(p-1)$ pro $k$-tou mocninu prvočísla $p$.
+\item $\varphi(n\cdot m) = \varphi(n)\cdot\varphi(m)$ pro nesoudělná čísla $m,n$.
+\end{itemize}
+
+\subsection{Algoritmus opakovaných čtverců}
+\subsection{Čínská věta o zbytcích}
 
 \section{Těžké matematické problémy}
 \subsection{Faktorizace čísel}
@@ -24,6 +101,10 @@ Symetrická a asymetrická kryptografie se liší vlastnostmi a způsobem použi
 \subsection{Diffie-Hellman}
 \subsection{ElGamal}
 \subsection{Eliptické křivky}
+
+\section{Generování prvočísel}
+\subsection{Fermatův test}
+\subsection{Miller Rabinův test}
 
 \section{Hashování}
 \end{document}
