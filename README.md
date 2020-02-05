@@ -1,7 +1,7 @@
 # Jak jsou státnicové otázky organizované
 *This repository contains study materials for final exams of the Open Informatics programme on FEE, CTU.*
 
-V tomto gitu jsou vypracované otázky k magisterským státnicím Otevřené Informatiky na ČVUT FEL. Dokumenty jsou psané v TeXu, každý předmět (otázka) má svou složku, kde jsou uložené obrázky a další materiál. Předměty nejsou členěné podle oborů, protože jeden předmět je často součástí více oborů a nelze to tedy zorganizovat stromově jako bakalářské otázky. V kořeni má každý obor své pdf, ve kterém jsou spojené všechny příslušné otázky. Nevypracované otázky jsou označeny symbolem ⛔ a otázky, na kterých je potřeba ještě zapracovat, jsou označeny symbolem ⛏️.
+V tomto gitu jsou vypracované otázky k magisterským státnicím Otevřené Informatiky na ČVUT FEL. Dokumenty jsou psané v TeXu, každý předmět (otázka) má svou složku, kde jsou uložené obrázky, *.tex soubory a kde vzniká výsledné pdf. Předměty nejsou členěné podle oborů, protože jeden předmět je často součástí více oborů a nelze to tedy zorganizovat stromově jako bakalářské otázky. V kořeni má každý obor své pdf, ve kterém jsou spojené všechny příslušné otázky. Nevypracované otázky jsou označeny symbolem ⛔, hotové otázky symbolem ✓ a rozpracované otázky symbolem ⛏️.
 
 # Seznam otázek
 Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/master/topicsOI2016.html).
@@ -63,7 +63,7 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 1. ⛔ Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování. Analýza časových řad. **B4M36SAN**
 2. ⛔ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
 3. ⛔ Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení. **B4M36BSY**
-4. ⛔ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
+4. ⛏️ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
 5. ⛔ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. **A0M32PST**
 6. ⛔ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36KBE**
 
