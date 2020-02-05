@@ -3,6 +3,8 @@
 
 V tomto gitu jsou vypracované otázky k magisterským státnicím Otevřené Informatiky na ČVUT FEL. Dokumenty jsou psané v TeXu, každý předmět (otázka) má svou složku, kde jsou uložené obrázky, *.tex soubory a kde vzniká výsledné pdf. Předměty nejsou členěné podle oborů, protože jeden předmět je často součástí více oborů a nelze to tedy zorganizovat stromově jako bakalářské otázky. V kořeni má každý obor své pdf, ve kterém jsou spojené všechny příslušné otázky. Nevypracované otázky jsou označeny symbolem ⛔, hotové otázky symbolem ✓ a rozpracované otázky symbolem ⛏️.
 
+Osobně mám v plánu vypracovat otázky oboru Kybernetická bezpečnost a společné otázky do května 2020. Ostatní obory dělat nebudu, ale vzhledem k zájmu o repozitář k bakalářským státnicím je tu na ně místo a budu ráda za pull requesty. 
+
 # Seznam otázek
 Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/master/topicsOI2016.html).
 
