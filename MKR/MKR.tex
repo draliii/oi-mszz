@@ -551,8 +551,50 @@ $7\cdot 11^v$ & 7 & 3 & 33 & 30 & 34 & \textbf{4} & ??? \\
 \textit{Poslední prvek posledního řádku nemusíme počítat, shodu jsme našli pro $u=2$ a $v=5$, tj $7\cdot 11^5 = 2^2 = 4$, rovnice platí. Řešení je $x = \text{dlog}_2 (7) = vm + u = 5\cdot6 + 2 = 30 + 2 = 32$. }
 
 \subsubsection{Pohling-Hellman}
-\subsubsection{SEDL}
+Pohling-Hellmanův algoritmus můžeme použít na hledání diskrétního logaritmu v cyklické grupě $G$ řádu $n$ s generátorem $s$, pokud známe rozklad čísla $n$. Označíme $|G| = n = \prod_{i=1}^k p_i^{e_i}$ pro prvočísla $p_i$.  Budeme řešit diskrétní logaritmus v podgrupách řádu $p_i^{e_i}$ a výsledky spojíme pomocí čínské věty o zbytcích. Pokud je $n$ prvočíslo, pak musíme použít např. baby step giant step algoritmus. Pokud je $n$ mocnina prvočísla, můžeme postupovat rekurzivně (viz příklad).
 
+\textbf{Př.:} Vyřešte $x = \text{dlog}_2 (7)$ v $\mathbb{Z}_{37}^*$.
+
+Protože známe rozklad velikosti grupy: $|\mathbb{Z}_{37}^*| = 36 = 4 \cdot 9 = 2^2 \cdot 3^2$. Problém budeme řešit v 4 a 9ti prvkových podgrupách. Když máme cyklickou grupu řádu 36, pak generátor (2) na 36 je jedna. Pokud umocníme generátor na 4, dostaneme generátor devítiprvkové podgrupy, ve které stále počítáme mod 37, ale exponenty jsou mod 9, protože velikost podgrupy je 9.
+
+\begin{enumerate}
+\item V podgrupě velikosti 9: Rovnici $2^x = 7$ umocníme na 4, abychom se dostali do devítiprvkové podgrupy: $2^{4x} = 7^4$, což je $16^x = 33$. Tohle můžeme řešit dvěma způsoby:
+\begin{itemize}
+\item Algoritmem Baby-step giant-step: Velikost podgrupy je 9, proto $m = \sqrt{9} = 3$. Vyjádříme $x$ jako $x = 3v + u$ a upravujeme rovnici. Protože jsme v podgrupě velikosti 9, víme, že $a^{-3} = a^{9-3} = a^6$.
+$$16^{3v+u} = 33 \xrightarrow{}16^{3v}16^u = 33 \xrightarrow{}16^u = 33\cdot 16^{-3v} \xrightarrow{} 16^u = 33\cdot 16^{6v} \xrightarrow{}16^u = 33\cdot 10^v$$
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+\hline
+u, v & 0 & 1 & 2 & 3\\
+\hline
+\hline
+$16^u$ & 1 & 16 & \textbf{34} & 26\\
+\hline
+$33\cdot 10^v$ & 33 & \textbf{34} & ??? & ??? \\
+\hline
+\end{tabular}
+\end{table}
+
+Z tabulky je zřejmé, že $x = 3v + u = 3\cdot 1 + 2 = 5$.
+
+\item S využitím toho, že máme expontent prvočísla: $x$ si vyjádříme následovně: $x = \cdots + p^3x_3 + p^2x_2 + px_1 + x_0$. Protože pracujeme s $3^2$, bude naše rovnice vypadat $x = 3x_1 + x_0$, kde $x_i$ jsou ze $\mathbb{Z}_{3}$, pomocí toho dokážeme vyjádřit jakékoliv $x$ menší než $3^2$. Opět řešíme $16^x = 33$, což si rozepíšeme:  $16^{3x_1 + x_0} = 33$. Rovnici pak celou umocníme na násobek trojky tak, aby jediná neznámá zůstala $x_0$. 
+
+$$ 16^{3x_1 + x_0} = 33  \xrightarrow{\text{Mocníme na 3}} 16^{9x_1 + 3x_0} = 33^3 \xrightarrow{} 26^{x_0} = 10$$
+
+Protože jsme v $\mathbb{Z}_{3}$, vyřešíme získanou rovnici hrubou silou, máme $x_0 = 2$. Do vztahu pro $x$ dosadíme právě získanou hodnotu a pokračujeme ve výpočtu. Tentokrát již nám zbývá pouze jedna neznámá:
+
+$$ 16^{3x_1 + 2} = 33  \xrightarrow{} 16^{3x_1} = 26 \xrightarrow{} 26^{x_1} = 26$$
+
+Řešení je zjevně $x_1 = 1$, a získali jsme $x = 3x_1 + x_0 = 3 + 2 = 5$.
+\end{itemize}
+\item V podgrupě velikosti 4: Abychom se dostali do čtyřprvkové podgrupy, umocníme rovnici na devátou: $2^x = 7 \rightarrow{} 31^x = 1$. Teď můžeme opět použít jeden ze dvou postupů výše, nebo to vyřešit z hlavy, kde $x = 0 = 4 \mod 4$.
+\end{enumerate}
+
+Výsledek v $\mathbb{Z}_{37}^*$ získáme pomocí čínské věty o zbytcích: máme dvě rovnice: $x = 5 \mod 9$ a $x = 0 \mod 4$. Koeficient $q_9$ může být třeba 28, a protože druhá rovnice je nulová, druhý koeficient vůbec nepotřebujeme. $x = 5\cdot q_9 = 5\cdot 28 = 140 = 32 \mod 36$. Našli jsme řešení $\text{dlog}_2(7) = 32$.
+
+\subsubsection{SEDL}
 
 \section{Základní kryptosystémy}
 \subsection{RSA}
