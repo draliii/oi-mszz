@@ -242,14 +242,14 @@ Dvojice $(\mathbb{Z}, +)$,  $(\mathbb{R}^+, \times)$,  $(\mathbb{Z}_n, +)$ jsou 
 
 \textbf{Řád grupy} je počet prvků v $A$. Grupy mohou být konečné i nekonečné.
 
-V grupách $\mathbb{Z}_n^*$ jsou všechna čísla menší než $n$, která jsou s $n$ nesoudělná. Počet nesoudělných čísel, a tedy i řád grupy, vyjařuje \textbf{Eulerova funkce} $\varphi(n)$.
+V grupách $\mathbb{Z}_n^*$ jsou všechna čísla menší než $n$, která jsou s $n$ nesoudělná. Počet nesoudělných čísel, a tedy i řád grupy, vyjadřuje \textbf{Eulerova funkce} $\varphi(n)$.
 \begin{itemize}
 \item $\varphi(p) = p-1$ pro prvočíslo $p$.
 \item $\varphi(p^k) = p^k - p^{k-1} = p^{k-1}(p-1)$ pro $k$-tou mocninu prvočísla $p$.
 \item $\varphi(n\cdot m) = \varphi(n)\cdot\varphi(m)$ pro nesoudělná čísla $m,n$.
 \end{itemize}
 
-Nejmenší $m$ takové, že $\forall a \in G: a^m = 0$ se nazývá \textbf{exponent grupy}. Exponent grupy $\mathbb{Z}_n^*$ lze spočítat \textbf{Carmichaelovou fcí} $\lambda(n)$.
+Nejmenší $m$ takové, že $\forall a \in G: a^m = 0$ se nazývá \textbf{exponent grupy}. Exponent grupy $\mathbb{Z}_n^*$ lze spočítat \textbf{Carmichaelovou funkcí} $\lambda(n)$.
 \begin{itemize}
 \item $\lambda(\prod_{i=1}^r p_i^{e_i}) = lcm\{\lambda(p_1^{e_1}), \ldots, \lambda(p_r^{e_r})\}$ pro složené číslo.
 \item $\lambda(p^e) = \varphi(p^e) = p^e - p^{e-1} = p^{e-1}(p-1)$ pro $e$-tou mocninu prvočísla $p$, kde $p > 2$.
@@ -355,7 +355,7 @@ $$ 8 \xrightarrow{\text{mocníme na 5}} 8 \xrightarrow{\text{mocníme na 2}} 64 
 
 \subsubsection{Faktorizace, když víme něco navíc}
 
-Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grupy platí, že každý prvek grupy umocněný na exponent grupy je jedna, proto to bude platit i o násobku exponentu grupy. Faktorizujeme tak, že najdeme netriviální odmocninu z jedné, tj $c^2 = 1$. Jiné zjedondušení využívá znalosti $\varphi(n) = p \cdot q$.
+Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grupy platí, že každý prvek grupy umocněný na exponent grupy je jedna, proto to bude platit i o násobku exponentu grupy. Faktorizujeme tak, že najdeme netriviální odmocninu z jedné, tj $c^2 = 1$. Jiné zjednodušení využívá znalosti $\varphi(n) = p \cdot q$.
 
 \textbf{Př.:} Faktorizujte číslo 187, o kterém víte, že je součinem dvou prvočísel a $\varphi(187) = 160$.
 
@@ -367,7 +367,7 @@ Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grup
 
 $$ 5 \xrightarrow{\text{mocníme na 165}} 804 \xrightarrow{\text{mocníme na 2}} 1 \xrightarrow{\text{mocníme na 2}} 1 \xrightarrow{\text{mocníme na 2}} 1$$
 
-\textit{Z netriviální odmocniny zkusíme najít gcd(804-1, 1771) = 11, tím máme jeden z faktorů. Ale $1771 = 11 \cdot 161$, a 161 dle testů není prvočíslo. Postup budeme opakovat, tentoktát v $\mathbb{Z}_{161}$ a zvolíme $a = 69$. Nejprve ale potřebujeme znát $\varphi(161)$, které získáme podílem jako $\varphi(161) = \frac{\varphi(1771)}{\varphi(11)} = 1320/10 = 132 = 33 \cdot 2 \cdot 2$.}
+\textit{Z netriviální odmocniny zkusíme najít gcd(804-1, 1771) = 11, tím máme jeden z faktorů. Ale $1771 = 11 \cdot 161$, a 161 dle testů není prvočíslo. Postup budeme opakovat, tentokrát v $\mathbb{Z}_{161}$ a zvolíme $a = 69$. Nejprve ale potřebujeme znát $\varphi(161)$, které získáme podílem jako $\varphi(161) = \frac{\varphi(1771)}{\varphi(11)} = 1320/10 = 132 = 33 \cdot 2 \cdot 2$.}
 
 $$69 \xrightarrow{\text{mocníme na 33}} 69 \xrightarrow{\text{mocníme na 2}} 92 \xrightarrow{\text{mocníme na 2}} 92$$
 
@@ -430,7 +430,7 @@ V opačném případě je gcd($c \pm 1$, n) faktor.
 \end{enumerate}
 
 \subsubsection{Algoritmus kvadratického síta pro SEF (QSF)}
-Kvadratické síto urychluje algoritmus SEF tím, že v první fázi dokáže lépe gerovat dobré čtverce. Pokud bychom generovali pouze čísla menší než $\sqrt{n}$, pak nikdy nepoužijeme modulo a SEF skončí s triviálním řešením. Označíme $m = \sqrt{n}$/ Chceme tedy generovat čísla z intervalu $\langle m, m + z \rangle$, kde $z$ je parametr síta. 
+Kvadratické síto urychluje algoritmus SEF tím, že v první fázi dokáže lépe generovat dobré čtverce. Pokud bychom generovali pouze čísla menší než $\sqrt{n}$, pak nikdy nepoužijeme modulo a SEF skončí s triviálním řešením. Označíme $m = \sqrt{n}$/ Chceme tedy generovat čísla z intervalu $\langle m, m + z \rangle$, kde $z$ je parametr síta. 
 
 V algoritmu budeme pracovat s číslem $s$, zajímá nás $F(s) = (s + m)^2 - n$, tedy vlastně zbytek po dělení. Takto získaný $F(s)$ je čtverec v $\mathbb{Z}_n$. Ještě ale potřebujeme zaručit y-hladkost, a to budeme taky dělat chytře. Najdeme první $s$, pro které je zbytek po dělení nula, a z vlastností $F(s)$ plyne, že nulový zbytek po dělení prvočíslem $p$ bude mít i $F(s + kp)$.
 
@@ -579,7 +579,7 @@ $33\cdot 10^v$ & 33 & \textbf{34} & ??? & ??? \\
 
 Z tabulky je zřejmé, že $x = 3v + u = 3\cdot 1 + 2 = 5$.
 
-\item S využitím toho, že máme expontent prvočísla: $x$ si vyjádříme následovně: $x = \cdots + p^3x_3 + p^2x_2 + px_1 + x_0$. Protože pracujeme s $3^2$, bude naše rovnice vypadat $x = 3x_1 + x_0$, kde $x_i$ jsou ze $\mathbb{Z}_{3}$, pomocí toho dokážeme vyjádřit jakékoliv $x$ menší než $3^2$. Opět řešíme $16^x = 33$, což si rozepíšeme:  $16^{3x_1 + x_0} = 33$. Rovnici pak celou umocníme na násobek trojky tak, aby jediná neznámá zůstala $x_0$. 
+\item S využitím toho, že máme exponent prvočísla: $x$ si vyjádříme následovně: $x = \cdots + p^3x_3 + p^2x_2 + px_1 + x_0$. Protože pracujeme s $3^2$, bude naše rovnice vypadat $x = 3x_1 + x_0$, kde $x_i$ jsou ze $\mathbb{Z}_{3}$, pomocí toho dokážeme vyjádřit jakékoliv $x$ menší než $3^2$. Opět řešíme $16^x = 33$, což si rozepíšeme:  $16^{3x_1 + x_0} = 33$. Rovnici pak celou umocníme na násobek trojky tak, aby jediná neznámá zůstala $x_0$. 
 
 $$ 16^{3x_1 + x_0} = 33  \xrightarrow{\text{Mocníme na 3}} 16^{9x_1 + 3x_0} = 33^3 \xrightarrow{} 26^{x_0} = 10$$
 
@@ -657,7 +657,7 @@ Na pravé straně vyjde součin mocnin y-hladkých prvočísel. Rovnici upravím
 \item $4^6\cdot 12^7 \cdot 1 = 2^0\cdot 3^2$
 \end{enumerate}
 
-\textit{A vynásobíme je mezi sebou: $4^1\cdot 12^2 \cdot 1 = 2^0\cdot 3^0$. Převedeme upravene $h$ na pravou stranu (tady to nemá moc význam, protože to je jedna) a dostaneme finální rovnici: $4^1\cdot 12^2  = 1$. Nebo jsme to vůbec nemuseli dělat, mohli jsme si pamatovat vzorce z postupu a pravou stranu úplně zahodit, protože vždy vyjde jedna. Tak jako tak máme teď parametry $s=1, t=2$, ze kterých získáme řešení: $x = -s\cdot t^{-1} = -1 \cdot 2^{-1} = -1 \cdot 6 = -6 = 5 \mod 11$. Tedy dlog$_4(12) = 5$ v $\mathbb{Z}_{23}^*$.}
+\textit{A vynásobíme je mezi sebou: $4^1\cdot 12^2 \cdot 1 = 2^0\cdot 3^0$. Převedeme upravené $h$ na pravou stranu (tady to nemá moc význam, protože to je jedna) a dostaneme finální rovnici: $4^1\cdot 12^2  = 1$. Nebo jsme to vůbec nemuseli dělat, mohli jsme si pamatovat vzorce z postupu a pravou stranu úplně zahodit, protože vždy vyjde jedna. Tak jako tak máme teď parametry $s=1, t=2$, ze kterých získáme řešení: $x = -s\cdot t^{-1} = -1 \cdot 2^{-1} = -1 \cdot 6 = -6 = 5 \mod 11$. Tedy dlog$_4(12) = 5$ v $\mathbb{Z}_{23}^*$.}
 
 \end{enumerate}
 
