@@ -17,58 +17,80 @@
 \begin{document}
 \maketitle
 \section{Symetrická a asymetrická kryptografie}
-Symetrická a asymetrická kryptografie se liší vlastnostmi a způsobem použití klíčů. Zatímco v symetrické kryptografii používají obě komunikující strany stejný klíč, u asymetrické kryptografie jsou klíče dva: soukromý klíč (často značený $d$), a veřejný klíč (často značený $e$).
+Symetrická a asymetrická kryptografie se liší vlastnostmi a způsobem použití
+klíčů. Zatímco v symetrické kryptografii používají obě komunikující strany
+stejný klíč, u asymetrické kryptografie jsou klíče dva: soukromý klíč (často
+značený $d$), a veřejný klíč (často značený $e$).
 
-Symetrická kryptografie je rychlejší a proto se používá pro většinu komunikace, ale vyžaduje bezpečnou výměnu klíče. Asymetrická kryptografie je pomalejší, a podle použití klíčů umožňuje dvě věci:
+Symetrická kryptografie je rychlejší a proto se používá pro většinu komunikace,
+ale vyžaduje bezpečnou výměnu klíče. Asymetrická kryptografie je pomalejší, a
+podle použití klíčů umožňuje dvě věci:
 \begin{itemize}
-\item Kdokoliv může zašifrovat zprávu veřejným klíčem, a zprávu si pak může přečíst jen ten, komu je určena (majitel soukromého klíče)
-\item Majitel klíče pošle zprávu a k ní hash zašifrovaný soukromým klíčem. Takovou zprávu si může kdokoliv přečíst, ale zprávu nelze zfalšovat (je jasné, že autorem může být jedině majitel klíče).
+\item Kdokoliv může zašifrovat zprávu veřejným klíčem, a zprávu si pak může
+přečíst jen ten, komu je určena (majitel soukromého klíče)
+\item Majitel klíče pošle zprávu a k ní hash zašifrovaný soukromým klíčem.
+Takovou zprávu si může kdokoliv přečíst, ale zprávu nelze zfalšovat (je jasné,
+že autorem může být jedině majitel klíče).
 \end{itemize}
 
-Díky tomu mohla vzniknout hierarchie certifikačních autorit a certifikátů. Uživatel může ověřit (podle certifikační autority, které věří), že server na druhé straně komunikace se za nikoho nevydává, a skutečně jde třeba o webovou stránku banky. S použitím asymetrické kryptografie si uživatel se serverem vymění hesla a dál mohou používat rychlejší symetrickou kryptografii.
+Díky tomu mohla vzniknout hierarchie certifikačních autorit a certifikátů.
+Uživatel může ověřit (podle certifikační autority, které věří), že server na
+druhé straně komunikace se za nikoho nevydává, a skutečně jde třeba o webovou
+stránku banky. S použitím asymetrické kryptografie si uživatel se serverem
+vymění hesla a dál mohou používat rychlejší symetrickou kryptografii.
 
 \section{Matematika používaná v kryptografii}
 \subsection{Dělitelnost, modulo, rovnice}
 
-Základní věta aritmetiky: Každé přirozené číslo $n$ jde zapsat jako jednoznačný součin prvočísel, kde \textbf{prvočíslo} je číslo, které je dělitelné jen jedničkou a sebou samým.
+Základní věta aritmetiky: Každé přirozené číslo $n$ jde zapsat jako jednoznačný
+součin prvočísel, kde \textbf{prvočíslo} je číslo, které je dělitelné jen
+jedničkou a sebou samým.
 
 \subsubsection{Počítání modulo}
 
-\textbf{Dělení se zbytkem}: $\forall a, b \in \mathbb{Z}, a, b > 0, \exists q, r \in \mathbb{Z},$ že $ a = qb + r$, a přitom $0 \leq r \le b$, a $q, r$ jsou jednoznačné. Když je $r$ (zbytek) nulový, řekneme, že $a$ je dělitelné $b$ nebo že $b$ dělí $a$, značíme $b \mid a$. Relace dělitelnosti na $\mathbb{Z}$ je reflexivní, tranzitivní a antisymetrická, dá se znázornit Hasseho diagramem (Obrázek \ref{fig:hasse}).
+\textbf{Dělení se zbytkem}: $\forall a, b \in \mathbb{Z}, a, b > 0, \exists q, r
+\in \mathbb{Z},$ že $ a = qb + r$, a přitom $0 \leq r \le b$, a $q, r$ jsou
+jednoznačné. Když je $r$ (zbytek) nulový, řekneme, že $a$ je dělitelné $b$ nebo
+že $b$ dělí $a$, značíme $b \mid a$. Relace dělitelnosti na $\mathbb{Z}$ je
+reflexivní, tranzitivní a antisymetrická, dá se znázornit Hasseho diagramem
+(Obrázek \ref{fig:hasse}).
 
 \begin{figure}[h!]
 \label{fig:hasse}
 \centering
 \begin{tikzpicture}
-    \node (12) at (0,0) {12};
-    \node (4) at (-1, -1) {4};
-    \node (6) at (1, -1) {6};
-    \node (2) at (-1, -2.5) {2};
-    \node (3) at (1, -2.5) {3};
-    \node (1) at (0, -3.5) {1} ;
+    \node (12) at (0,0) {12}; \node (4) at (-1, -1) {4}; \node (6) at (1, -1)
+    {6}; \node (2) at (-1, -2.5) {2}; \node (3) at (1, -2.5) {3}; \node (1) at
+    (0, -3.5) {1} ;
 
-    \path  (12) edge node {} (4);
-    \path  (12) edge node {} (6);
-    \path  (6) edge node {} (2);
-    \path  (6) edge node {} (3);
-    \path  (4) edge node {} (2);
-    \path  (1) edge node {} (2);
-    \path  (1) edge node {} (3);
+    \path  (12) edge node {} (4); \path  (12) edge node {} (6); \path  (6) edge
+    node {} (2); \path  (6) edge node {} (3); \path  (4) edge node {} (2); \path
+    (1) edge node {} (2); \path  (1) edge node {} (3);
 \end{tikzpicture}
 \caption{Hasseho diagram pro číslo 12}
 \end{figure}
 
-\textbf{Největší společný dělitel (GCD)} dvou čísel $a, b$ (značíme $gcd(a,b)$) je takové číslo $d$, kde:
+\textbf{Největší společný dělitel (GCD)} dvou čísel $a, b$ (značíme $gcd(a,b)$)
+je takové číslo $d$, kde:
 \begin{itemize}
 \item $d \mid a \wedge d \mid b$
 \item $d$ je dělitelné všemi společnými děliteli obou čísel
 \item $d \geq 0$
 \end{itemize}
-V Hasseho diagramu najdeme GCD dvou čísel jako první číslo, ve kterém se můžeme sejít při cestě dolů - pro čísla 4 a 6 jde o číslo 2.
+V Hasseho diagramu najdeme GCD dvou čísel jako první číslo, ve kterém se můžeme
+sejít při cestě dolů - pro čísla 4 a 6 jde o číslo 2.
 
-\textbf{Nejmenší společný násobek (LCM)} čísel $a, b$ (značíme $lcm(a, b)$) je nejmenší takové $d$, které je dělitelné číslem $a$ a zároveň je dělitelné číslem $b$. V Hasseho diagramu najdeme LCM jako první číslo, ve kterém se můžeme sejít při cestě nahoru - pro čísla 3 a 4 je LCM 12.
+\textbf{Nejmenší společný násobek (LCM)} čísel $a, b$ (značíme $lcm(a, b)$) je
+nejmenší takové $d$, které je dělitelné číslem $a$ a zároveň je dělitelné číslem
+$b$. V Hasseho diagramu najdeme LCM jako první číslo, ve kterém se můžeme sejít
+při cestě nahoru - pro čísla 3 a 4 je LCM 12.
 
-Máme nějaké $n \in \mathbb{N}$, pak čísla $a, b \in \mathbb{Z}$ jsou \textbf{kongruentní modulo} $n$, pokud $n \mid (b-a)$. Kongruence se značí $a \equiv b\mod n$, je to ekvivalence a rozdělí celá čísla na $n$ tříd, kde všechny prvky ve třídě mají stejný zbytek po dělení číslem $n$. Přirozená čísla rozdělená na třídy ekvivalence podle $n$ značíme $\mathbb{Z}_n$. Relace kongruence je zachovaná při sčítání i násobení.
+Máme nějaké $n \in \mathbb{N}$, pak čísla $a, b \in \mathbb{Z}$ jsou
+\textbf{kongruentní modulo} $n$, pokud $n \mid (b-a)$. Kongruence se značí $a
+\equiv b\mod n$, je to ekvivalence a rozdělí celá čísla na $n$ tříd, kde všechny
+prvky ve třídě mají stejný zbytek po dělení číslem $n$. Přirozená čísla
+rozdělená na třídy ekvivalence podle $n$ značíme $\mathbb{Z}_n$. Relace
+kongruence je zachovaná při sčítání i násobení.
 
 Například můžeme celá čísla rodělit podle $\mathbb{Z}_4$:
 \begin{itemize}
@@ -86,28 +108,29 @@ A kongruence je zachovaná i při násobení a sčítání:
 \end{itemize}
 
 \subsubsection{Euklidův algoritmus}
-\textbf{Euklidův algoritmus} umožňuje v lineárním čase najít $gcd(a,b)$. Dělá to tak, že rozkládá $a$ jako $a = qb + r$, a dokud je zbytek $r$ nenulový, rekurzivně spouští $gcd(b,r)$. Výhodné je použít místo tohoto postupu výpočet přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
+\textbf{Euklidův algoritmus} umožňuje v lineárním čase najít $gcd(a,b)$. Dělá to
+tak, že rozkládá $a$ jako $a = qb + r$, a dokud je zbytek $r$ nenulový,
+rekurzivně spouští $gcd(b,r)$. Výhodné je použít místo tohoto postupu výpočet
+přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
 
 \textbf{Př.:} Euklidovým algoritmem chceme najít $gcd(260, 84)$.
 
 \begin{center}
-\begin{tikzpicture};
-    \node (A) at (0, 0) {$gcd(260, 84) = 4$};
-    \node (B) at (0, -1) {$260 = 3 \cdot 84 + 8$};
-    \node (C) at (0, -2) {$84 = 10 \cdot 8 + 4$};
+\begin{tikzpicture}; \node (A) at (0, 0) {$gcd(260, 84) = 4$}; \node (B) at (0,
+    -1) {$260 = 3 \cdot 84 + 8$}; \node (C) at (0, -2) {$84 = 10 \cdot 8 + 4$};
     \node (D) at (0, -3) {$8 = 2 \cdot 4 + 0$};
     
-    \draw[->](-0.4,-0.2) to[out=270,in=90] (-1,-0.8);
-   	 \draw[->] (0.25,-0.2) to[out=270,in=90] (0.4,-0.8);
+    \draw[->](-0.4,-0.2) to[out=270,in=90] (-1,-0.8); \draw[->] (0.25,-0.2)
+   	 to[out=270,in=90] (0.4,-0.8);
    	 
-    \draw[->](0.4,-1.2) to[out=270,in=90] (-1,-1.8);
-   	 \draw[->] (1.1,-1.2) to[out=270,in=90] (0.4,-1.8);
+    \draw[->](0.4,-1.2) to[out=270,in=90] (-1,-1.8); \draw[->] (1.1,-1.2)
+   	 to[out=270,in=90] (0.4,-1.8);
    	 
-    \draw[->](0.4,-2.2) to[out=270,in=90] (-0.8,-2.8);
-   	 \draw[->] (1,-2.2) to[out=270,in=90] (0.25,-2.8);
+    \draw[->](0.4,-2.2) to[out=270,in=90] (-0.8,-2.8); \draw[->] (1,-2.2)
+   	 to[out=270,in=90] (0.25,-2.8);
    	 
-   	 \draw (0.25,-3.2) to[out=270,in=180] (1.5, -3.7);
-   	 \draw[->] (1.5, -3.7) to[out=0,in=0] (1.3, 0);
+   	 \draw (0.25,-3.2) to[out=270,in=180] (1.5, -3.7); \draw[->] (1.5, -3.7)
+   	 to[out=0,in=0] (1.3, 0);
 \end{tikzpicture}
 \end{center}
 
@@ -117,115 +140,100 @@ A kongruence je zachovaná i při násobení a sčítání:
 
 \[ \left( \begin{array}{cc|c}
 1 & 0 & 260\\
-0 & 1 & 84
-\end{array} \right)
+0 & 1 & 84 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{cc|c}
 1 & -3 & 8\\
-0 & 1 & 84
-\end{array} \right)
+0 & 1 & 84 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{cc|c}
 1 & -3 & 8\\
--10 & 31 & 4
-\end{array} \right)
+-10 & 31 & 4 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{cc|c}
 21 & -65 & 0\\
--10 & 31 & 4
-\end{array} \right)
-\]
+-10 & 31 & 4 \end{array} \right) \]
 
 \textit{Maticové řešení je podrobněji popsané níže u diofantických rovnic. Kromě toho, že jsme našli řešení, máme i jiné užitečné vztahy, a sice vyjádření nuly: $21 \cdot 260 - 65 \cdot 84 = 0$ a vyjádření GCD: $-10 \cdot 260 + 31 \cdot 84 = 4$. Maticový výpočet se hodí, když hledáme GCD více čísel najednou:}
 
 \[ \left( \begin{array}{ccc|c}
 1 & 0 & 0 & 90\\
 0 & 1 & 0 &  78\\
-0 & 0 & 1 &  72
-\end{array} \right)
+0 & 0 & 1 &  72 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc|c}
 1 & 0 & -1 & 18\\
 0 & 1 & -1 &  6\\
-0 & 0 & 1 &  72
-\end{array} \right)
+0 & 0 & 1 &  72 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc|c}
 1 & -3 & 2 & 0\\
 0 & 1 & -1 &  6\\
-0 & -12 & 13 &  0
-\end{array} \right)
-\]
+0 & -12 & 13 &  0 \end{array} \right) \]
 
 \[ \left( \begin{array}{ccc|c}
 1 & 0 & 0 & 70\\
 0 & 1 & 0 &  110\\
-0 & 0 & 1 &  154
-\end{array} \right)
+0 & 0 & 1 &  154 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc|c}
 1 & 0 & 0 & 70\\
 -1 & 1 & 0 &  40\\
--2 & 0 & 1 &  14
-\end{array} \right)
+-2 & 0 & 1 &  14 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc|c}
 11 & 0 & -5 & 0\\
 5 & 1 & -3 &  -2\\
--2 & 0 & 1 &  14
-\end{array} \right)
+-2 & 0 & 1 &  14 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc|c}
 11 & 0 & -5 & 0\\
 -5 & -1 & 3 &  2\\
-33 & 7 & -20 &  0
-\end{array} \right)
-\]
+33 & 7 & -20 &  0 \end{array} \right) \]
 
 \subsubsection{Bezoutova věta}
-\textbf{Bezoutova věta} říká, že největší společný dělitel jde zapsat jako vztah $a,b$, tedy: $gcd(a, b) = sa + tb$, kde $s,t$ jsou celá čísla.
+\textbf{Bezoutova věta} říká, že největší společný dělitel jde zapsat jako vztah
+$a,b$, tedy: $gcd(a, b) = sa + tb$, kde $s,t$ jsou celá čísla.
 
 \subsubsection{Diofantické rovnice}
-\textbf{Diofantická rovnice} je rovnice ve tvaru $ax + by = c$, kde $a,b,c \in \mathbb{Z}$. Diofantická rovnice má řešení, právě když $gcd(a,b) \mid c$. Řešení má partikulární a homogenní část.
+\textbf{Diofantická rovnice} je rovnice ve tvaru $ax + by = c$, kde $a,b,c \in
+\mathbb{Z}$. Diofantická rovnice má řešení, právě když $gcd(a,b) \mid c$. Řešení
+má partikulární a homogenní část.
 
 \textbf{Př.:} V $\mathbb{Z}_{45}$ chceme řešit rovnici $12x = 6$.
 
 \textit{Rovnici si nejprve převedeme na diofantickou, tj dostaneme $12x + 45y = 6$. Vyrobíme si jednotkovou matici o dvou sloupcích, kde první sloupec odpovídá neznámé $x$ a druhý sloupec neznámé $y$. Příslušné hodnoty v rovnici napíšeme do pravého sloupce a matici upravíme.}
 \[ \left( \begin{array}{cc|c}
 1 & 0 & 12\\
-0 & 1 & 45
-\end{array} \right)
+0 & 1 & 45 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{cc|c}
 1 & 0 & 12\\
--4 & 1 & -3
-\end{array} \right)
+-4 & 1 & -3 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{cc|c}
 -15 & 4 & 0\\
--4 & 1 & -3
-\end{array} \right)
-\]
+-4 & 1 & -3 \end{array} \right) \]
 \textit{Úpravy skončí, když se v pravém sloupci objeví nula. Druhá hodnota je největší společný dělitel čísel 12 a 45, po přenásobení řádku $-1$ vidíme, že $gcd(12,45)=3$. Protože $3 \mid 6$, bude mít diofantická rovnice řešení.}
 
 \textit{Máme homogenní řešení $12\times(-15) + 45\times 4 = 0$ a partikulární řešení $12\times4 + 45\times(-1) = 3$. Druhou rovnici ale musíme vynásobit dvěma, abychom dostali na pravé straně 6 (odtud požadavek, aby $3\mid6$), tím dostaneme partikulární řešení $12\times8 + 45\times(-2) = 6$. Řešení se zapisuje ve tvaru $(x,y) = (x_p,y_p) + k(x_0,y_0)$, a řešení diofantické rovnice je $(x,y) = (8, -2) + k(-15,4)$. V zadání jsme ale měli řešit pouze rovnici pro $x$, a tak výsledek je $x = 8 - 15k$.}
@@ -234,86 +242,151 @@ A kongruence je zachovaná i při násobení a sčítání:
 Máme množinu $A$ a operaci $\cdot$~. Dvojice $(A,\cdot)$ je grupa, pokud:
 \begin{itemize}
 \item Platí asociativita, tj $x\cdot(y\cdot z) = (x\cdot y)\cdot z$
-\item Existuje neutrální prvek $e \in A$ (jednotka), pro který platí, že $\forall x \in A: e\cdot x = x = x \cdot e$.
-\item Všechny prvky mají inverze, tj $\forall x ~\exists y: x\cdot y = e = y \cdot x$.
+\item Existuje neutrální prvek $e \in A$ (jednotka), pro který platí, že
+$\forall x \in A: e\cdot x = x = x \cdot e$.
+\item Všechny prvky mají inverze, tj $\forall x ~\exists y: x\cdot y = e = y
+\cdot x$.
 \end{itemize}
-Řekneme, že $(A,\cdot)$ je Abelova grupa, když je navíc operace $\cdot$ komutativní, tedy $x\cdot y = y \cdot x$.
-Dvojice $(\mathbb{Z}, +)$,  $(\mathbb{R}^+, \times)$,  $(\mathbb{Z}_n, +)$ jsou grupy. $(\mathbb{Z}_n^*, \times)$, kde $\mathbb{Z}_n^*$ je podmnožina prvků ze $\mathbb{Z}_n$ nesoudělných s $n$, je taky grupa.
+Řekneme, že $(A,\cdot)$ je Abelova grupa, když je navíc operace $\cdot$
+komutativní, tedy $x\cdot y = y \cdot x$. Dvojice $(\mathbb{Z}, +)$,
+$(\mathbb{R}^+, \times)$,  $(\mathbb{Z}_n, +)$ jsou grupy. $(\mathbb{Z}_n^*,
+\times)$, kde $\mathbb{Z}_n^*$ je podmnožina prvků ze $\mathbb{Z}_n$
+nesoudělných s $n$, je taky grupa.
 
 \textbf{Řád grupy} je počet prvků v $A$. Grupy mohou být konečné i nekonečné.
 
-V grupách $\mathbb{Z}_n^*$ jsou všechna čísla menší než $n$, která jsou s $n$ nesoudělná. Počet nesoudělných čísel, a tedy i řád grupy, vyjadřuje \textbf{Eulerova funkce} $\varphi(n)$.
+V grupách $\mathbb{Z}_n^*$ jsou všechna čísla menší než $n$, která jsou s $n$
+nesoudělná. Počet nesoudělných čísel, a tedy i řád grupy, vyjadřuje
+\textbf{Eulerova funkce} $\varphi(n)$.
 \begin{itemize}
 \item $\varphi(p) = p-1$ pro prvočíslo $p$.
-\item $\varphi(p^k) = p^k - p^{k-1} = p^{k-1}(p-1)$ pro $k$-tou mocninu prvočísla $p$.
-\item $\varphi(n\cdot m) = \varphi(n)\cdot\varphi(m)$ pro nesoudělná čísla $m,n$.
+\item $\varphi(p^k) = p^k - p^{k-1} = p^{k-1}(p-1)$ pro $k$-tou mocninu
+prvočísla $p$.
+\item $\varphi(n\cdot m) = \varphi(n)\cdot\varphi(m)$ pro nesoudělná čísla
+$m,n$.
 \end{itemize}
 
-Nejmenší $m$ takové, že $\forall a \in G: a^m = 0$ se nazývá \textbf{exponent grupy}. Exponent grupy $\mathbb{Z}_n^*$ lze spočítat \textbf{Carmichaelovou funkcí} $\lambda(n)$.
+Nejmenší $m$ takové, že $\forall a \in G: a^m = 0$ se nazývá \textbf{exponent
+grupy}. Exponent grupy $\mathbb{Z}_n^*$ lze spočítat \textbf{Carmichaelovou
+funkcí} $\lambda(n)$.
 \begin{itemize}
-\item $\lambda(\prod_{i=1}^r p_i^{e_i}) = lcm\{\lambda(p_1^{e_1}), \ldots, \lambda(p_r^{e_r})\}$ pro složené číslo.
-\item $\lambda(p^e) = \varphi(p^e) = p^e - p^{e-1} = p^{e-1}(p-1)$ pro $e$-tou mocninu prvočísla $p$, kde $p > 2$.
-\item $\lambda(2^e) = \frac{\varphi(2^e)}{2} = 2^{e - 2}$ pro mocninu dvojky, kde $e \geq 3$.
+\item $\lambda(\prod_{i=1}^r p_i^{e_i}) = lcm\{\lambda(p_1^{e_1}), \ldots,
+\lambda(p_r^{e_r})\}$ pro složené číslo.
+\item $\lambda(p^e) = \varphi(p^e) = p^e - p^{e-1} = p^{e-1}(p-1)$ pro $e$-tou
+mocninu prvočísla $p$, kde $p > 2$.
+\item $\lambda(2^e) = \frac{\varphi(2^e)}{2} = 2^{e - 2}$ pro mocninu dvojky,
+kde $e \geq 3$.
 \item $\lambda(4) = 2$
 \item $\lambda(2) = 1$
 \end{itemize}
 
 \subsubsection{Cyklické grupy}
 
-Nechť $(G,\cdot)$ je grupa s neutrálem 1, $a \in G$. Nejmenší $r \in \mathbb{N}$ takové, že $a^r = 1$ v $G$ se nazývá \textbf{řád prvku} $a$, značí se $r(a)$. Pokud takové číslo neexistuje, je řád nekonečný.
+Nechť $(G,\cdot)$ je grupa s neutrálem 1, $a \in G$. Nejmenší $r \in \mathbb{N}$
+takové, že $a^r = 1$ v $G$ se nazývá \textbf{řád prvku} $a$, značí se $r(a)$.
+Pokud takové číslo neexistuje, je řád nekonečný.
 
-Pro prvek $a \in G$ je množina $P = \{a^i~|~i = 1 \ldots r(a)\}$ \textbf{cyklickou podgrupou} grupy $G$. Cyklickou podgrupu generovanou prvkem $a$ značíme $\langle a \rangle$. Pokud pro nějaký prvek $a \in G$ platí $\langle a \rangle  = G$, pak řekneme, že grupa $G$ je \textbf{cyklická} a prvek $a$ je její \textbf{generátor}.
+Pro prvek $a \in G$ je množina $P = \{a^i~|~i = 1 \ldots r(a)\}$
+\textbf{cyklickou podgrupou} grupy $G$. Cyklickou podgrupu generovanou prvkem
+$a$ značíme $\langle a \rangle$. Pokud pro nějaký prvek $a \in G$ platí $\langle
+a \rangle  = G$, pak řekneme, že grupa $G$ je \textbf{cyklická} a prvek $a$ je
+její \textbf{generátor}.
 
-Grupy $(\mathbb{Z}, +)$ a $(\mathbb{Z}_n, +)$ jsou cyklické a jejich generátorem je např. prvek 1. Grupy $(\mathbb{Z}_n^*, \times)$ jsou cyklické pro $n$ prvočíslo, mocninu prvočísla, nebo $n$ ve tvaru $2p^e$ pro liché prvočíslo $p$.
+Grupy $(\mathbb{Z}, +)$ a $(\mathbb{Z}_n, +)$ jsou cyklické a jejich generátorem
+je např. prvek 1. Grupy $(\mathbb{Z}_n^*, \times)$ jsou cyklické pro $n$
+prvočíslo, mocninu prvočísla, nebo $n$ ve tvaru $2p^e$ pro liché prvočíslo $p$.
 
-Cyklické grupy jsou specifické tím, že mají jasné velikosti podgrup a od každé velikosti existuje jen jedna podgrupa.
+Cyklické grupy jsou specifické tím, že mají jasné velikosti podgrup a od každé
+velikosti existuje jen jedna podgrupa.
 
 \subsection{Euler-Fermatova věta}
-Nechť $(G,\cdot)$ je konečná grupa s neutrálem 1. Pak $\forall a \in G: a^{|G|} = a\cdot a\cdot a\cdots a = 1$ v $G$.
+Nechť $(G,\cdot)$ je konečná grupa s neutrálem 1. Pak $\forall a \in G: a^{|G|}
+= a\cdot a\cdot a\cdots a = 1$ v $G$.
 
-To nám říká, že když umocníme na velikost grupy, dostaneme jednotku. 
-Euler-Fermatova věta se používá při počítání velkých mocnin, protože umožňuje zmenšit exponent.
+To nám říká, že když umocníme na velikost grupy, dostaneme jednotku.
+Euler-Fermatova věta se používá při počítání velkých mocnin, protože umožňuje
+zmenšit exponent.
 
 \subsection{Algoritmus opakovaných čtverců}
-Algoritmus opakovaných čtverců taky zrychluje počítání mocnin. Fungování je nejlépe vidět na příkladu, spočítáme $5^{17}$ v $\mathbb{Z}_{27}$.
+Algoritmus opakovaných čtverců taky zrychluje počítání mocnin. Fungování je
+nejlépe vidět na příkladu, spočítáme $5^{17}$ v $\mathbb{Z}_{27}$.
 \begin{enumerate}
 \item Exponent napíšeme jako binární číslo:\\ $17 = 16 + 1 = 10001_{bin}$
-\item Do mezer mezi cifry vložíme znak $S$, nuly smažeme, jedničky nahradíme znakem $X$:\\ $10001 = 1S0S0S0S1 = 1SSSS1 = XSSSSX$.
-\item Začneme s číslem 1 a postupně zpracováváme znaky $S$ a $X$. Po přečtení znaku $S$ mezivýsledek umocníme na druhou, po přečtení znaku $X$ mezivýsledek vynásobíme základem. Přitom pořád si mezivýsledek udržujeme v modulu $n$:\\ $1XSSSSX \rightarrow 5SSSSX \rightarrow 25SSSX = -2SSSX \rightarrow 4SSX \rightarrow 16SX \rightarrow 256X = 13X \rightarrow 65 = 11$ v $\mathbb{Z}_{27}$.
+\item Do mezer mezi cifry vložíme znak $S$, nuly smažeme, jedničky nahradíme
+znakem $X$:\\ $10001 = 1S0S0S0S1 = 1SSSS1 = XSSSSX$.
+\item Začneme s číslem 1 a postupně zpracováváme znaky $S$ a $X$. Po přečtení
+znaku $S$ mezivýsledek umocníme na druhou, po přečtení znaku $X$ mezivýsledek
+vynásobíme základem. Přitom pořád si mezivýsledek udržujeme v modulu $n$:\\
+$1XSSSSX \rightarrow 5SSSSX \rightarrow 25SSSX = -2SSSX \rightarrow 4SSX
+\rightarrow 16SX \rightarrow 256X = 13X \rightarrow 65 = 11$ v
+$\mathbb{Z}_{27}$.
 \end{enumerate}
 
 \subsection{Čínská věta o zbytcích}
-Díky čínské větě umíme řešit soustavy rovnic. Mějme po dvou nesoudělná přirozená čísla $n_1, \ldots, n_k$ a k nim libovolná přirozená čísla $a_1,\ldots,a_k$. Pak soustava rovnic $x_i \equiv a_i \mod n_i, i = 1,\ldots,k$ má právě jedno řešení modulo $n = \prod_{i=1}^{k}n_i$.
+Díky čínské větě umíme řešit soustavy rovnic. Mějme po dvou nesoudělná přirozená
+čísla $n_1, \ldots, n_k$ a k nim libovolná přirozená čísla $a_1,\ldots,a_k$. Pak
+soustava rovnic $x_i \equiv a_i \mod n_i, i = 1,\ldots,k$ má právě jedno řešení
+modulo $n = \prod_{i=1}^{k}n_i$.
 
-Řešení se najde tak, že pro každou rovnici najdeme takové $q_i$, aby platil vztah $q_i \equiv 1 \mod q_i$ a zároveň $q_i \equiv 0 \mod q_j, j \neq i$ (tedy $q_i$ je nulové ve všech modulech vyjma svého vlastního, kde má hodnotu jedna).
+Řešení se najde tak, že pro každou rovnici najdeme takové $q_i$, aby platil
+vztah $q_i \equiv 1 \mod q_i$ a zároveň $q_i \equiv 0 \mod q_j, j \neq i$ (tedy
+$q_i$ je nulové ve všech modulech vyjma svého vlastního, kde má hodnotu jedna).
 
-Takové $q_i$ můžeme najít tak, že vynásobíme všechny moduly (vyjma $n_i$), výsledek označme $m_i$, a najdeme nějaké $t_i$ tak, aby $m_iq_i \equiv 1 \mod n_i$. Tato soustava určitě bude mít řešení, protože $n_i$ jsou nesoudělná.
+Takové $q_i$ můžeme najít tak, že vynásobíme všechny moduly (vyjma $n_i$),
+výsledek označme $m_i$, a najdeme nějaké $t_i$ tak, aby $m_iq_i \equiv 1 \mod
+n_i$. Tato soustava určitě bude mít řešení, protože $n_i$ jsou nesoudělná.
 
 Řešení soustavy pak je $x = \sum_{i=1}^{k}q_ia_i$.
 
-Př.: Řešte soustavu: $x \equiv 2 \mod 4$, $x \equiv 0 \mod 5$, $x \equiv 1 \mod 9$, $x \equiv 2 \mod 11$.
+Př.: Řešte soustavu: $x \equiv 2 \mod 4$, $x \equiv 0 \mod 5$, $x \equiv 1 \mod
+9$, $x \equiv 2 \mod 11$.
 
-Spočítáme koeficient $q$ pro modul 4. $q_4 = 5\cdot9\cdot11\cdot t = 495t$. Chceme, aby $495t \equiv 1 \mod 4$, což si můžeme ještě upravit na $3t \equiv 1 \mod 4$. Vidíme, že vhodné $t$ je 3, protože $3\times 3 = 9 \equiv 1 \mod 4$. Dosazením hodnoty $t$ dostaneme $q_4 = 495t = 495 \times 3 = 1485$. Obdobně dostaneme $q_5 = 396$, $q_9 = 1540$, $q_{11} = 540$.
+Spočítáme koeficient $q$ pro modul 4. $q_4 = 5\cdot9\cdot11\cdot t = 495t$.
+Chceme, aby $495t \equiv 1 \mod 4$, což si můžeme ještě upravit na $3t \equiv 1
+\mod 4$. Vidíme, že vhodné $t$ je 3, protože $3\times 3 = 9 \equiv 1 \mod 4$.
+Dosazením hodnoty $t$ dostaneme $q_4 = 495t = 495 \times 3 = 1485$. Obdobně
+dostaneme $q_5 = 396$, $q_9 = 1540$, $q_{11} = 540$.
 
-Z koeficientů dostaneme výsledek: $x = 2q_4 + 0q_5 + 1q_9 + 2q_{11} = 2970 + 0 + 1540 + 540 = 5590$. Ale my pracujeme modulo $n = 4\cdot5\cdot9\cdot11 = 1980$, proto je výsledek $x = 5590 \equiv 3610 \equiv 1630 \mod 1980$.
+Z koeficientů dostaneme výsledek: $x = 2q_4 + 0q_5 + 1q_9 + 2q_{11} = 2970 + 0 +
+1540 + 540 = 5590$. Ale my pracujeme modulo $n = 4\cdot5\cdot9\cdot11 = 1980$,
+proto je výsledek $x = 5590 \equiv 3610 \equiv 1630 \mod 1980$.
 
 \section{Generování prvočísel}
-Generování prvočísel zjednodušeně probíhá tak, že se (chytře) generují čísla, a následně se ověřuje, jestli vzniklo prvočíslo. Testy prvočíselnosti můžeme dělat deterministicky nebo pravděpodobnostně. Deterministické testy zmíníme jen okrajově:
+Generování prvočísel zjednodušeně probíhá tak, že se (chytře) generují čísla, a
+následně se ověřuje, jestli vzniklo prvočíslo. Testy prvočíselnosti můžeme dělat
+deterministicky nebo pravděpodobnostně. Deterministické testy zmíníme jen
+okrajově:
 
 \begin{itemize}
-\item \textbf{Hrubou silou}: Dělíme $n$ všemi (prvo)čísly až do $\sqrt{n}$ a tím vyloučíme dělitelnost. Složitost takového postupu je $O(2^{0.5\cdot len(n)}\cdot len(n))$
-\item \textbf{Agrawal, Kayal, Saxena (AKS)}:  test prvočíselnosti je sice polynomiální a deterministický, ale jeho složitost je $O(len(n)^{10.5 + o(1)})$
+\item \textbf{Hrubou silou}: Dělíme $n$ všemi (prvo)čísly až do $\sqrt{n}$ a tím
+vyloučíme dělitelnost. Složitost takového postupu je $O(2^{0.5\cdot len(n)}\cdot
+len(n))$
+\item \textbf{Agrawal, Kayal, Saxena (AKS)}:  test prvočíselnosti je sice
+polynomiální a deterministický, ale jeho složitost je $O(len(n)^{10.5 + o(1)})$
 \end{itemize}
 
-Pravděpodobnostní testy mají jednostrannou chybu. Pokud odpoví, že číslo je \texttt{složené}, je to vždy pravda. Odpověď \texttt{prvočíslo} ale správná být nemusí - mohlo se stát, že test důkaz o složenosti "přehlédl". Ve vstupu testu je testované číslo a nějaký svědek. Na základě jednoho svědka algoritmus rozhodne. Pro získání požadované spolehlivosti se test několikrát opakuje s různými svědky.
+Pravděpodobnostní testy mají jednostrannou chybu. Pokud odpoví, že číslo je
+\texttt{složené}, je to vždy pravda. Odpověď \texttt{prvočíslo} ale správná být
+nemusí - mohlo se stát, že test důkaz o složenosti "přehlédl". Ve vstupu testu
+je testované číslo a nějaký svědek. Na základě jednoho svědka algoritmus
+rozhodne. Pro získání požadované spolehlivosti se test několikrát opakuje s
+různými svědky.
 
 \subsection{Fermatův test}
-Fermatův test zavádí pro testované $n$ množinu svědků prvočíselnosti $K_n$, ve které jsou ty prvky, které po umocnění na $n-1$ vrátí jedničku.
+Fermatův test zavádí pro testované $n$ množinu svědků prvočíselnosti $K_n$, ve
+které jsou ty prvky, které po umocnění na $n-1$ vrátí jedničku.
 
- Pokud je $n$ prvočíslo, pak $K_n$ je shodná s $\mathbb{Z}_n^*$. Pokud $n$ prvočíslo není, pak rozdělíme $\mathbb{Z}_n^*$ na třídy (podgrupy). Počet tříd $k$ nutně dělí velikost grupy.
+ Pokud je $n$ prvočíslo, pak $K_n$ je shodná s $\mathbb{Z}_n^*$. Pokud $n$
+ prvočíslo není, pak rozdělíme $\mathbb{Z}_n^*$ na třídy (podgrupy). Počet tříd
+ $k$ nutně dělí velikost grupy.
 \begin{itemize}
-\item Pro $k = 1$ nastává výjimečná situace, totiž že $|\mathbb{Z}_n^*| = |K_n|$. Takové složené $n$ se nazývá Carmichaelovo a platí pro něj, že $a^{n-1} = 1 \mod n$ pro libovolné $a$. Fermatův test nedokáže rozpoznat Carmichaelova čísla jako složená.
-\item Pro $k \geq 2$ platí, že  $|K_n| = \frac{1}{k}|\mathbb{Z}_n^*|$.  Obecně můžeme říct, že $|K_n| \leq \frac{1}{2}|\mathbb{Z}_n^*|$, ale to je hrubý odhad, častěji bude $K_n$ daleko menší.
+\item Pro $k = 1$ nastává výjimečná situace, totiž že $|\mathbb{Z}_n^*| =
+|K_n|$. Takové složené $n$ se nazývá Carmichaelovo a platí pro něj, že $a^{n-1}
+= 1 \mod n$ pro libovolné $a$. Fermatův test nedokáže rozpoznat Carmichaelova
+čísla jako složená.
+\item Pro $k \geq 2$ platí, že  $|K_n| = \frac{1}{k}|\mathbb{Z}_n^*|$.  Obecně
+můžeme říct, že $|K_n| \leq \frac{1}{2}|\mathbb{Z}_n^*|$, ale to je hrubý odhad,
+častěji bude $K_n$ daleko menší.
 \end{itemize}
 
 Fermatův test bere na vstupu testované číslo $n$ a svědka $a$.
@@ -326,24 +399,45 @@ fermat-test(n, a):
         return "určitě složené"
 \end{verbatim}
 
-\textbf{Př.:} Fermatovým testem ověřte, zda 21 je prvočíslo. Použijte svědky 8, 6 a 2.
+\textbf{Př.:} Fermatovým testem ověřte, zda 21 je prvočíslo. Použijte svědky 8,
+6 a 2.
 \begin{itemize}
-\item \texttt{fermat-test(21, 8) = "asi prvočíslo"}, protože $8^{20} = \cdots = 1 \mod 21$.  Pravděpodobnost chyby je nejvýš 1/2. Pokud bychom si to spočítali (našli řešení $x^{20} = 1$), uvidíme, že takové $x$ jsou čtyři (1, 8, 13, 20) a zabírají pětinu z celkových 20ti prvků. Pravděpodobnost omylu testu je tedy daleko nižší, a to 1/5.
-\item \texttt{fermat-test(21, 6) = "složené"}, protože $6^{20} = \cdots = 15 \neq 1 \mod 21$. Navíc když spočítáme gcd(21, 6) = 3, našli jsme jeden z faktorů.
-\item \texttt{fermat-test(21, 2) = "složené"}, protože $6^{20} = \cdots = 4\neq 1 \mod 21$. V tomto případě ale gcd(21, 2) = 1, takže nám to v hledání faktorů nepomohlo.
+\item \texttt{fermat-test(21, 8) = "asi prvočíslo"}, protože $8^{20} = \cdots =
+1 \mod 21$.  Pravděpodobnost chyby je nejvýš 1/2. Pokud bychom si to spočítali
+(našli řešení $x^{20} = 1$), uvidíme, že takové $x$ jsou čtyři (1, 8, 13, 20) a
+zabírají pětinu z celkových 20ti prvků. Pravděpodobnost omylu testu je tedy
+daleko nižší, a to 1/5.
+\item \texttt{fermat-test(21, 6) = "složené"}, protože $6^{20} = \cdots = 15
+\neq 1 \mod 21$. Navíc když spočítáme gcd(21, 6) = 3, našli jsme jeden z
+faktorů.
+\item \texttt{fermat-test(21, 2) = "složené"}, protože $6^{20} = \cdots = 4\neq
+1 \mod 21$. V tomto případě ale gcd(21, 2) = 1, takže nám to v hledání faktorů
+nepomohlo.
 \end{itemize}
 
 \subsection{Miller Rabinův test}
-Millerův test je složitější a přísnější než Fermatův v tom, že kromě výsledku výpočtu sleduje i jeho průběh. Využívá toho, že pokud je $p$ prvočíslo, pak má rovnice $a^2 = 1 \mod p$ pouze dvě řešení, a to $\pm 1$. To znamená, že nenajdeme žádnou netriviální odmocninu (triviální odmocnina jedničky je mínus jednička).
+Millerův test je složitější a přísnější než Fermatův v tom, že kromě výsledku
+výpočtu sleduje i jeho průběh. Využívá toho, že pokud je $p$ prvočíslo, pak má
+rovnice $a^2 = 1 \mod p$ pouze dvě řešení, a to $\pm 1$. To znamená, že
+nenajdeme žádnou netriviální odmocninu (triviální odmocnina jedničky je mínus
+jednička).
 
-Miller Rabinův test zavádí množinu svědků $L_n$, která vybírá z $K_n$ jen ty prvky, které při výpočtu prochází přes netriviální odmocninu z jedné. $L_n = \{ a \in \mathbb{Z}_n^*, a^{n-1} = 1, \text{a když } a^{t2^j} = 1, \text{pak } a^{t2^{j-1}} = \pm 1 \text{ pro } \forall 1 \leq j \leq h \}$.
+Miller Rabinův test zavádí množinu svědků $L_n$, která vybírá z $K_n$ jen ty
+prvky, které při výpočtu prochází přes netriviální odmocninu z jedné. $L_n = \{
+a \in \mathbb{Z}_n^*, a^{n-1} = 1, \text{a když } a^{t2^j} = 1, \text{pak }
+a^{t2^{j-1}} = \pm 1 \text{ pro } \forall 1 \leq j \leq h \}$.
 
-Máme liché testované číslo $n$ a rozložíme si $n-1 = t \cdot 2^h$ pro nějaké liché $t$. V Miller Rabinově testu se svědci taky mocní na $n-1$ jako ve Fermatově testu, ale mocní se postupně podle rozkladu a pozorují se mezivýsledky.
+Máme liché testované číslo $n$ a rozložíme si $n-1 = t \cdot 2^h$ pro nějaké
+liché $t$. V Miller Rabinově testu se svědci taky mocní na $n-1$ jako ve
+Fermatově testu, ale mocní se postupně podle rozkladu a pozorují se
+mezivýsledky.
 
-\textbf{Př.:} Miller Rabinovým testem ověřte, zda 21 je prvočíslo. Použijte svědka 8.
+\textbf{Př.:} Miller Rabinovým testem ověřte, zda 21 je prvočíslo. Použijte
+svědka 8.
 
 $$n = 21, n-1 = 20 = 5 \cdot 4  = 5 \cdot 2^2$$
-$$ 8 \xrightarrow{\text{mocníme na 5}} 8 \xrightarrow{\text{mocníme na 2}} 64 = 1 \xrightarrow{\text{mocníme na 2}} 1$$
+$$ 8 \xrightarrow{\text{mocníme na 5}} 8 \xrightarrow{\text{mocníme na 2}} 64 =
+1 \xrightarrow{\text{mocníme na 2}} 1$$
 
 \textit{V průběhu výpočtu jsme našli netriviální odmocninu jedné, a sice $8^2 = 64 = 1 \mod 21$ ($\sqrt{1} = 8$), a dle Miller Rabinova testu o prvočíslo nejde. Díky netriviální odmocnině můžeme faktorizovat: gcd(8+1, 21) = 3, gcd(8-1, 21) = 7.}
 
@@ -351,13 +445,21 @@ $$ 8 \xrightarrow{\text{mocníme na 5}} 8 \xrightarrow{\text{mocníme na 2}} 64 
 
 \section{Těžké matematické problémy}
 \subsection{Faktorizace čísel}
-Úloha faktorizace je složitá - snažíme se najít prvočíselný rozklad daného čísla $n$. Mohli bychom zkoušet dělit čísly až do $\sqrt{n}$, ale takové dělení by bylo pomalé (exponenciální). Rychleji se dá faktorizovat, pokud o $n$ něco víme, a nebo použitím SubExponenciálního faktorizačního algoritmu (SEF).
+Úloha faktorizace je složitá - snažíme se najít prvočíselný rozklad daného čísla
+$n$. Mohli bychom zkoušet dělit čísly až do $\sqrt{n}$, ale takové dělení by
+bylo pomalé (exponenciální). Rychleji se dá faktorizovat, pokud o $n$ něco víme,
+a nebo použitím SubExponenciálního faktorizačního algoritmu (SEF).
 
 \subsubsection{Faktorizace, když víme něco navíc}
 
-Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grupy platí, že každý prvek grupy umocněný na exponent grupy je jedna, proto to bude platit i o násobku exponentu grupy. Faktorizujeme tak, že najdeme netriviální odmocninu z jedné, tj $c^2 = 1$. Jiné zjednodušení využívá znalosti $\varphi(n) = p \cdot q$.
+Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grupy
+platí, že každý prvek grupy umocněný na exponent grupy je jedna, proto to bude
+platit i o násobku exponentu grupy. Faktorizujeme tak, že najdeme netriviální
+odmocninu z jedné, tj $c^2 = 1$. Jiné zjednodušení využívá znalosti $\varphi(n)
+= p \cdot q$.
 
-\textbf{Př.:} Faktorizujte číslo 187, o kterém víte, že je součinem dvou prvočísel a $\varphi(187) = 160$.
+\textbf{Př.:} Faktorizujte číslo 187, o kterém víte, že je součinem dvou
+prvočísel a $\varphi(187) = 160$.
 
 \textit{Označíme si použitá prvočísla jako $p$ a $q$. Jejich součin pak je $n = p \cdot q = 187$. Obdobně vyjádříme $\varphi(n) = 160 = (p-1)(q-1) = pq - p - q + 1 = n - p - q + 1 = 187 - p - q + 1$. Dalšími úpravami dostaneme vztah pro $p = 28 - q$ (vztah pro $q$ by byl obdobný). Toto dosadíme do vztahu $n = p\cdot q$ a dostaneme kvadratickou rovnici $q^2 - 28q + 187 = 0$, která má dvě řešení 11 a 17.}
 
@@ -365,18 +467,24 @@ Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grup
 
 \textit{Rozdělíme si $\varphi(n) = 1320 = 165 \cdot 2 \cdot 2 \cdot 2$ podobně jako při Miller Rabinově testu, a pokusíme se najít netriviální odmocninu jedné. Zvolme $a = 5$.}
 
-$$ 5 \xrightarrow{\text{mocníme na 165}} 804 \xrightarrow{\text{mocníme na 2}} 1 \xrightarrow{\text{mocníme na 2}} 1 \xrightarrow{\text{mocníme na 2}} 1$$
+$$ 5 \xrightarrow{\text{mocníme na 165}} 804 \xrightarrow{\text{mocníme na 2}} 1
+\xrightarrow{\text{mocníme na 2}} 1 \xrightarrow{\text{mocníme na 2}} 1$$
 
 \textit{Z netriviální odmocniny zkusíme najít gcd(804-1, 1771) = 11, tím máme jeden z faktorů. Ale $1771 = 11 \cdot 161$, a 161 dle testů není prvočíslo. Postup budeme opakovat, tentokrát v $\mathbb{Z}_{161}$ a zvolíme $a = 69$. Nejprve ale potřebujeme znát $\varphi(161)$, které získáme podílem jako $\varphi(161) = \frac{\varphi(1771)}{\varphi(11)} = 1320/10 = 132 = 33 \cdot 2 \cdot 2$.}
 
-$$69 \xrightarrow{\text{mocníme na 33}} 69 \xrightarrow{\text{mocníme na 2}} 92 \xrightarrow{\text{mocníme na 2}} 92$$
+$$69 \xrightarrow{\text{mocníme na 33}} 69 \xrightarrow{\text{mocníme na 2}} 92
+\xrightarrow{\text{mocníme na 2}} 92$$
 
 \textit{Nedostali jsme jedničku, tedy 69 a 161 jsou soudělné. Najdeme gcd(161, 69) = 23, tedy $161 = 23 \cdot 7$. Faktorizovali jsme $1771 = 7 \cdot 11 \cdot 23$.}
 
 \textit{Poznámka k té soudělnosti. Budeme řešit třeba $3^x = 1 \mod 15$. To upravíme na $3\cdot 3^{x-1} = 1 \mod 15$, pak označíme $3^{x-1} = m$ a získáme diofantickou rovnici $3m + 15k = 1$. A u diofantických rovnic platí, že levá strana musí být násobkem gcd koeficientů na pravé straně.}
 
 \subsubsection{Subexponenciální faktorizace (SEF)}
-Pro subexponenciální algoritmy SEF a SEDL (níže) je zásadní pojem \textit{y-hladkých} čísel. Pro nějaké kladné $y$ můžeme říct, že přirozené číslo $m$ je y-hladké, pokud všechna čísla v jeho prvočíselném rozkladu jsou menší nebo rovna $y$. Počet y-hladkých čísel od nuly do $x$ značíme $\psi(y, x)$. Do deseti najdeme sedm 3-hladkých čísel, jsou to: 1, 2, 3, 4, 5, 6 a 9.
+Pro subexponenciální algoritmy SEF a SEDL (níže) je zásadní pojem
+\textit{y-hladkých} čísel. Pro nějaké kladné $y$ můžeme říct, že přirozené číslo
+$m$ je y-hladké, pokud všechna čísla v jeho prvočíselném rozkladu jsou menší
+nebo rovna $y$. Počet y-hladkých čísel od nuly do $x$ značíme $\psi(y, x)$. Do
+deseti najdeme sedm 3-hladkých čísel, jsou to: 1, 2, 3, 4, 5, 6 a 9.
 
 Další důležitý pojem je \textit{subexponenciální} časová náročnost:
 \begin{itemize}
@@ -384,19 +492,34 @@ Další důležitý pojem je \textit{subexponenciální} časová náročnost:
 \item \textbf{Subexponenciální:} $O(2^{f(len(n))})$, kde $f(x)\in o(x)$
 \end{itemize}
 
-Složitost SEFu jde nějak vyjádřit vzorcem, ale ten vzorec je tak brutální, že nemá cenu se ho učit, natož ho sem psát.
+Složitost SEFu jde nějak vyjádřit vzorcem, ale ten vzorec je tak brutální, že
+nemá cenu se ho učit, natož ho sem psát.
 
-Na vstupu algoritmu SEF je parametr $y$ a nějaké přirozené $n$, které není prvočíslo ani jeho mocnina. Výstupem je faktor, nebo hláška neúspěch. 
+Na vstupu algoritmu SEF je parametr $y$ a nějaké přirozené $n$, které není
+prvočíslo ani jeho mocnina. Výstupem je faktor, nebo hláška neúspěch. 
 
 Algoritmus pracuje ve dvou fázích:
 
 \begin{enumerate}
-\item Najdeme $k$, totiž počet y-hladkých prvočísel, a označíme je $p_i$. Pak volíme různá $a$ a ověřujeme, zda jejich čtverce $a^2$ jsou y-hladké. Celkem potřebujeme získat $k+1$ takových čtverců.
-\item Čtverce rozložíme na prvočísla a uložíme si pro každý z nich vektor exponentů $\vec{v_i}$, a to nad $\mathbb{Z}_2$. Pak najdeme vektor koeficientů $\vec{c}$ tak, aby $\vec{v}_1c_1 + \vec{v}_2c_2  + \cdots + \vec{v}_{k+1}c_{k+1} = \vec{o}$. Podíváme=li se na $\vec{c}$ v  $\mathbb{Z}$, pak všechny složky jsou sudé. 
+\item Najdeme $k$, totiž počet y-hladkých prvočísel, a označíme je $p_i$. Pak
+volíme různá $a$ a ověřujeme, zda jejich čtverce $a^2$ jsou y-hladké. Celkem
+potřebujeme získat $k+1$ takových čtverců.
+\item Čtverce rozložíme na prvočísla a uložíme si pro každý z nich vektor
+exponentů $\vec{v_i}$, a to nad $\mathbb{Z}_2$. Pak najdeme vektor koeficientů
+$\vec{c}$ tak, aby $\vec{v}_1c_1 + \vec{v}_2c_2  + \cdots + \vec{v}_{k+1}c_{k+1}
+= \vec{o}$. Podíváme=li se na $\vec{c}$ v  $\mathbb{Z}$, pak všechny složky jsou
+sudé. 
 
-Vrátíme se k rozkladům čtverců, každou rovnost umocníme na příslušné $\vec{c}_i$, a navzájem je vynásobíme. Získáme součin $a^2 = p_1^{e_1} \cdot p_2^{e_2} \cdot \cdots \cdot p_{k+1}^{e_{k+1}}$ - tím, že koeficienty $c_i$ jsou 0 nebo 1 se do výsledku promítnou jen některé ze čtverců.
+Vrátíme se k rozkladům čtverců, každou rovnost umocníme na příslušné
+$\vec{c}_i$, a navzájem je vynásobíme. Získáme součin $a^2 = p_1^{e_1} \cdot
+p_2^{e_2} \cdot \cdots \cdot p_{k+1}^{e_{k+1}}$ - tím, že koeficienty $c_i$ jsou
+0 nebo 1 se do výsledku promítnou jen některé ze čtverců.
 
-Protože exponenty jsou sudé, můžeme je podělit dvěma: $b = p_1^{\frac{e_1}{2}} \cdot p_2^{\frac{e_2}{2}} \cdot \cdots \cdot p_{k+1}^{\frac{e_{k+1}}{2}}$. Tím máme $b$, pro které platí $a^2 = b^2$, a ze kterého získáme $(a\cdot b^{-1})^2 = 1$. To můžeme odmocnit a získáme $c$, druhou odmocninu z jedné: $c = a\cdot b^{-1}$.
+Protože exponenty jsou sudé, můžeme je podělit dvěma: $b = p_1^{\frac{e_1}{2}}
+\cdot p_2^{\frac{e_2}{2}} \cdot \cdots \cdot p_{k+1}^{\frac{e_{k+1}}{2}}$. Tím
+máme $b$, pro které platí $a^2 = b^2$, a ze kterého získáme $(a\cdot b^{-1})^2 =
+1$. To můžeme odmocnit a získáme $c$, druhou odmocninu z jedné: $c = a\cdot
+b^{-1}$.
 
 Pokud $c = \pm 1$, ohlásíme neúspěch.
 
@@ -430,13 +553,26 @@ V opačném případě je gcd($c \pm 1$, n) faktor.
 \end{enumerate}
 
 \subsubsection{Algoritmus kvadratického síta pro SEF (QSF)}
-Kvadratické síto urychluje algoritmus SEF tím, že v první fázi dokáže lépe generovat dobré čtverce. Pokud bychom generovali pouze čísla menší než $\sqrt{n}$, pak nikdy nepoužijeme modulo a SEF skončí s triviálním řešením. Označíme $m = \sqrt{n}$/ Chceme tedy generovat čísla z intervalu $\langle m, m + z \rangle$, kde $z$ je parametr síta. 
+Kvadratické síto urychluje algoritmus SEF tím, že v první fázi dokáže lépe
+generovat dobré čtverce. Pokud bychom generovali pouze čísla menší než
+$\sqrt{n}$, pak nikdy nepoužijeme modulo a SEF skončí s triviálním řešením.
+Označíme $m = \sqrt{n}$/ Chceme tedy generovat čísla z intervalu $\langle m, m +
+z \rangle$, kde $z$ je parametr síta. 
 
-V algoritmu budeme pracovat s číslem $s$, zajímá nás $F(s) = (s + m)^2 - n$, tedy vlastně zbytek po dělení. Takto získaný $F(s)$ je čtverec v $\mathbb{Z}_n$. Ještě ale potřebujeme zaručit y-hladkost, a to budeme taky dělat chytře. Najdeme první $s$, pro které je zbytek po dělení nula, a z vlastností $F(s)$ plyne, že nulový zbytek po dělení prvočíslem $p$ bude mít i $F(s + kp)$.
+V algoritmu budeme pracovat s číslem $s$, zajímá nás $F(s) = (s + m)^2 - n$,
+tedy vlastně zbytek po dělení. Takto získaný $F(s)$ je čtverec v $\mathbb{Z}_n$.
+Ještě ale potřebujeme zaručit y-hladkost, a to budeme taky dělat chytře. Najdeme
+první $s$, pro které je zbytek po dělení nula, a z vlastností $F(s)$ plyne, že
+nulový zbytek po dělení prvočíslem $p$ bude mít i $F(s + kp)$.
 
-Postup kvadratického síta pak vypadá tak, že začneme se $s$ z intervalu $\langle 1, z\rangle$, spočítáme jejich $F(s)$ a pak budeme postupně ověřovat dělitelnost prvočísly do $y$. Na konci algoritmu budeme vědět, která z čísel jsou y-hladká, a mělo by jich být dost pro SEF (tedy $k+1$). Pokud jich je málo, můžeme rozšířit tabulku o dalších $z$ čísel a algoritmus opakovat.
+Postup kvadratického síta pak vypadá tak, že začneme se $s$ z intervalu $\langle
+1, z\rangle$, spočítáme jejich $F(s)$ a pak budeme postupně ověřovat dělitelnost
+prvočísly do $y$. Na konci algoritmu budeme vědět, která z čísel jsou y-hladká,
+a mělo by jich být dost pro SEF (tedy $k+1$). Pokud jich je málo, můžeme
+rozšířit tabulku o dalších $z$ čísel a algoritmus opakovat.
 
-\textbf{Př.:} Najděte y-hladké čtverce pro algoritmus SEF pro faktorizaci čísla $n=403$ s parametry $y = 8$ a $z=8$.
+\textbf{Př.:} Najděte y-hladké čtverce pro algoritmus SEF pro faktorizaci čísla
+$n=403$ s parametry $y = 8$ a $z=8$.
 
 \textit{Vztah pro $F(s)$ je v tomto případě $F(s) = (s +\lfloor \sqrt{403} \rfloor)^2 - 403= (s + 20)^2 - 403$. Pro všechna $s$ si spočítáme hodnoty $V = F(s)$ a zapíšeme si je do pracovního řádku tabulky. V druhém řádku D si budeme udržovat prvočíselné rozklady. Vždy platí, že $F(s) = V(s) \cdot D(s)$.}
 
@@ -507,7 +643,8 @@ $F(s)$ & 38 & 81 & 126 & 173 & 222 & 273 & 326 & 381\\
 \hline
 V & 19 & 1 & 1 & 173 & 37 & 13 & 163 & 127\\
 \hline
-D & 2  & $3^4$ & $2\cdot 3^2 \cdot 7$  &         & $2\cdot 3$   &   $3 \cdot 7$   &  2    &  3 \\
+D & 2  & $3^4$ & $2\cdot 3^2 \cdot 7$  &         & $2\cdot 3$   &   $3 \cdot 7$
+&  2    &  3 \\
 \hline
 \end{tabular}
 \end{table}
@@ -515,19 +652,42 @@ D & 2  & $3^4$ & $2\cdot 3^2 \cdot 7$  &         & $2\cdot 3$   &   $3 \cdot 7$ 
 \textit{Prošli jsme všechna 8-hladká prvočísla, a 8-hladké čtverce jsou ty, které byly ve sloupcích, kde je teď $V = 1$, což jsou sloupce 2 a 3, $F(2) = 81$, $F(3) = 126$. K nim máme taky vektory exponentů $v_1 = (0, 4, 0, 0)$ a $v_2 = (1, 2, 0, 1)$. pro faktorizaci SEF ale potřebujeme takových vektorů pět. To bychom normálně řešili rozšířením tabulky o sloupce 9-16, ale to v tomto případě již nejde, protože $F(9) > 403$, a tedy rovnice, kde jsme dosud měli daný zbytek po dělení pouze odečtením, by neplatily. Nezbývá nám, než zkoušet generovat další čtverce tak, jako to dělá první fáze SEFu běžně.}
 
 \subsection{Problém diskrétního logaritmu}
-Nechť $G = \langle a \rangle$ je cyklická grupa řádu $n$ s generátorem $a$. Každý prvek $b \in G$ lze zapsat jako $b = a^x$ pro jediné $x \in \mathbb{Z}_n$. Toto $x$ se nazývá diskrétní logaritmus o základu $a$ z prvku $b$ v grupě $G$. Značí se $\text{dlog}_a (b)$. Někdy se o diskrétním logaritmu mluví obecněji pro libovolné $a \in G$, ne nutně generátor. Pak pokud $b \notin \langle a \rangle$, není $\text{dlog}_a (b)$ definován.
+Nechť $G = \langle a \rangle$ je cyklická grupa řádu $n$ s generátorem $a$.
+Každý prvek $b \in G$ lze zapsat jako $b = a^x$ pro jediné $x \in \mathbb{Z}_n$.
+Toto $x$ se nazývá diskrétní logaritmus o základu $a$ z prvku $b$ v grupě $G$.
+Značí se $\text{dlog}_a (b)$. Někdy se o diskrétním logaritmu mluví obecněji pro
+libovolné $a \in G$, ne nutně generátor. Pak pokud $b \notin \langle a \rangle$,
+není $\text{dlog}_a (b)$ definován.
 
-V kryptografii se dlog používá tam, kde to je exponenciální nebo subexponenciální problém, tj v $\mathbb{Z}_p^*$ a jejich podgrupy, nebo pro grupy eliptických křivek. V aditivních grupách jde dlog vyjádřit jako lineární rovnici a řešit rozšířeným euklidem, proto se k šifrování nepoužívá. Nejznámější algoritmy na principu dlog je Diffie-Hellmanova výměna klíče a ElGamalovo šifrování.
+V kryptografii se dlog používá tam, kde to je exponenciální nebo
+subexponenciální problém, tj v $\mathbb{Z}_p^*$ a jejich podgrupy, nebo pro
+grupy eliptických křivek. V aditivních grupách jde dlog vyjádřit jako lineární
+rovnici a řešit rozšířeným euklidem, proto se k šifrování nepoužívá. Nejznámější
+algoritmy na principu dlog je Diffie-Hellmanova výměna klíče a ElGamalovo
+šifrování.
 
-Diskrétní logaritmus jde řešit hrubou silou se složitostí $O(2^{len(n)})$, algoritmem Baby-step Giant-step s časovou složitostí $O(2^{\frac{1}{2}len(n)})$ násobení (ale máme i stejnou paměťovou složitost) a subexponenciálním algoritmem SEDL. Pokud navíc známe rozklad $n$, můžeme použít Pohling-Hellmanův algoritmus.
+Diskrétní logaritmus jde řešit hrubou silou se složitostí $O(2^{len(n)})$,
+algoritmem Baby-step Giant-step s časovou složitostí $O(2^{\frac{1}{2}len(n)})$
+násobení (ale máme i stejnou paměťovou složitost) a subexponenciálním algoritmem
+SEDL. Pokud navíc známe rozklad $n$, můžeme použít Pohling-Hellmanův algoritmus.
 
 \subsubsection{Baby-step Giant-step}
-Zvolíme aproximaci $m = \sqrt{n}$ a $m' = [ \frac{n}{m}]$ a zapíšeme $x = \text{dlog}_a (b) = vm + u$, kde $0 \leq u < m$, $0 \leq v \leq m'$. Rovnici diskrétního logaritmu pak můžeme upravit: z $b = a^x = a^{vm + u}$ dostaneme vztah $b\cdot (a^{-m})^v = a^u$. Abychom se vyhnuli hledání inverze, spočítáme $b\cdot (a^{-m})^v = b\cdot (a^{n-m})^v$. Při běhu algoritmu budeme počítat levou a pravou stranu odděleně. 
+Zvolíme aproximaci $m = \sqrt{n}$ a $m' = [ \frac{n}{m}]$ a zapíšeme $x =
+\text{dlog}_a (b) = vm + u$, kde $0 \leq u < m$, $0 \leq v \leq m'$. Rovnici
+diskrétního logaritmu pak můžeme upravit: z $b = a^x = a^{vm + u}$ dostaneme
+vztah $b\cdot (a^{-m})^v = a^u$. Abychom se vyhnuli hledání inverze, spočítáme
+$b\cdot (a^{-m})^v = b\cdot (a^{n-m})^v$. Při běhu algoritmu budeme počítat
+levou a pravou stranu odděleně. 
 
 \begin{enumerate}
-\item \textbf{Pravá strana}: Spočítáme si baby-steps ($a^i$) pro všechna i od nuly do m a uložíme si je.
-\item\textbf{Levá strana}: Počítáme giant-steps ($b\cdot (a^{n-m})^j$) pro všechna j on nuly do m, a po každém výpočtu se díváme do uložených výsledků, jestli máme shodu. Shoda znamená, že i a j jsou řešením pro u, v ve vztahu $b\cdot (a^{n-m})^v = a^u$.
-\item \textbf{Kompletace výsledků}: Jakmile známe u a v, najdeme řešení x snadno podle: $x = vm + u$.
+\item \textbf{Pravá strana}: Spočítáme si baby-steps ($a^i$) pro všechna i od
+nuly do m a uložíme si je.
+\item\textbf{Levá strana}: Počítáme giant-steps ($b\cdot (a^{n-m})^j$) pro
+všechna j on nuly do m, a po každém výpočtu se díváme do uložených výsledků,
+jestli máme shodu. Shoda znamená, že i a j jsou řešením pro u, v ve vztahu
+$b\cdot (a^{n-m})^v = a^u$.
+\item \textbf{Kompletace výsledků}: Jakmile známe u a v, najdeme řešení x snadno
+podle: $x = vm + u$.
 \end{enumerate}
 
 \textbf{Př.:} Vyřešte $x = \text{dlog}_2 (7)$ v $\mathbb{Z}_{37}^*$.
@@ -551,17 +711,33 @@ $7\cdot 11^v$ & 7 & 3 & 33 & 30 & 34 & \textbf{4} & ??? \\
 \textit{Poslední prvek posledního řádku nemusíme počítat, shodu jsme našli pro $u=2$ a $v=5$, tj $7\cdot 11^5 = 2^2 = 4$, rovnice platí. Řešení je $x = \text{dlog}_2 (7) = vm + u = 5\cdot6 + 2 = 30 + 2 = 32$. }
 
 \subsubsection{Pohling-Hellman}
-Pohling-Hellmanův algoritmus můžeme použít na hledání diskrétního logaritmu v cyklické grupě $G$ řádu $n$ s generátorem $s$, pokud známe rozklad čísla $n$. Označíme $|G| = n = \prod_{i=1}^k p_i^{e_i}$ pro prvočísla $p_i$.  Budeme řešit diskrétní logaritmus v podgrupách řádu $p_i^{e_i}$ a výsledky spojíme pomocí čínské věty o zbytcích. Pokud je $n$ prvočíslo, pak musíme použít např. baby step giant step algoritmus. Pokud je $n$ mocnina prvočísla, můžeme postupovat rekurzivně (viz příklad).
+Pohling-Hellmanův algoritmus můžeme použít na hledání diskrétního logaritmu v
+cyklické grupě $G$ řádu $n$ s generátorem $s$, pokud známe rozklad čísla $n$.
+Označíme $|G| = n = \prod_{i=1}^k p_i^{e_i}$ pro prvočísla $p_i$.  Budeme řešit
+diskrétní logaritmus v podgrupách řádu $p_i^{e_i}$ a výsledky spojíme pomocí
+čínské věty o zbytcích. Pokud je $n$ prvočíslo, pak musíme použít např. baby
+step giant step algoritmus. Pokud je $n$ mocnina prvočísla, můžeme postupovat
+rekurzivně (viz příklad).
 
 \textbf{Př.:} Vyřešte $x = \text{dlog}_2 (7)$ v $\mathbb{Z}_{37}^*$.
 
-Protože známe rozklad velikosti grupy: $|\mathbb{Z}_{37}^*| = 36 = 4 \cdot 9 = 2^2 \cdot 3^2$. Problém budeme řešit v 4 a 9ti prvkových podgrupách. Když máme cyklickou grupu řádu 36, pak generátor (2) na 36 je jedna. Pokud umocníme generátor na 4, dostaneme generátor devítiprvkové podgrupy, ve které stále počítáme mod 37, ale exponenty jsou mod 9, protože velikost podgrupy je 9.
+Protože známe rozklad velikosti grupy: $|\mathbb{Z}_{37}^*| = 36 = 4 \cdot 9 =
+2^2 \cdot 3^2$. Problém budeme řešit v 4 a 9ti prvkových podgrupách. Když máme
+cyklickou grupu řádu 36, pak generátor (2) na 36 je jedna. Pokud umocníme
+generátor na 4, dostaneme generátor devítiprvkové podgrupy, ve které stále
+počítáme mod 37, ale exponenty jsou mod 9, protože velikost podgrupy je 9.
 
 \begin{enumerate}
-\item V podgrupě velikosti 9: Rovnici $2^x = 7$ umocníme na 4, abychom se dostali do devítiprvkové podgrupy: $2^{4x} = 7^4$, což je $16^x = 33$. Tohle můžeme řešit dvěma způsoby:
+\item V podgrupě velikosti 9: Rovnici $2^x = 7$ umocníme na 4, abychom se
+dostali do devítiprvkové podgrupy: $2^{4x} = 7^4$, což je $16^x = 33$. Tohle
+můžeme řešit dvěma způsoby:
 \begin{itemize}
-\item Algoritmem Baby-step giant-step: Velikost podgrupy je 9, proto $m = \sqrt{9} = 3$. Vyjádříme $x$ jako $x = 3v + u$ a upravujeme rovnici. Protože jsme v podgrupě velikosti 9, víme, že $a^{-3} = a^{9-3} = a^6$.
-$$16^{3v+u} = 33 \xrightarrow{}16^{3v}16^u = 33 \xrightarrow{}16^u = 33\cdot 16^{-3v} \xrightarrow{} 16^u = 33\cdot 16^{6v} \xrightarrow{}16^u = 33\cdot 10^v$$
+\item Algoritmem Baby-step giant-step: Velikost podgrupy je 9, proto $m =
+\sqrt{9} = 3$. Vyjádříme $x$ jako $x = 3v + u$ a upravujeme rovnici. Protože
+jsme v podgrupě velikosti 9, víme, že $a^{-3} = a^{9-3} = a^6$.
+$$16^{3v+u} = 33 \xrightarrow{}16^{3v}16^u = 33 \xrightarrow{}16^u = 33\cdot
+16^{-3v} \xrightarrow{} 16^u = 33\cdot 16^{6v} \xrightarrow{}16^u = 33\cdot
+10^v$$
 
 \begin{table}[h!]
 \centering
@@ -579,40 +755,83 @@ $33\cdot 10^v$ & 33 & \textbf{34} & ??? & ??? \\
 
 Z tabulky je zřejmé, že $x = 3v + u = 3\cdot 1 + 2 = 5$.
 
-\item S využitím toho, že máme exponent prvočísla: $x$ si vyjádříme následovně: $x = \cdots + p^3x_3 + p^2x_2 + px_1 + x_0$. Protože pracujeme s $3^2$, bude naše rovnice vypadat $x = 3x_1 + x_0$, kde $x_i$ jsou ze $\mathbb{Z}_{3}$, pomocí toho dokážeme vyjádřit jakékoliv $x$ menší než $3^2$. Opět řešíme $16^x = 33$, což si rozepíšeme:  $16^{3x_1 + x_0} = 33$. Rovnici pak celou umocníme na násobek trojky tak, aby jediná neznámá zůstala $x_0$. 
+\item S využitím toho, že máme exponent prvočísla: $x$ si vyjádříme následovně:
+$x = \cdots + p^3x_3 + p^2x_2 + px_1 + x_0$. Protože pracujeme s $3^2$, bude
+naše rovnice vypadat $x = 3x_1 + x_0$, kde $x_i$ jsou ze $\mathbb{Z}_{3}$,
+pomocí toho dokážeme vyjádřit jakékoliv $x$ menší než $3^2$. Opět řešíme $16^x =
+33$, což si rozepíšeme:  $16^{3x_1 + x_0} = 33$. Rovnici pak celou umocníme na
+násobek trojky tak, aby jediná neznámá zůstala $x_0$. 
 
-$$ 16^{3x_1 + x_0} = 33  \xrightarrow{\text{Mocníme na 3}} 16^{9x_1 + 3x_0} = 33^3 \xrightarrow{} 26^{x_0} = 10$$
+$$ 16^{3x_1 + x_0} = 33  \xrightarrow{\text{Mocníme na 3}} 16^{9x_1 + 3x_0} =
+33^3 \xrightarrow{} 26^{x_0} = 10$$
 
-Protože jsme v $\mathbb{Z}_{3}$, vyřešíme získanou rovnici hrubou silou, máme $x_0 = 2$. Do vztahu pro $x$ dosadíme právě získanou hodnotu a pokračujeme ve výpočtu. Tentokrát již nám zbývá pouze jedna neznámá:
+Protože jsme v $\mathbb{Z}_{3}$, vyřešíme získanou rovnici hrubou silou, máme
+$x_0 = 2$. Do vztahu pro $x$ dosadíme právě získanou hodnotu a pokračujeme ve
+výpočtu. Tentokrát již nám zbývá pouze jedna neznámá:
 
-$$ 16^{3x_1 + 2} = 33  \xrightarrow{} 16^{3x_1} = 26 \xrightarrow{} 26^{x_1} = 26$$
+$$ 16^{3x_1 + 2} = 33  \xrightarrow{} 16^{3x_1} = 26 \xrightarrow{} 26^{x_1} =
+26$$
 
 Řešení je zjevně $x_1 = 1$, a získali jsme $x = 3x_1 + x_0 = 3 + 2 = 5$.
 \end{itemize}
-\item V podgrupě velikosti 4: Abychom se dostali do čtyřprvkové podgrupy, umocníme rovnici na devátou: $2^x = 7 \rightarrow{} 31^x = 1$. Teď můžeme opět použít jeden ze dvou postupů výše, nebo to vyřešit z hlavy, kde $x = 0 = 4 \mod 4$.
+\item V podgrupě velikosti 4: Abychom se dostali do čtyřprvkové podgrupy,
+umocníme rovnici na devátou: $2^x = 7 \rightarrow{} 31^x = 1$. Teď můžeme opět
+použít jeden ze dvou postupů výše, nebo to vyřešit z hlavy, kde $x = 0 = 4 \mod
+4$.
 \end{enumerate}
 
-Výsledek v $\mathbb{Z}_{37}^*$ získáme pomocí čínské věty o zbytcích: máme dvě rovnice: $x = 5 \mod 9$ a $x = 0 \mod 4$. Koeficient $q_9$ může být třeba 28, a protože druhá rovnice je nulová, druhý koeficient vůbec nepotřebujeme. $x = 5\cdot q_9 = 5\cdot 28 = 140 = 32 \mod 36$. Našli jsme řešení $\text{dlog}_2(7) = 32$.
+Výsledek v $\mathbb{Z}_{37}^*$ získáme pomocí čínské věty o zbytcích: máme dvě
+rovnice: $x = 5 \mod 9$ a $x = 0 \mod 4$. Koeficient $q_9$ může být třeba 28, a
+protože druhá rovnice je nulová, druhý koeficient vůbec nepotřebujeme. $x =
+5\cdot q_9 = 5\cdot 28 = 140 = 32 \mod 36$. Našli jsme řešení $\text{dlog}_2(7)
+= 32$.
 
 \subsubsection{SEDL}
-SEDL (subexponenciální diskrétní logaritmus) funguje díky \textit{vnitřnímu direktnímu součinu}:
+SEDL (subexponenciální diskrétní logaritmus) funguje díky \textit{vnitřnímu
+direktnímu součinu}:
 
-Máme grupu $\mathbb{Z}_p^*$, kde řád grupy jde vyjádřit jako $|\mathbb{Z}_p^*| = q\cdot m$ pro nějaké prvočíslo $q$ a složené číslo $m$, která jsou nesoudělná. Máme tedy podgrupu $G$, kde $|G| = q$, a podgrupu $H$, kde $|H| = m$. Řekneme, že $\mathbb{Z}_p^*$ je vnitřní direktní součin podgrup $G$ a $H$, pokud průnik podgrup je jeden (a to jednička) a součiny všech prvků z $G$ a $H$ poskládají dohromady $\mathbb{Z}_p^*$. Zjednodušeně se pak dá říct, že každý prvek $z \in \mathbb{Z}_p^*$ jde zapsat jako $z = g\cdot h$, kde $g \in G$ a $h \in H$.
+Máme grupu $\mathbb{Z}_p^*$, kde řád grupy jde vyjádřit jako $|\mathbb{Z}_p^*| =
+q\cdot m$ pro nějaké prvočíslo $q$ a složené číslo $m$, která jsou nesoudělná.
+Máme tedy podgrupu $G$, kde $|G| = q$, a podgrupu $H$, kde $|H| = m$. Řekneme,
+že $\mathbb{Z}_p^*$ je vnitřní direktní součin podgrup $G$ a $H$, pokud průnik
+podgrup je jeden (a to jednička) a součiny všech prvků z $G$ a $H$ poskládají
+dohromady $\mathbb{Z}_p^*$. Zjednodušeně se pak dá říct, že každý prvek $z \in
+\mathbb{Z}_p^*$ jde zapsat jako $z = g\cdot h$, kde $g \in G$ a $h \in H$.
 
-SEDL obdobně jako SEF používá y-hladkost čísel a pracuje ve dvou fázích. Pokud je y-hladkých čísel $k$, pak budeme hledat $k+1$ hodnot a pracovat s nimi. 
+SEDL obdobně jako SEF používá y-hladkost čísel a pracuje ve dvou fázích. Pokud
+je y-hladkých čísel $k$, pak budeme hledat $k+1$ hodnot a pracovat s nimi. 
 
 \begin{enumerate}
-\item Hledáme $k+1$ y-hladkých čísel ze $\mathbb{Z}_p^*$ ve tvaru $z_i = a^{s_i}\cdot b^{t_i}\cdot h_i$. Přitom $a$, $b$ máme dané (dlog$_a(b)$), $s_i$, $t_i$ volíme náhodně ze  $\mathbb{Z}_q$ a $h_i$ volíme náhodně z $H$. Pokud nevíme, jak $H$ vypadá, můžeme vzít libovolný prvek z  $\mathbb{Z}_p^*$ a umocnit ho na $q$, tím se dostaneme do $H$. Pokud máme y-hladké $z_i$, vyjádříme si ho jako vektor exponentů, stejně jako se to dělalo u SEFu: $z_i = p_1^{e_{i1}}p_2^{e_{i2}}\cdots p_k^{e_{ik}}$, $\vec{v_i} = (e_{i1}, e_{i2}, \cdots, e_{ik})$.
-\item Najdeme vektor koeficientů $\vec{c}$ tak, aby $\vec{v}_1c_1 + \vec{v}_2c_2  + \cdots + \vec{v}_{k+1}c_{k+1} = \vec{o}$. Každou z rovnic umocníme na koeficienty a tím získáme jednu rovnici. Na levé straně máme nové hodnoty $s$, $t$ a $h$, které vyjdou následovně:
+\item Hledáme $k+1$ y-hladkých čísel ze $\mathbb{Z}_p^*$ ve tvaru $z_i =
+a^{s_i}\cdot b^{t_i}\cdot h_i$. Přitom $a$, $b$ máme dané (dlog$_a(b)$), $s_i$,
+$t_i$ volíme náhodně ze  $\mathbb{Z}_q$ a $h_i$ volíme náhodně z $H$. Pokud
+nevíme, jak $H$ vypadá, můžeme vzít libovolný prvek z  $\mathbb{Z}_p^*$ a
+umocnit ho na $q$, tím se dostaneme do $H$. Pokud máme y-hladké $z_i$, vyjádříme
+si ho jako vektor exponentů, stejně jako se to dělalo u SEFu: $z_i =
+p_1^{e_{i1}}p_2^{e_{i2}}\cdots p_k^{e_{ik}}$, $\vec{v_i} = (e_{i1}, e_{i2},
+\cdots, e_{ik})$.
+\item Najdeme vektor koeficientů $\vec{c}$ tak, aby $\vec{v}_1c_1 + \vec{v}_2c_2
++ \cdots + \vec{v}_{k+1}c_{k+1} = \vec{o}$. Každou z rovnic umocníme na
+koeficienty a tím získáme jednu rovnici. Na levé straně máme nové hodnoty $s$,
+$t$ a $h$, které vyjdou následovně:
 \begin{itemize}
 \item $s = \sum_{i=1}^k s_i \cdot c_i \mod q$
 \item $t = \sum_{i=1}^k t_i \cdot c_i \mod q$
 \item $h = \prod_{i=1}^k h_i^{c_i} \mod q$
 \end{itemize}
-Na pravé straně vyjde součin mocnin y-hladkých prvočísel. Rovnici upravíme na tvar $a^s\cdot b^t = h^{-1}\cdot p_1^{e_1}\cdot p_2^{e_2}\cdots p_k^{e_k}$, kde na levé straně je prvek z $G$ a na pravé straně prvek z $H$. Jejich jediným průnikem je ale díky vnitřnímu direktnímu součinu jednička. Ta vyjde výpočtem na pravé straně: $a^s\cdot b^t = 1$. Pokud $t=0$, byl algoritmus neúspěšný, protože reprezentace jedničky je triviální. V opačném případě můžeme snadno dopočítat dlog$_a(b) = -s \cdot t^{-1}$ v $\mathbb{Z}_q$.
+Na pravé straně vyjde součin mocnin y-hladkých prvočísel. Rovnici upravíme na
+tvar $a^s\cdot b^t = h^{-1}\cdot p_1^{e_1}\cdot p_2^{e_2}\cdots p_k^{e_k}$, kde
+na levé straně je prvek z $G$ a na pravé straně prvek z $H$. Jejich jediným
+průnikem je ale díky vnitřnímu direktnímu součinu jednička. Ta vyjde výpočtem na
+pravé straně: $a^s\cdot b^t = 1$. Pokud $t=0$, byl algoritmus neúspěšný, protože
+reprezentace jedničky je triviální. V opačném případě můžeme snadno dopočítat
+dlog$_a(b) = -s \cdot t^{-1}$ v $\mathbb{Z}_q$.
 \end{enumerate}
 
-\textbf{Př.:} Vyřešte $x = \text{dlog}_4 (12)$ v $\mathbb{Z}_{23}^*$ algoritmem SEDL, když víte, že $G = \langle 4 \rangle$ je jedenáctiprvková podgrupa $\mathbb{Z}_{23}^*$ a $|\mathbb{Z}_{23}^*| = 22 = 11 \cdot 2$. Použijte parametr hladkosti $y = 4$.
+\textbf{Př.:} Vyřešte $x = \text{dlog}_4 (12)$ v $\mathbb{Z}_{23}^*$ algoritmem
+SEDL, když víte, že $G = \langle 4 \rangle$ je jedenáctiprvková podgrupa
+$\mathbb{Z}_{23}^*$ a $|\mathbb{Z}_{23}^*| = 22 = 11 \cdot 2$. Použijte parametr
+hladkosti $y = 4$.
 
 \textit{Při parametru hladkosti 4 budeme mít dvě prvočísla, a to 2 a 3. Potřebujeme najít 3 rovnice ve tvaru $z_i = 4^{s_i}\cdot 12^{t_i}\cdot h_i$, kde $s_i$ a $t_i$ jsou z $\mathbb{Z}_{11}$ a $h_i$ je z $H = \{1, -1\}$.}
 
@@ -631,23 +850,19 @@ Na pravé straně vyjde součin mocnin y-hladkých prvočísel. Rovnici upravím
 
 \[ \left( \begin{array}{ccc}
 3 & 2 & 0\\
-0 & 1 & 2
-\end{array} \right)
+0 & 1 & 2 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc}
 1 & 8 & 0\\
-0 & 1 & 2
-\end{array} \right)
+0 & 1 & 2 \end{array} \right)
 %
 \sim
 %
 \left( \begin{array}{ccc}
 1 & 0 & 6\\
-0 & 1 & 2
-\end{array} \right)
-\]
+0 & 1 & 2 \end{array} \right) \]
 
 \textit{Chceme najít takové koeficienty pro sloupce, aby součet na řádku byl nula. To splňují třeba $c_1 = -6 = 5$, $c_2 = -2 = 9$ a $c_3 = 1$.  Rovnice umocníme na tyto exponenty:}
 
