@@ -7,11 +7,17 @@
 \usepackage{amssymb}
 \usepackage{delarray}
 
+% exercises and solutions
+\usepackage{mdframed}
+\newmdenv[topline=false, bottomline=false, skipabove=\topsep, rightline=false,
+  skipbelow=\topsep]{exercise}
+
 % graphs
 \usepackage{tikz}
 \usetikzlibrary[topaths]
 
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
 \title{B4M01MKR - Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování.}
 \date{}
 \begin{document}
@@ -55,7 +61,7 @@ jednoznačné. Když je $r$ (zbytek) nulový, řekneme, že $a$ je dělitelné $
 reflexivní, tranzitivní a antisymetrická, dá se znázornit Hasseho diagramem
 (Obrázek \ref{fig:hasse}).
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \label{fig:hasse}
 \centering
 \begin{tikzpicture}
@@ -113,7 +119,9 @@ tak, že rozkládá $a$ jako $a = qb + r$, a dokud je zbytek $r$ nenulový,
 rekurzivně spouští $gcd(b,r)$. Výhodné je použít místo tohoto postupu výpočet
 přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
 
-\textbf{Př.:} Euklidovým algoritmem chceme najít $gcd(260, 84)$.
+\begin{exercise}
+
+\textbf{Př.:} Najděte $gcd(260, 84)$ s použitím Euklidova aloritmu.
 
 \begin{center}
 \begin{tikzpicture}; \node (A) at (0, 0) {$gcd(260, 84) = 4$}; \node (B) at (0,
@@ -134,9 +142,13 @@ přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
 \end{tikzpicture}
 \end{center}
 
-\textit{Jakmile získáme $r = 0$, tak víme, že hodnota GCD je uložena v $b$. V tomto případě $gcd(260, 84) = 4$.}
+Jakmile získáme $r = 0$, tak víme, že hodnota GCD je uložena v $b$. V tomto
+případě $gcd(260, 84) = 4$.
 
-\textbf{Př.:} Chceme najít $gcd(260, 84)$ maticově.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Př.:} Najděte $gcd(260, 84)$ maticově.
 
 \[ \left( \begin{array}{cc|c}
 1 & 0 & 260\\
@@ -160,7 +172,10 @@ přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
 21 & -65 & 0\\
 -10 & 31 & 4 \end{array} \right) \]
 
-\textit{Maticové řešení je podrobněji popsané níže u diofantických rovnic. Kromě toho, že jsme našli řešení, máme i jiné užitečné vztahy, a sice vyjádření nuly: $21 \cdot 260 - 65 \cdot 84 = 0$ a vyjádření GCD: $-10 \cdot 260 + 31 \cdot 84 = 4$. Maticový výpočet se hodí, když hledáme GCD více čísel najednou:}
+Maticové řešení je podrobněji popsané níže u diofantických rovnic. Kromě toho,
+že jsme našli řešení, máme i jiné užitečné vztahy, a sice vyjádření nuly: $21
+\cdot 260 - 65 \cdot 84 = 0$ a vyjádření GCD: $-10 \cdot 260 + 31 \cdot 84 = 4$.
+Maticový výpočet se hodí, když hledáme GCD více čísel najednou:
 
 \[ \left( \begin{array}{ccc|c}
 1 & 0 & 0 & 90\\
@@ -206,6 +221,7 @@ přes úpravy matic, kde dostaneme navíc koeficienty pro Bezoutovu větu.
 11 & 0 & -5 & 0\\
 -5 & -1 & 3 &  2\\
 33 & 7 & -20 &  0 \end{array} \right) \]
+\end{exercise}
 
 \subsubsection{Bezoutova věta}
 \textbf{Bezoutova věta} říká, že největší společný dělitel jde zapsat jako vztah
@@ -216,9 +232,14 @@ $a,b$, tedy: $gcd(a, b) = sa + tb$, kde $s,t$ jsou celá čísla.
 \mathbb{Z}$. Diofantická rovnice má řešení, právě když $gcd(a,b) \mid c$. Řešení
 má partikulární a homogenní část.
 
-\textbf{Př.:} V $\mathbb{Z}_{45}$ chceme řešit rovnici $12x = 6$.
+\begin{exercise}
+    
+\textbf{Př.:} V $\mathbb{Z}_{45}$ řešte rovnici $12x = 6$.
 
-\textit{Rovnici si nejprve převedeme na diofantickou, tj dostaneme $12x + 45y = 6$. Vyrobíme si jednotkovou matici o dvou sloupcích, kde první sloupec odpovídá neznámé $x$ a druhý sloupec neznámé $y$. Příslušné hodnoty v rovnici napíšeme do pravého sloupce a matici upravíme.}
+Rovnici si nejprve převedeme na diofantickou, tj dostaneme $12x + 45y = 6$.
+Vyrobíme si jednotkovou matici o dvou sloupcích, kde první sloupec odpovídá
+neznámé $x$ a druhý sloupec neznámé $y$. Příslušné hodnoty v rovnici napíšeme do
+pravého sloupce a matici upravíme.
 \[ \left( \begin{array}{cc|c}
 1 & 0 & 12\\
 0 & 1 & 45 \end{array} \right)
@@ -233,10 +254,19 @@ má partikulární a homogenní část.
 %
 \left( \begin{array}{cc|c}
 -15 & 4 & 0\\
--4 & 1 & -3 \end{array} \right) \]
-\textit{Úpravy skončí, když se v pravém sloupci objeví nula. Druhá hodnota je největší společný dělitel čísel 12 a 45, po přenásobení řádku $-1$ vidíme, že $gcd(12,45)=3$. Protože $3 \mid 6$, bude mít diofantická rovnice řešení.}
+-4 & 1 & -3 \end{array} \right) \] Úpravy skončí, když se v pravém sloupci
+objeví nula. Druhá hodnota je největší společný dělitel čísel 12 a 45, po
+přenásobení řádku $-1$ vidíme, že $gcd(12,45)=3$. Protože $3 \mid 6$, bude mít
+diofantická rovnice řešení.
 
-\textit{Máme homogenní řešení $12\times(-15) + 45\times 4 = 0$ a partikulární řešení $12\times4 + 45\times(-1) = 3$. Druhou rovnici ale musíme vynásobit dvěma, abychom dostali na pravé straně 6 (odtud požadavek, aby $3\mid6$), tím dostaneme partikulární řešení $12\times8 + 45\times(-2) = 6$. Řešení se zapisuje ve tvaru $(x,y) = (x_p,y_p) + k(x_0,y_0)$, a řešení diofantické rovnice je $(x,y) = (8, -2) + k(-15,4)$. V zadání jsme ale měli řešit pouze rovnici pro $x$, a tak výsledek je $x = 8 - 15k$.}
+Máme homogenní řešení $12\times(-15) + 45\times 4 = 0$ a partikulární řešení
+$12\times4 + 45\times(-1) = 3$. Druhou rovnici ale musíme vynásobit dvěma,
+abychom dostali na pravé straně 6 (odtud požadavek, aby $3\mid6$), tím dostaneme
+partikulární řešení $12\times8 + 45\times(-2) = 6$. Řešení se zapisuje ve tvaru
+$(x,y) = (x_p,y_p) + k(x_0,y_0)$, a řešení diofantické rovnice je $(x,y) = (8,
+-2) + k(-15,4)$. V zadání jsme ale měli řešit pouze rovnici pro $x$, a tak
+výsledek je $x = 8 - 15k$.
+\end{exercise}
 
 \subsection{Grupy}
 Máme množinu $A$ a operaci $\cdot$~. Dvojice $(A,\cdot)$ je grupa, pokud:
@@ -308,8 +338,12 @@ Euler-Fermatova věta se používá při počítání velkých mocnin, protože 
 zmenšit exponent.
 
 \subsection{Algoritmus opakovaných čtverců}
+
 Algoritmus opakovaných čtverců taky zrychluje počítání mocnin. Fungování je
-nejlépe vidět na příkladu, spočítáme $5^{17}$ v $\mathbb{Z}_{27}$.
+nejlépe vidět na příkladu.
+
+\begin{exercise}
+\textbf{Př.:} Spočítejte $5^{17}$ v $\mathbb{Z}_{27}$.
 \begin{enumerate}
 \item Exponent napíšeme jako binární číslo:\\ $17 = 16 + 1 = 10001_{bin}$
 \item Do mezer mezi cifry vložíme znak $S$, nuly smažeme, jedničky nahradíme
@@ -321,6 +355,7 @@ $1XSSSSX \rightarrow 5SSSSX \rightarrow 25SSSX = -2SSSX \rightarrow 4SSX
 \rightarrow 16SX \rightarrow 256X = 13X \rightarrow 65 = 11$ v
 $\mathbb{Z}_{27}$.
 \end{enumerate}
+\end{exercise}
 
 \subsection{Čínská věta o zbytcích}
 Díky čínské větě umíme řešit soustavy rovnic. Mějme po dvou nesoudělná přirozená
@@ -338,8 +373,9 @@ n_i$. Tato soustava určitě bude mít řešení, protože $n_i$ jsou nesouděln
 
 Řešení soustavy pak je $x = \sum_{i=1}^{k}q_ia_i$.
 
-Př.: Řešte soustavu: $x \equiv 2 \mod 4$, $x \equiv 0 \mod 5$, $x \equiv 1 \mod
-9$, $x \equiv 2 \mod 11$.
+\begin{exercise}
+\textbf{Př.:} Řešte soustavu: $x \equiv 2 \mod 4$, $x \equiv 0 \mod 5$, $x
+\equiv 1 \mod 9$, $x \equiv 2 \mod 11$.
 
 Spočítáme koeficient $q$ pro modul 4. $q_4 = 5\cdot9\cdot11\cdot t = 495t$.
 Chceme, aby $495t \equiv 1 \mod 4$, což si můžeme ještě upravit na $3t \equiv 1
@@ -350,6 +386,8 @@ dostaneme $q_5 = 396$, $q_9 = 1540$, $q_{11} = 540$.
 Z koeficientů dostaneme výsledek: $x = 2q_4 + 0q_5 + 1q_9 + 2q_{11} = 2970 + 0 +
 1540 + 540 = 5590$. Ale my pracujeme modulo $n = 4\cdot5\cdot9\cdot11 = 1980$,
 proto je výsledek $x = 5590 \equiv 3610 \equiv 1630 \mod 1980$.
+
+\end{exercise}
 
 \section{Generování prvočísel}
 Generování prvočísel zjednodušeně probíhá tak, že se (chytře) generují čísla, a
@@ -399,6 +437,7 @@ fermat-test(n, a):
         return "určitě složené"
 \end{verbatim}
 
+\begin{exercise}
 \textbf{Př.:} Fermatovým testem ověřte, zda 21 je prvočíslo. Použijte svědky 8,
 6 a 2.
 \begin{itemize}
@@ -414,6 +453,7 @@ faktorů.
 1 \mod 21$. V tomto případě ale gcd(21, 2) = 1, takže nám to v hledání faktorů
 nepomohlo.
 \end{itemize}
+\end{exercise}
 
 \subsection{Miller Rabinův test}
 Millerův test je složitější a přísnější než Fermatův v tom, že kromě výsledku
@@ -423,8 +463,8 @@ nenajdeme žádnou netriviální odmocninu (triviální odmocnina jedničky je m
 jednička).
 
 Miller Rabinův test zavádí množinu svědků $L_n$, která vybírá z $K_n$ jen ty
-prvky, které při výpočtu prochází přes netriviální odmocninu z jedné. $L_n = \{
-a \in \mathbb{Z}_n^*, a^{n-1} = 1, \text{a když } a^{t2^j} = 1, \text{pak }
+prvky, které při výpočtu prochází přes netriviální odmocninu z jedné. $L_n = \{a
+\in \mathbb{Z}_n^*, a^{n-1} = 1, \text{a když } a^{t2^j} = 1, \text{pak }
 a^{t2^{j-1}} = \pm 1 \text{ pro } \forall 1 \leq j \leq h \}$.
 
 Máme liché testované číslo $n$ a rozložíme si $n-1 = t \cdot 2^h$ pro nějaké
@@ -432,6 +472,7 @@ liché $t$. V Miller Rabinově testu se svědci taky mocní na $n-1$ jako ve
 Fermatově testu, ale mocní se postupně podle rozkladu a pozorují se
 mezivýsledky.
 
+\begin{exercise}
 \textbf{Př.:} Miller Rabinovým testem ověřte, zda 21 je prvočíslo. Použijte
 svědka 8.
 
@@ -439,8 +480,10 @@ $$n = 21, n-1 = 20 = 5 \cdot 4  = 5 \cdot 2^2$$
 $$ 8 \xrightarrow{\text{mocníme na 5}} 8 \xrightarrow{\text{mocníme na 2}} 64 =
 1 \xrightarrow{\text{mocníme na 2}} 1$$
 
-\textit{V průběhu výpočtu jsme našli netriviální odmocninu jedné, a sice $8^2 = 64 = 1 \mod 21$ ($\sqrt{1} = 8$), a dle Miller Rabinova testu o prvočíslo nejde. Díky netriviální odmocnině můžeme faktorizovat: gcd(8+1, 21) = 3, gcd(8-1, 21) = 7.}
-
+V průběhu výpočtu jsme našli netriviální odmocninu jedné, a sice $8^2 = 64 = 1
+\mod 21$ ($\sqrt{1} = 8$), a dle Miller Rabinova testu o prvočíslo nejde. Díky
+netriviální odmocnině můžeme faktorizovat: gcd(8+1, 21) = 3, gcd(8-1, 21) = 7.
+\end{exercise}
 
 
 \section{Těžké matematické problémy}
@@ -458,26 +501,45 @@ platit i o násobku exponentu grupy. Faktorizujeme tak, že najdeme netriviáln�
 odmocninu z jedné, tj $c^2 = 1$. Jiné zjednodušení využívá znalosti $\varphi(n)
 = p \cdot q$.
 
+\begin{exercise}
 \textbf{Př.:} Faktorizujte číslo 187, o kterém víte, že je součinem dvou
 prvočísel a $\varphi(187) = 160$.
 
-\textit{Označíme si použitá prvočísla jako $p$ a $q$. Jejich součin pak je $n = p \cdot q = 187$. Obdobně vyjádříme $\varphi(n) = 160 = (p-1)(q-1) = pq - p - q + 1 = n - p - q + 1 = 187 - p - q + 1$. Dalšími úpravami dostaneme vztah pro $p = 28 - q$ (vztah pro $q$ by byl obdobný). Toto dosadíme do vztahu $n = p\cdot q$ a dostaneme kvadratickou rovnici $q^2 - 28q + 187 = 0$, která má dvě řešení 11 a 17.}
+Označíme si použitá prvočísla jako $p$ a $q$. Jejich součin pak je $n = p \cdot
+q = 187$. Obdobně vyjádříme $\varphi(n) = 160 = (p-1)(q-1) = pq - p - q + 1 = n
+- p - q + 1 = 187 - p - q + 1$. Dalšími úpravami dostaneme vztah pro $p = 28 -
+q$ (vztah pro $q$ by byl obdobný). Toto dosadíme do vztahu $n = p\cdot q$ a
+dostaneme kvadratickou rovnici $q^2 - 28q + 187 = 0$, která má dvě řešení 11 a
+17.
+\end{exercise}
 
+\begin{exercise}
 \textbf{Př.:} Faktorizujte číslo 1771, znáte-li $\varphi(1771) = 1320$.
 
-\textit{Rozdělíme si $\varphi(n) = 1320 = 165 \cdot 2 \cdot 2 \cdot 2$ podobně jako při Miller Rabinově testu, a pokusíme se najít netriviální odmocninu jedné. Zvolme $a = 5$.}
+Rozdělíme si $\varphi(n) = 1320 = 165 \cdot 2 \cdot 2 \cdot 2$ podobně jako při
+Miller Rabinově testu, a pokusíme se najít netriviální odmocninu jedné. Zvolme
+$a = 5$.
 
 $$ 5 \xrightarrow{\text{mocníme na 165}} 804 \xrightarrow{\text{mocníme na 2}} 1
 \xrightarrow{\text{mocníme na 2}} 1 \xrightarrow{\text{mocníme na 2}} 1$$
 
-\textit{Z netriviální odmocniny zkusíme najít gcd(804-1, 1771) = 11, tím máme jeden z faktorů. Ale $1771 = 11 \cdot 161$, a 161 dle testů není prvočíslo. Postup budeme opakovat, tentokrát v $\mathbb{Z}_{161}$ a zvolíme $a = 69$. Nejprve ale potřebujeme znát $\varphi(161)$, které získáme podílem jako $\varphi(161) = \frac{\varphi(1771)}{\varphi(11)} = 1320/10 = 132 = 33 \cdot 2 \cdot 2$.}
+Z netriviální odmocniny zkusíme najít gcd(804-1, 1771) = 11, tím máme jeden z
+faktorů. Ale $1771 = 11 \cdot 161$, a 161 dle testů není prvočíslo. Postup
+budeme opakovat, tentokrát v $\mathbb{Z}_{161}$ a zvolíme $a = 69$. Nejprve ale
+potřebujeme znát $\varphi(161)$, které získáme podílem jako $\varphi(161) =
+\frac{\varphi(1771)}{\varphi(11)} = 1320/10 = 132 = 33 \cdot 2 \cdot 2$.
 
 $$69 \xrightarrow{\text{mocníme na 33}} 69 \xrightarrow{\text{mocníme na 2}} 92
 \xrightarrow{\text{mocníme na 2}} 92$$
 
-\textit{Nedostali jsme jedničku, tedy 69 a 161 jsou soudělné. Najdeme gcd(161, 69) = 23, tedy $161 = 23 \cdot 7$. Faktorizovali jsme $1771 = 7 \cdot 11 \cdot 23$.}
+Nedostali jsme jedničku, tedy 69 a 161 jsou soudělné. Najdeme gcd(161, 69) = 23,
+tedy $161 = 23 \cdot 7$. Faktorizovali jsme $1771 = 7 \cdot 11 \cdot 23$.
 
-\textit{Poznámka k té soudělnosti. Budeme řešit třeba $3^x = 1 \mod 15$. To upravíme na $3\cdot 3^{x-1} = 1 \mod 15$, pak označíme $3^{x-1} = m$ a získáme diofantickou rovnici $3m + 15k = 1$. A u diofantických rovnic platí, že levá strana musí být násobkem gcd koeficientů na pravé straně.}
+Poznámka k té soudělnosti. Budeme řešit třeba $3^x = 1 \mod 15$. To upravíme na
+$3\cdot 3^{x-1} = 1 \mod 15$, pak označíme $3^{x-1} = m$ a získáme diofantickou
+rovnici $3m + 15k = 1$. A u diofantických rovnic platí, že levá strana musí být
+násobkem gcd koeficientů na pravé straně.
+\end{exercise}
 
 \subsubsection{Subexponenciální faktorizace (SEF)}
 Pro subexponenciální algoritmy SEF a SEDL (níže) je zásadní pojem
@@ -526,31 +588,50 @@ Pokud $c = \pm 1$, ohlásíme neúspěch.
 V opačném případě je gcd($c \pm 1$, n) faktor.
 \end{enumerate}
 
+\begin{exercise}
 \textbf{Př.:} Faktorizujte číslo 77 algoritmem SEF, s parametrem $y$ = 5.
 
-\textit{Před spuštěním SEFu ověříme Miller Rabinovým testem, že nejde o prvočíslo, a algoritmem perfektní mocniny ověříme, že to není $p^e$ (perfektní mocninu mám popsanou v sešitě, sem to psát už nebudu). Číslo 77 oba testy prošlo, proto můžeme spustit SEF.}
+Před spuštěním SEFu ověříme Miller Rabinovým testem, že nejde o prvočíslo, a
+algoritmem perfektní mocniny ověříme, že to není $p^e$ (perfektní mocninu mám
+popsanou v sešitě, sem to psát už nebudu). Číslo 77 oba testy prošlo, proto
+můžeme spustit SEF.
 
-\textit{Najdeme 5-hladká prvočísla, jsou to 2, 3 a 5. Máme tedy $k = 3$ a potřebujeme najít 4 čtverce.}
+Najdeme 5-hladká prvočísla, jsou to 2, 3 a 5. Máme tedy $k = 3$ a potřebujeme
+najít 4 čtverce.
 
 \begin{enumerate}
-\item \textit{Zkoušíme nějaká čísla, hledáme jejich druhé mocniny v $\mathbb{Z}_{77}$}
+\item Zkoušíme nějaká čísla, hledáme jejich druhé mocniny v $\mathbb{Z}_{77}$
 \begin{itemize}
-\item \textit{$59^2 = 16 = 2^4 \cdot 3^0 \cdot 5^0$, ~~16 je 5-hladké, máme první vektor: $v_1 = (4, 0, 0) = (0, 0, 0)$ v $\mathbb{Z}_2$}
-\item \textit{$3^2 = 9 = 2^0 \cdot 3^2 \cdot 5^0$, ~~9 je 5-hladké, máme druhý vektor: $v_2 = (0, 2, 0) = (0, 0, 0)$ v $\mathbb{Z}_2$}
-\item \textit{$37^2 = 60 = 2^3 \cdot 3^1 \cdot 5^1$, ~~60 je 5-hladké, máme třetí vektor: $v_3 = (2, 1, 1) = (0, 1, 1)$ v $\mathbb{Z}_2$}
-\item\textit{$10^2 = 23$, ~~23 není je 5-hladké, musíme hledat dál}
-\item \textit{$13^2 = 15 = 2^0 \cdot 3^1 \cdot 5^1$, ~~15 je 5-hladké, máme poslední vektor: $v_4 = (0, 1, 1) = (0, 1, 1)$ v $\mathbb{Z}_2$}
+\item $59^2 = 16 = 2^4 \cdot 3^0 \cdot 5^0$, ~~16 je 5-hladké, máme první
+vektor: $v_1 = (4, 0, 0) = (0, 0, 0)$ v $\mathbb{Z}_2$
+\item $3^2 = 9 = 2^0 \cdot 3^2 \cdot 5^0$, ~~9 je 5-hladké, máme druhý vektor:
+$v_2 = (0, 2, 0) = (0, 0, 0)$ v $\mathbb{Z}_2$
+\item $37^2 = 60 = 2^3 \cdot 3^1 \cdot 5^1$, ~~60 je 5-hladké, máme třetí
+vektor: $v_3 = (2, 1, 1) = (0, 1, 1)$ v $\mathbb{Z}_2$
+\item $10^2 = 23$, ~~23 není je 5-hladké, musíme hledat dál
+\item $13^2 = 15 = 2^0 \cdot 3^1 \cdot 5^1$, ~~15 je 5-hladké, máme poslední
+vektor: $v_4 = (0, 1, 1) = (0, 1, 1)$ v $\mathbb{Z}_2$
 \end{itemize}
-\textit{\item V druhé fázi chceme najít netriviální koeficienty tak, aby $c_1(0, 0, 0) + c_2(0, 0, 0) + c_3(0, 1, 1) + c_4(0, 1, 1) = \vec{o}$. Mělo by se to dělat Gaussovou eliminační metodou, ale to je v tomto případě zbytečné, stačí zvolit $\vec{c} = (0, 1, 0, 0)$.}
+\item V druhé fázi chceme najít netriviální koeficienty tak, aby
+$$c_1(0, 0, 0) + c_2(0, 0, 0) + c_3(0, 1, 1) + c_4(0, 1, 1) = \vec{o}$$ Mělo by
+se to dělat Gaussovou eliminační metodou, ale to je v tomto případě zbytečné,
+stačí zvolit $\vec{c} = (0, 1, 0, 0)$. Spočítáme $a_1^{c_1} \cdot a_2^{c_2}
+\cdot a_3^{c_3} \cdot a_4^{c_4} = 1 \cdot a_2 \cdot 1 \cdot 1 = a_2 = 2^0 \cdot
+3^2 \cdot 5^0$. Po dosazení máme $3^2 = 3^2$, což je nám k ničemu, vede to totiž
+na triviální řešení.
 
-\textit{Spočítáme $a_1^{c_1} \cdot a_2^{c_2} \cdot a_3^{c_3} \cdot a_4^{c_4} = 1 \cdot a_2 \cdot 1 \cdot 1 = a_2 = 2^0 \cdot 3^2 \cdot 5^0$. Po dosazení máme $3^2 = 3^2$, což je nám k ničemu, vede to totiž na triviální řešení.}
+Zkusíme zvolit  $\vec{c} = (0, 0, 1, 1)$. Spočítáme $a_1^{c_1} \cdot a_2^{c_2}
+\cdot a_3^{c_3} \cdot a_4^{c_4} =  1 \cdot 1 \cdot a_3 \cdot a_4 = a_3 \cdot a_4
+= 37^2 \cdot 13^2 = (37 \cdot 13)^2 = 19^2 =  2^3 \cdot 3^2 \cdot 5^2 = (2\cdot
+3 \cdot 5)^2 = 30^2$. Máme vztah $19^2 = 30^2$, kde 19 jsme získali čistě z
+levých stran ve fázi 1, a 30 z pravých stran.
 
-\textit{Zkusíme zvolit  $\vec{c} = (0, 0, 1, 1)$. Spočítáme $a_1^{c_1} \cdot a_2^{c_2} \cdot a_3^{c_3} \cdot a_4^{c_4} =  1 \cdot 1 \cdot a_3 \cdot a_4 = a_3 \cdot a_4 = 37^2 \cdot 13^2 = (37 \cdot 13)^2 = 19^2 =  2^3 \cdot 3^2 \cdot 5^2 = (2\cdot 3 \cdot 5)^2 = 30^2$. Máme vztah $19^2 = 30^2$, kde 19 jsme získali čistě z levých stran ve fázi 1, a 30 z pravých stran.}
+Úpravami vyjádříme jedničku a najdeme netriviální odmocninu: $(19 \cdot
+30^{-1})^2 = 1$, $(19 \cdot 18)^2 = 1$, $34^2 = 1$.
 
-\textit{Úpravami vyjádříme jedničku a najdeme netriviální odmocninu: $(19 \cdot 30^{-1})^2 = 1$, $(19 \cdot 18)^2 = 1$, $34^2 = 1$.}
-
-\textit{Faktor pak najdeme jako gcd(34+1, 77) = 7, nebo gcd(34-1, 77) = 11.}
+Faktor pak najdeme jako gcd(34+1, 77) = 7, nebo gcd(34-1, 77) = 11.
 \end{enumerate}
+\end{exercise}
 
 \subsubsection{Algoritmus kvadratického síta pro SEF (QSF)}
 Kvadratické síto urychluje algoritmus SEF tím, že v první fázi dokáže lépe
@@ -571,13 +652,16 @@ prvočísly do $y$. Na konci algoritmu budeme vědět, která z čísel jsou y-h
 a mělo by jich být dost pro SEF (tedy $k+1$). Pokud jich je málo, můžeme
 rozšířit tabulku o dalších $z$ čísel a algoritmus opakovat.
 
+\begin{exercise}
 \textbf{Př.:} Najděte y-hladké čtverce pro algoritmus SEF pro faktorizaci čísla
 $n=403$ s parametry $y = 8$ a $z=8$.
 
-\textit{Vztah pro $F(s)$ je v tomto případě $F(s) = (s +\lfloor \sqrt{403} \rfloor)^2 - 403= (s + 20)^2 - 403$. Pro všechna $s$ si spočítáme hodnoty $V = F(s)$ a zapíšeme si je do pracovního řádku tabulky. V druhém řádku D si budeme udržovat prvočíselné rozklady. Vždy platí, že $F(s) = V(s) \cdot D(s)$.}
+Vztah pro $F(s)$ je v tomto případě $F(s) = (s +\lfloor \sqrt{403} \rfloor)^2 -
+403= (s + 20)^2 - 403$. Pro všechna $s$ si spočítáme hodnoty $V = F(s)$ a
+zapíšeme si je do pracovního řádku tabulky. V druhém řádku D si budeme udržovat
+prvočíselné rozklady. Vždy platí, že $F(s) = V(s) \cdot D(s)$.
 
-\begin{table}[h!]
-\centering
+\begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 i & 1 & 2 &3 & 4 & 5 & 6 & 7 & 8\\
@@ -590,12 +674,15 @@ V & 38 & 81 & 126 & 173 & 222 & 273 & 326 & 381\\
 D &  &   &  &   &   &  &   &  \\
 \hline
 \end{tabular}
-\end{table}
+\end{center}
 
-\textit{Prvním prvočíslem je 2. V $\mathbb{Z}_2$ bude rovnice vypadat takto: $F(s) = (s + 0)^2 - 1$, a chceme najít, kde je nulová. Řešíme rovnici $x^2 = 1$, řešením je $\pm1$. Z našich $s$ jsou kořeny $1 + 2i$, což jsou $\{1, 3, 5, 7\}$. Tato čísla tedy zkoušíme dělit dvěma, rozklad píšeme do řádku D a výsledek podílu do řádku V.}
+Prvním prvočíslem je 2. V $\mathbb{Z}_2$ bude rovnice vypadat takto: $F(s) = (s
++ 0)^2 - 1$, a chceme najít, kde je nulová. Řešíme rovnici $x^2 = 1$, řešením je
+$\pm1$. Z našich $s$ jsou kořeny $1 + 2i$, což jsou $\{1, 3, 5, 7\}$. Tato čísla
+tedy zkoušíme dělit dvěma, rozklad píšeme do řádku D a výsledek podílu do řádku
+V.
 
-\begin{table}[h!]
-\centering
+\begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 i & \textbf{1} & 2 &\textbf{3} & 4 & \textbf{5} & 6 & \textbf{7} & 8\\
@@ -608,12 +695,14 @@ V & 19 & 81 & 63 & 173 & 111 & 273 & 163 & 381\\
 D & 2  &       & 2   &         & 2     &         &  2    &  \\
 \hline
 \end{tabular}
-\end{table}
+\end{center}
 
-\textit{Dalším prvočíslem je 3, rovnice v $\mathbb{Z}_3$ bude rovnice vypadat takto: $0 = (s + 2)^2 - 1$. Řešení jsou dvě, a to 0 a 2, a ty jdou zobecnit na $0 + 3i$ a $2 + 3j$.  To znamená, že čísla dělitelná třemi nalezneme ve sloupcích $\{2, 3, 5, 6, 8\}$.}
+Dalším prvočíslem je 3, rovnice v $\mathbb{Z}_3$ bude rovnice vypadat takto: $0
+= (s + 2)^2 - 1$. Řešení jsou dvě, a to 0 a 2, a ty jdou zobecnit na $0 + 3i$ a
+$2 + 3j$.  To znamená, že čísla dělitelná třemi nalezneme ve sloupcích $\{2, 3,
+5, 6, 8\}$.
 
-\begin{table}[h!]
-\centering
+\begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 i & 1 & \textbf{2} &\textbf{3} & 4 & \textbf{5} & \textbf{6} & 7 & \textbf{8}\\
@@ -626,14 +715,21 @@ V & 19 & 1 & 7 & 173 & 37 & 91 & 163 & 127\\
 D & 2  & $3^4$ & $2\cdot 3^2$  &         & $2\cdot 3$   &   3   &  2    &  3 \\
 \hline
 \end{tabular}
-\end{table}
+\end{center}
 
-\textit{V $\mathbb{Z}_5$ bude rovnice vypadat takto: $0 = (s + 0)^2 - 3$, takže řešíme $x^2 = 3$ v $\mathbb{Z}_5$.  Eulerovo kritérium nám říká, že v $\mathbb{Z}_p$, kde p je liché prvočíslo, je prvek $b$ nečtverec ($b \neq c^2$), právě když $b^{\frac{p-1}{2}} = -1$. Bohužel 3 je nečtverec v $\mathbb{Z}_5$, tedy rovnice nemá řešení, a tedy žádné z čísel není dělitelné pěti (což je ostatně rovnou vidět v tabulce).}
+V $\mathbb{Z}_5$ bude rovnice vypadat takto: $0 = (s + 0)^2 - 3$, takže řešíme
+$x^2 = 3$ v $\mathbb{Z}_5$.  Eulerovo kritérium nám říká, že v $\mathbb{Z}_p$,
+kde p je liché prvočíslo, je prvek $b$ nečtverec ($b \neq c^2$), právě když
+$b^{\frac{p-1}{2}} = -1$. Bohužel 3 je nečtverec v $\mathbb{Z}_5$, tedy rovnice
+nemá řešení, a tedy žádné z čísel není dělitelné pěti (což je ostatně rovnou
+vidět v tabulce).
 
-\textit{Posledním prvočíslem je 7, rovnice v $\mathbb{Z}_7$ bude rovnice vypadat takto: $0 = (s - 1)^2 - 4$. Budeme řešit $(x-1)^2 = 4$, což je to samé jako $x-1 = \pm 2$. Řešení jsou tedy dvě, a to 3 a 6, a ty jdou zobecnit na $3 + 7i$ a $6 + 7j$.  To znamená, že čísla dělitelná sedmi nalezneme ve sloupcích 3 a 6.}
+Posledním prvočíslem je 7, rovnice v $\mathbb{Z}_7$ bude rovnice vypadat takto:
+$0 = (s - 1)^2 - 4$. Budeme řešit $(x-1)^2 = 4$, což je to samé jako $x-1 = \pm
+2$. Řešení jsou tedy dvě, a to 3 a 6, a ty jdou zobecnit na $3 + 7i$ a $6 + 7j$.
+To znamená, že čísla dělitelná sedmi nalezneme ve sloupcích 3 a 6.
 
-\begin{table}[h!]
-\centering
+\begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 i & 1 & 2 &\textbf{3} & 4 & 5 & \textbf{6} & 7 & 8\\
@@ -647,9 +743,17 @@ D & 2  & $3^4$ & $2\cdot 3^2 \cdot 7$  &         & $2\cdot 3$   &   $3 \cdot 7$
 &  2    &  3 \\
 \hline
 \end{tabular}
-\end{table}
+\end{center}
 
-\textit{Prošli jsme všechna 8-hladká prvočísla, a 8-hladké čtverce jsou ty, které byly ve sloupcích, kde je teď $V = 1$, což jsou sloupce 2 a 3, $F(2) = 81$, $F(3) = 126$. K nim máme taky vektory exponentů $v_1 = (0, 4, 0, 0)$ a $v_2 = (1, 2, 0, 1)$. pro faktorizaci SEF ale potřebujeme takových vektorů pět. To bychom normálně řešili rozšířením tabulky o sloupce 9-16, ale to v tomto případě již nejde, protože $F(9) > 403$, a tedy rovnice, kde jsme dosud měli daný zbytek po dělení pouze odečtením, by neplatily. Nezbývá nám, než zkoušet generovat další čtverce tak, jako to dělá první fáze SEFu běžně.}
+Prošli jsme všechna 8-hladká prvočísla, a 8-hladké čtverce jsou ty, které byly
+ve sloupcích, kde je teď $V = 1$, což jsou sloupce 2 a 3, $F(2) = 81$, $F(3) =
+126$. K nim máme taky vektory exponentů $v_1 = (0, 4, 0, 0)$ a $v_2 = (1, 2, 0,
+1)$. pro faktorizaci SEF ale potřebujeme takových vektorů pět. To bychom
+normálně řešili rozšířením tabulky o sloupce 9-16, ale to v tomto případě již
+nejde, protože $F(9) > 403$, a tedy rovnice, kde jsme dosud měli daný zbytek po
+dělení pouze odečtením, by neplatily. Nezbývá nám, než zkoušet generovat další
+čtverce tak, jako to dělá první fáze SEFu běžně.
+\end{exercise}
 
 \subsection{Problém diskrétního logaritmu}
 Nechť $G = \langle a \rangle$ je cyklická grupa řádu $n$ s generátorem $a$.
@@ -690,11 +794,16 @@ $b\cdot (a^{n-m})^v = a^u$.
 podle: $x = vm + u$.
 \end{enumerate}
 
+\begin{exercise}
 \textbf{Př.:} Vyřešte $x = \text{dlog}_2 (7)$ v $\mathbb{Z}_{37}^*$.
 
-\textit{Najdeme $n = \varphi(37) = 36$, $m = \sqrt{36} = 6$, $m' = n/m = 36/6 = 6$. Máme vztah $7 = 2^x = 2^{vm + u} = 2^{6v + u}$, který převedeme na rovnici $7\cdot (2^{30})^v =7\cdot 11^v = 2^u$. Do tabulky vyplníme baby-steps a budeme postupně vyplňovat giant-steps v $\mathbb{Z}_{37}^*$, dokud nenajdeme shodu s prvním řádkem.}
+Najdeme $n = \varphi(37) = 36$, $m = \sqrt{36} = 6$, $m' = n/m = 36/6 = 6$. Máme
+vztah $7 = 2^x = 2^{vm + u} = 2^{6v + u}$, který převedeme na rovnici $7\cdot
+(2^{30})^v =7\cdot 11^v = 2^u$. Do tabulky vyplníme baby-steps a budeme postupně
+vyplňovat giant-steps v $\mathbb{Z}_{37}^*$, dokud nenajdeme shodu s prvním
+řádkem.
 
-\begin{table}[h!]
+\begin{center}
 \centering
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
@@ -706,9 +815,12 @@ $2^u$ & 1 & 2 & \textbf{4} & 8 & 16 & 32 & 27\\
 $7\cdot 11^v$ & 7 & 3 & 33 & 30 & 34 & \textbf{4} & ??? \\
 \hline
 \end{tabular}
-\end{table}
+\end{center}
 
-\textit{Poslední prvek posledního řádku nemusíme počítat, shodu jsme našli pro $u=2$ a $v=5$, tj $7\cdot 11^5 = 2^2 = 4$, rovnice platí. Řešení je $x = \text{dlog}_2 (7) = vm + u = 5\cdot6 + 2 = 30 + 2 = 32$. }
+Poslední prvek posledního řádku nemusíme počítat, shodu jsme našli pro $u=2$ a
+$v=5$, tj $7\cdot 11^5 = 2^2 = 4$, rovnice platí. Řešení je $x = \text{dlog}_2
+(7) = vm + u = 5\cdot6 + 2 = 30 + 2 = 32$.
+\end{exercise}
 
 \subsubsection{Pohling-Hellman}
 Pohling-Hellmanův algoritmus můžeme použít na hledání diskrétního logaritmu v
@@ -719,6 +831,7 @@ diskrétní logaritmus v podgrupách řádu $p_i^{e_i}$ a výsledky spojíme pom
 step giant step algoritmus. Pokud je $n$ mocnina prvočísla, můžeme postupovat
 rekurzivně (viz příklad).
 
+\begin{exercise}
 \textbf{Př.:} Vyřešte $x = \text{dlog}_2 (7)$ v $\mathbb{Z}_{37}^*$.
 
 Protože známe rozklad velikosti grupy: $|\mathbb{Z}_{37}^*| = 36 = 4 \cdot 9 =
@@ -739,8 +852,7 @@ $$16^{3v+u} = 33 \xrightarrow{}16^{3v}16^u = 33 \xrightarrow{}16^u = 33\cdot
 16^{-3v} \xrightarrow{} 16^u = 33\cdot 16^{6v} \xrightarrow{}16^u = 33\cdot
 10^v$$
 
-\begin{table}[h!]
-\centering
+\begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 u, v & 0 & 1 & 2 & 3\\
@@ -751,7 +863,7 @@ $16^u$ & 1 & 16 & \textbf{34} & 26\\
 $33\cdot 10^v$ & 33 & \textbf{34} & ??? & ??? \\
 \hline
 \end{tabular}
-\end{table}
+\end{center}
 
 Z tabulky je zřejmé, že $x = 3v + u = 3\cdot 1 + 2 = 5$.
 
@@ -785,6 +897,7 @@ rovnice: $x = 5 \mod 9$ a $x = 0 \mod 4$. Koeficient $q_9$ může být třeba 28
 protože druhá rovnice je nulová, druhý koeficient vůbec nepotřebujeme. $x =
 5\cdot q_9 = 5\cdot 28 = 140 = 32 \mod 36$. Našli jsme řešení $\text{dlog}_2(7)
 = 32$.
+\end{exercise}
 
 \subsubsection{SEDL}
 SEDL (subexponenciální diskrétní logaritmus) funguje díky \textit{vnitřnímu
@@ -828,25 +941,37 @@ reprezentace jedničky je triviální. V opačném případě můžeme snadno do
 dlog$_a(b) = -s \cdot t^{-1}$ v $\mathbb{Z}_q$.
 \end{enumerate}
 
+\begin{exercise}
 \textbf{Př.:} Vyřešte $x = \text{dlog}_4 (12)$ v $\mathbb{Z}_{23}^*$ algoritmem
 SEDL, když víte, že $G = \langle 4 \rangle$ je jedenáctiprvková podgrupa
 $\mathbb{Z}_{23}^*$ a $|\mathbb{Z}_{23}^*| = 22 = 11 \cdot 2$. Použijte parametr
 hladkosti $y = 4$.
 
-\textit{Při parametru hladkosti 4 budeme mít dvě prvočísla, a to 2 a 3. Potřebujeme najít 3 rovnice ve tvaru $z_i = 4^{s_i}\cdot 12^{t_i}\cdot h_i$, kde $s_i$ a $t_i$ jsou z $\mathbb{Z}_{11}$ a $h_i$ je z $H = \{1, -1\}$.}
+Při parametru hladkosti 4 budeme mít dvě prvočísla, a to 2 a 3. Potřebujeme
+najít 3 rovnice ve tvaru $z_i = 4^{s_i}\cdot 12^{t_i}\cdot h_i$, kde $s_i$ a
+$t_i$ jsou z $\mathbb{Z}_{11}$ a $h_i$ je z $H = \{1, -1\}$.
 
 \begin{enumerate}
 
-\item \textit{První fáze, hledáme tři rovnice a jim odpovídající tři vektory. Přitom parametry volíme ze $\mathbb{Z}_{11}$ a z $H$, a výpočty děláme v $\mathbb{Z}_{23}^*$:}
+\item První fáze, hledáme tři rovnice a jim odpovídající tři vektory. Přitom
+parametry volíme ze $\mathbb{Z}_{11}$ a z $H$, a výpočty děláme v
+$\mathbb{Z}_{23}^*$:
 
 \begin{enumerate}
-\item \textit{Zkusíme $s_1 = 5, t_1 = 7, h_1 = 1$: $z_1 = 4^5 \cdot 12^7 \cdot 1 = 12 \cdot 16 = 8 = 2^3 \cdot 3^0$. Takové z je 4-hladké, máme vektor $\vec{v_1} = (3, 0)$.}
-\item \textit{Zkusíme $s_2 = 3, t_2 = 5, h_2 = -1$: $z_2 = 4^3 \cdot 12^5 \cdot (-1) = 18 \cdot 18 \cdot (-1) = 23 $. Takové z není 4-hladké, hledáme dál.}
+\item Zkusíme $s_1 = 5, t_1 = 7, h_1 = 1$: $z_1 = 4^5 \cdot 12^7 \cdot 1 = 12
+\cdot 16 = 8 = 2^3 \cdot 3^0$. Takové z je 4-hladké, máme vektor $\vec{v_1} =
+(3, 0)$.
+\item Zkusíme $s_2 = 3, t_2 = 5, h_2 = -1$: $z_2 = 4^3 \cdot 12^5 \cdot (-1) =
+18 \cdot 18 \cdot (-1) = 23 $. Takové z není 4-hladké, hledáme dál.
 
-\textit{Zkusíme $s_2 = 4, t_2 = 9, h_2 = 1$: $z_2 = 4^4 \cdot 12^9 \cdot 1= 3 \cdot 4 = 12 = 2^2 \cdot 3^1 $. Takové z je 4-hladké, máme vektor $\vec{v_2} = (2, 1)$.}
-\item \textit{Zkusíme $s_3 = 6, t_3 = 7, h_3 = 1$: $z_3 = 4^6 \cdot 12^7 \cdot 1 = 2 \cdot 16 = 9 = 2^0 \cdot 3^2$. Takové z je 4-hladké, máme vektor $\vec{v_1} = (0, 2)$.}
+Zkusíme $s_2 = 4, t_2 = 9, h_2 = 1$: $z_2 = 4^4 \cdot 12^9 \cdot 1= 3 \cdot 4 =
+12 = 2^2 \cdot 3^1 $. Takové z je 4-hladké, máme vektor $\vec{v_2} = (2, 1)$.
+\item Zkusíme $s_3 = 6, t_3 = 7, h_3 = 1$: $z_3 = 4^6 \cdot 12^7 \cdot 1 = 2
+\cdot 16 = 9 = 2^0 \cdot 3^2$. Takové z je 4-hladké, máme vektor $\vec{v_1} =
+(0, 2)$.
 \end{enumerate}
-\item \textit{Druhá fáze, najdeme koeficienty. Protože teď počítáme v exponentech, musíme myslet na to, že jsme v $\mathbb{Z}_{11}$.}
+\item Druhá fáze, najdeme koeficienty. Protože teď počítáme v exponentech,
+musíme myslet na to, že jsme v $\mathbb{Z}_{11}$.
 
 \[ \left( \begin{array}{ccc}
 3 & 2 & 0\\
@@ -864,7 +989,9 @@ hladkosti $y = 4$.
 1 & 0 & 6\\
 0 & 1 & 2 \end{array} \right) \]
 
-\textit{Chceme najít takové koeficienty pro sloupce, aby součet na řádku byl nula. To splňují třeba $c_1 = -6 = 5$, $c_2 = -2 = 9$ a $c_3 = 1$.  Rovnice umocníme na tyto exponenty:}
+Chceme najít takové koeficienty pro sloupce, aby součet na řádku byl nula. To
+splňují třeba $c_1 = -6 = 5$, $c_2 = -2 = 9$ a $c_3 = 1$.  Rovnice umocníme na
+tyto exponenty:
 
 \begin{enumerate}
 \item $4^3\cdot 12^2 \cdot 1 = 2^4\cdot 3^0$
@@ -872,9 +999,16 @@ hladkosti $y = 4$.
 \item $4^6\cdot 12^7 \cdot 1 = 2^0\cdot 3^2$
 \end{enumerate}
 
-\textit{A vynásobíme je mezi sebou: $4^1\cdot 12^2 \cdot 1 = 2^0\cdot 3^0$. Převedeme upravené $h$ na pravou stranu (tady to nemá moc význam, protože to je jedna) a dostaneme finální rovnici: $4^1\cdot 12^2  = 1$. Nebo jsme to vůbec nemuseli dělat, mohli jsme si pamatovat vzorce z postupu a pravou stranu úplně zahodit, protože vždy vyjde jedna. Tak jako tak máme teď parametry $s=1, t=2$, ze kterých získáme řešení: $x = -s\cdot t^{-1} = -1 \cdot 2^{-1} = -1 \cdot 6 = -6 = 5 \mod 11$. Tedy dlog$_4(12) = 5$ v $\mathbb{Z}_{23}^*$.}
-
+A vynásobíme je mezi sebou: $4^1\cdot 12^2 \cdot 1 = 2^0\cdot 3^0$. Převedeme
+upravené $h$ na pravou stranu (tady to nemá moc význam, protože to je jedna) a
+dostaneme finální rovnici: $4^1\cdot 12^2  = 1$. Nebo jsme to vůbec nemuseli
+dělat, mohli jsme si pamatovat vzorce z postupu a pravou stranu úplně zahodit,
+protože vždy vyjde jedna. Tak jako tak máme teď parametry $s=1, t=2$, ze kterých
+získáme řešení: $x = -s\cdot t^{-1} = -1 \cdot 2^{-1} = -1 \cdot 6 = -6 = 5 \mod
+11$. Tedy dlog$_4(12) = 5$ v $\mathbb{Z}_{23}^*$.
 \end{enumerate}
+
+\end{exercise}
 
 \section{Základní kryptosystémy}
 \subsection{RSA}
