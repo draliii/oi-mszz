@@ -1007,11 +1007,108 @@ protože vždy vyjde jedna. Tak jako tak máme teď parametry $s=1, t=2$, ze kte
 získáme řešení: $x = -s\cdot t^{-1} = -1 \cdot 2^{-1} = -1 \cdot 6 = -6 = 5 \mod
 11$. Tedy dlog$_4(12) = 5$ v $\mathbb{Z}_{23}^*$.
 \end{enumerate}
-
 \end{exercise}
 
 \section{Základní kryptosystémy}
 \subsection{RSA}
+Šifrování RSA je postavené na složitosti problému faktorizace. Zprávy se
+převedou tak, aby šly reprezentovat jako čísla menší než $N$. Následně se zvolí
+dvě prvočísla $p, q$ tak, aby $p \cdot q = n, n > N$. Spočítá se $\varphi(n) =
+(p-1)\cdot (q-1)$ a zvolí se $e \in \mathbb{N}$ tak, aby gcd$(e, \varphi(n)) =
+1$. Tak zvolené $e$ má v$\mod \varphi(n)$ inverzi, kterou snadno spočítáme:
+$e^(-1) = d \mod \varphi(n)$.
+
+Získali jsme tak hodnoty, které jdou použít pro šifrování:
+\begin{itemize}
+    \item Veřejný klíč: $(n, e)$, kde $n$ je modulus a $e$ je veřejný exponent.
+    V praxi se volí $e = 65537$, což je prvočíslo (takže je určitě nesoudělné s
+    $\varphi(n)$), a navíc je jeho binární zápis \texttt{0b10000000000000001},
+    což usnadňuje výpočty (např. v algoritmu opakovaných čtverců).
+    \item Soukormý klíč: $(n, e)$, kde $n$ je modulus a $d$ se soukromý
+    exponent.
+\end{itemize}
+
+Princip šifrování: Při zašifrování zprávy se použije veřejný klíč a spočítá se
+$b = a^e \mod n$. Pro dešifrování se naopak používá soukromý klíč k opětovnému
+získání zprávy: $a = b^d \mod n$. Přitom platí, že zpráva se procesem
+zašifrování a dešifrování nezmění.
+
+Využijeme Euler-Fermatovy věty, krá říká, že pro $a$ nesoudělná s $n$ platí
+$a^{\varphi(n)} = 1 \mod n$, neboli v exponentu počítáme modulo $\varphi(n)$.
+Námi zvolené $e, d$ přitom splňují $ed = 1 \mod \varphi(n)$, a můžeme proto
+provést následující úpravu:
+
+$$(a^e)^d = a^{ed} = a^1 = a$$
+
+Euler-Fermatovu větu nemůžeme použít pro specifický případ, kdy $a$ je soudělné
+s $n$. S pomocí čínské věty o zbytcích jde ukázat, že i pro taková $a$ výpočet
+platí.
+
+\subsubsection{Útoky na RSA}
+Existuje několik útoků na RSA, všechny vychází z toho, že čísla při generování
+byla zvolena nevhodně, nebo že máme nějakou znalost navíc.
+
+\paragraph{Útok se znalostí některé z tajných hodnot}
+Pokud známe $\varphi(n)$, můžeme faktorizovat $n$ stejně, jako to je v příkladu
+u faktorizace. Pokud známe $d$, můžeme také faktorizovat $n$ a to podobně, jako
+tomu bylo u Miller-Rabinova testu - víme, že $a^{k(ed - 1)} = 1$, a se znalostí
+$d$ můžeme snadno volit různá $a$ a hledat netriviální odmocninu z jedné.
+
+\paragraph{Útok insidera}
+Správce sítě přidělí uživatelům $k$ klíčů se stejným modulem $n$. Jeden z
+uživatelů faktorizuje $n$ se znalostí svého $e_i$ a $d_i$. Následně může
+spočítat soukromé exponenty ostatních uživatelů sítě a číst jejich zprávy.
+
+\paragraph{Útok outsidera}
+Správce sítě přidělí uživatelům $k$ klíčů se stejným modulem $n$. Eva zachytila
+zprávy poslané uživatelům s nesoudělnými veřejnými exponenty. Přitom ví, že
+zprávy vznikly ze stejného otevřeného textu. Eva je díky tomu schopná zprávu
+přečíst.
+
+\begin{exercise}
+    \textbf{Př.:} Eva zachytila v síti s modulem $n = 703$ zprávy ze stejného
+    otevřeného těxtu $b_1 = 694, b_2 = 78$, určené uživatelům s exponenty $e_1 =
+    11, e_2 = 7$. Zjistěte, jaká zpráva byla odeslána.
+
+    Protože jsou exponenty nesoudělné, můžeme pomocí nich vyjádřit jedničku: $1
+    = x_1\cdot 11 + x_2 \cdot 7$. Řešení je $x_1 = 2, x_2 = -3$.
+
+    Zprávu získáme následovně: $a = a^1 = a^{e_1x_1 + e_2x_2} = a^{e_1x_1}\cdot
+    a^{e_2x_2} = b_1^{x_1} \cdot b_2^{x_2} = 694^2 \cdot 78^{-3} = 81 \cdot
+    27^{-1} = 81 \cdot 677 = 3 \mod 703$. Původní zpráva je $a = 3$, a můžeme to
+    případně ověřit umocněním na veřejné exponenty.
+\end{exercise}
+
+\paragraph{Hastadův útok}
+Uživatelé mají různé a nesoudělné moduly, ale shodné a malé veřejné exponenty
+$e$. Útočník může zachytit stejnou zprávu zaslanou $e$ uživatelům a takovou
+zprávu přečíst s využitím čínské věty o zbytcích.
+
+\begin{exercise}
+    \textbf{Př.:} Uživatelům s klíči (77, 3), (51, 3), (65, 3) byla zaslána
+    stejná zpráva, zachytili jsme zprávy 64, 9 a 60. Zjistěte původní zprávu.
+
+    Úlohu budeme řešit jako čínskou větu o zbytcích. Nesoudělnost ověříme
+    například přes gcd (tady to vynecháme, nesoudělné jsou). Velký modulus $N =
+    n_1 \cdot n_2 \cdot n_3 = 255255$. Máme tři rovnice $a^e = b \mod n$: 
+
+    $a^3 = 64 \mod 77, a^3 = 9 \mod 51, a^3 = 60 \mod 65$. Dopočítáme k nim
+    koeficienty: $q_{77} = 192270, q_{51} = 110110, q_{65} = 208131$. Pak
+    najdeme řešení soustavy $a^3 = 64\cdot q_{77} + 9\cdot q_{51} + 60 \cdot
+    q_{65} = \cdots = 3375 \mod 255255$.
+
+    Víme tedy, že $a^3 = 3375 \mod 255255$. Navíc ale můžeme říct, že zpráva
+    modulo nepřeleze. Největší možná zpráva v této soustavě je $a=50$ kvůli
+    druhé rovnici, a $50^3 = 125000$. Proto nutně i $a^3 < 125000 < 255255$.
+    Určitě proto platí $a^3 = 3375$ a ne víc, a díky tomu najdeme $a =
+    \sqrt[3]{3375} = 15$.
+\end{exercise}
+
+\paragraph{Wienerův útok}
+Wienerův útok umožňuje efektivně spočítat soukromý exponent ze znalosti
+veřejného, ale musí platit: $p < q < c \cdot p$ pro nějaké malé $c$, dále $e <
+\varphi(n)$ a $d < \frac{1}{c+1}\cdot n^{\frac{1}{4}}$. Výpočet je komplikovaný a využívá řetězové zlomky.
+
 \subsection{Diffie-Hellman}
 \subsection{ElGamal}
 \subsection{Eliptické křivky}
