@@ -1111,7 +1111,65 @@ veřejného, ale musí platit: $p < q < c \cdot p$ pro nějaké malé $c$, dále
 a využívá řetězové zlomky.
 
 \subsection{Diffie-Hellman}
+
+Algoritmus Diffie-Hellman se používá pro vygenerování klíče v kanálu, kde zprávy
+mohou být odposlechnuty. Posílány jsou tedy pouze dílčí výpočty a klíč samotný
+nikdy poslán není. DH výměna klíče používá problém diskrétního logaritmu.
+
+Alice zvolí cyklickou grupu $G$ řádu $n$ a najde její generátor $a$. Dále zvolí
+svůj tajný klíč $x \in \mathbb{Z}_n$, a spočítá prvek $b = a^x$ v $G$. Alice pak
+pošle Bobovi prvek $b$ a údaje o grupě.
+
+Bob zvolí svůj tajný klíč $y \in \mathbb{Z}_n$ a spočítá $c = a^y$ v $G$. Bob
+pošle alici prvek $c$.
+
+Výsledný tajný klíč je $s = a^{xy}$ a každá strana ho získá jako hodnotu od
+druhé strany umocněnou na svůj tajný klíč. Někdo, kdo komunikaci odposlechl, ale
+nedokáže klíč spočítat.
+
+Je nutné zmínit, že DH výměna je odolná proti odposlechu, ale útočník v pozici
+Man-in-the-Middle ji dokáže obejít a tajný klíč získat - jeden klíč domluví s
+Alicí, druhý klíč s Bobem a oba účastníci nemohou zjistit, že mezi nimi je někdo
+třetí.
+
+\begin{itemize}
+    \item Alice: $s_A = c^x = (a^y)^x = a^{yx} = a^{xy}$
+    \item Alice: $s_B = b^y = (a^x)^y = a^{xy}$
+\end{itemize}
+
+\begin{exercise}
+    \textbf{Př.:} Proveďte DH domluvu na klíči na grupě $\mathbb{Z}_{37}^*$ s
+    generátorem 2.
+
+    Alice si zvolí klíč $x = 13$ a spočítá $2^{13} = 15$ v $\mathbb{Z}_{37}^*$. Tuto
+    hodnotu pošle Bobovi.
+
+    Bob si zvolí klíč $y = 20$ a spočítá $2^{20} = 33$ v $\mathbb{Z}_{37}^*$. Tuto
+    hodnotu pošle Alici. Bob dále spočítá výsledný klíč $s = 15^{20} = 34$.
+
+    Alice si spočítá výsledný klíč $s = 33^{13} = 34$.
+
+    Obě strany se dohodly na společném tajném klíči, čísle 34.
+
+\end{exercise}
+
 \subsection{ElGamal}
+Algoritmus ElGamal umožňuje asymetrickou kryptografii založenou na diskrétním
+logaritmu.
+
+Alice zvolí grupu $G$ řádu $n$ s generátorem $a$, v ní zvolí soukromý klíč $x$ a
+veřejný klíč $b=a^x$. Grupu i veřejný klíč zveřejní.
+
+Bob chce poslat Alici zprávu $m$. Zvolí jednorázový klíč $y$ a spočítá $c=a^y,
+s=b^y$. Pak spočítá zašifrovanou zprávu $m' = m \cdot s$. Alici pošle dvojici
+$(c, m')$.
+
+Alice si spočítá $s = c^x = a^{xy}$, najde inverzi: $s^{-1} = c^{n-x}$. Pak
+dešifruje zprávu: $m = m' \cdot s^{-1} = (m\cdot s) \cdot s^{-1} = m$.
+
+% TODO: pridat priklad na elgamala, a podivat se, co se stane, kdyz y pouziju
+% vickrat
+
 \subsection{Eliptické křivky}
 
 \section{Hashování}
