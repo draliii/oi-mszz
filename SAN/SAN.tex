@@ -1,0 +1,129 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{delarray}
+
+% exercises and solutions
+\usepackage{mdframed}
+\newmdenv[topline=false, bottomline=false, skipabove=\topsep, rightline=false,
+  skipbelow=\topsep]{exercise}
+
+% graphs
+\usepackage{tikz}
+\usetikzlibrary[topaths]
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\title{B4M36SAN - Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování.}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Redukce dimenze}
+
+Při redukci dimenze chceme data dostat do nižší dimenze, např. kvůli vizualizaci nebo zmenšení při přenosu. Předpokladem je, že máme body $X = {x_i}$ z nějakého prostoru dimenze $D$. Předpokládáme, že $X$ leží aspoň přibližně na manifoldu dimenze $d < D$, kde $d$ je intrinsická dimenze.
+
+Manifold je topologický prostor, na kterém můžeme měřit Euklidovské vzdálenosti s malou chybou. Manifoldem dimenze 1 je nějak zkroucená křivka v prostoru vyšší dimenze (ale ne osmička, protože uprostřed se kříží), manifoldem dimenze 2 je např. rovina zkroucená do rolády. Předpoklad toho, že data leží na manifoldu nižší intrinsické dimenze je důležitý proto, že kdyby na manifoldu neležela, pak nemá smysl redukovat dimenzi (protože se to nepovede).
+
+Intrinsická dimenze popisuje, kolik proměnných je potřeba k popisu dat. Libovolný bod v $\mathbb{R}^3$ lze popsat třemi proměnnými, ale pokud víme, že leží na nějaké konkrétní přímce (nebo nějaké křivce), třeba na jedné z os, stačí nám proměnná jedna.
+
+Výstupem Redukce dimenze je nový prostor nižší dimenze než $D$, a dvě mapovací funkce: z původního prostoru do toho redukovaného, a z redukovaného prostoru do toho původního.
+
+\subsection{PCA - Principal Component Analysis}
+
+PCA najde největší varianci a transformuje data tak, aby byla ve směru osy. Toho dosáhne tak, že diagonalizuje kovariační matici. Data nejprve \textit{posuneme do počátku}.
+
+\begin{equation}
+X = 
+\left( \begin{array}{ccc}
+1 & 1 & 1\\
+1 & 2 & 1\\
+1 & 3 & 2\\
+1 & 4 & 3 \end{array} \right)
+%
+\sim
+%
+\left( \begin{array}{ccc}
+0 & -1.5 & -0.75\\
+0 & -0.5 & -0.75\\
+0 & 0.5 & 0.25\\
+0 & 1.5 & 1.25 \end{array} \right)
+\end{equation}
+Kovariační matici spočítáme tak, že na každou dvojici příznaků použijeme vzorec pro $\text{cov}(X, Y)$, a tím nám vznikne symetrická matice. Protože $E(X)$ všech příznaků je 0, tak se to dá zjednodušit na $C_X = \frac{1}{m}X^TX$.
+
+\begin{equation}
+\text{cov}(X,Y) = \frac{1}{n} \sum_{i=1}^n (x_i-E(X))(y_i-E(Y))
+\end{equation}
+
+Protože je kovariační matice symetrická, můžeme ji rozložit jako $C_X = P\Lambda P^{-1}$, kde $P$ má ve sloupcích vlastní vektory $C_X$ a $\Lambda$ je matice vlastních čísel. Protože $P$ je ortogonální, pak $P^{-1}=P^T$, a $P$ je zároveň transformační maticí, kterou hledáme.
+
+\subsection{Kernel PCA}
+
+PCA funguje dobře pro lineární data. Pokud máme data např. na kružnici, tak je PCA k ničemu. Chceme najít funkci $\Phi$, která data nejprve nějak upraví, aby šla lépe zpracovat (třeba $\mu_1 = x_1^2, \mu_2 = x_2^2$ pro kružnici, protože předpis kružnice je $x^2+y^2=1$).
+
+Využijeme toho, že v PCA jsme pracovali s daty $X$ jen jako se skalárním součinem $X^TX$. Zvolíme kernel funkci $K$. Pokud chceme běžné PCA, pak bude rovna skalárnímu součinu: $K(x_i, x_j) = \langle x_i, x_j\rangle$. Můžeme ale zvolit jiné funkce (které musí splňovat nějaké vlastnosti) a pak můžeme postupovat stejně jako u PCA, jen počítáme $C_X = \frac{1}{m}K$.
+
+Vhodnou kernel funkcí je např. RBF (radial basis function). KPCA funguje dobře i na nelineární manifoldy, a jeho složitost neroste s dimenzí dat (protože redukce dimenze se děje už v $K$). Nevýhodou je, že je těžké až nemožné získat funkci pro zpětnou transformaci dat.
+
+\subsection{MDS - MultiDimensional Scaling}
+
+Hlavní myšlenkou MDS je, že body, které jsou blízko sebe, mají zůstat blízko, a vzdálené body mají zůstat daleko od sebe. Řešíme úlohu, kde minimalizujeme stresovou funkci:
+
+\begin{equation}
+\text{stress}(T, f)=\sqrt{\frac{\sum_{i,j=1}^m(f(\delta_{ij})-d_{ij})^2}{\sum_{i,j=1}^m d_{ij}^2}}
+\end{equation}
+
+\noindent kde $T$ jsou data, $f$ je transformační funkce, a $d_{ij}$ a $\delta_{ij}$ jsou vzdálenosti v původním a novém prostoru.
+
+Pro vhodný výpočet vzdálenosti na manifoldu můžeme použít funkci \textbf{Isomap}. V ní se sestaví graf (síť) nejbližších bodů, např. zohledněním okolí nebo nalezení $k$ nejbližších sousedů. Pak se spočítají euklidovské vzdálenosti mezi přímými sousedy, a vzdálenosti dalších bodů se získají jako délka nejkratší cesty grafem (součet euklidovských vzdáleností). 
+
+
+\subsection{LLE - Locally Linear Embedding}
+
+Každý bod vyjádříme jako lineární kombinaci sousedů, s nějakými váhami. Chceme, aby po transformaci zůstaly tyto váhy zachovány. Řešíme pak úlohu lineárního programování.
+
+Výhodou LLE je, že jediným parametrem je počet sousedů, a je efektivní i pro velké datové sady. Nevýhodou je, že metoda není stabilní v řídkých oblastech, a pokud se do dat přidá nový bod, je potřeba vše spočítat znovu.
+
+\subsection{t-SNE - t-Distributed Stochastic Neighbor Embedding}
+
+Klade důraz na to, že malé vzdálenosti zůstanou podobné, u velkých povoluje větší změny. Vzdálenosti převedu na pravděpodobnosti (je pravdděpodobnější, že vytáhneme dva body, které jsou blízko sebe). Vzdálenost bodů $i$ a $j$ v původním prostoru bude nepřímo úměrná pravděpodobnosti $p_{ij}$, a v novém prostoru bude vzdálenost nepřímo úměrná pravděpodobnosti $q_{ij}$. Pak minimalizujeme Kullback-Leiblerovu divergenci:
+
+\begin{equation}
+S=KL(P||Q)=\sum_i\sum_{j\neq i} p_{ij}\text{log}\frac{p_{ij}}{q_ij}
+\end{equation}
+
+Ve slidech jsou obrázky, kde je vidět, že to dobře funguje na clusterování - třeba charakteristiky rukou psaných číslic tam jdou hezky rozdělit do skupin, protože důraz byl na to, aby podobné číslice zůstaly u sebe, a oddělení jednotlivých skupin nevadí.
+
+\subsection{SOM - Self Organizing Map}
+V sešitě o tom nic nemám a ze slidů to moc nechápu. Podle jednoho YT videa to vypadá, že se udělá síť s několika \textit{neurony} (zvolíme tolik neuronů, kolik očekáváme clusterů), a tu síť se snažíme napasovat na data:
+
+\begin{enumerate}
+\item Vybereme nějaký bod v datech
+\item Najdeme nejbližší neuron, to je \textit{winner}, a síť posuneme/natáhneme tak, aby byl \textit{winner} blíž k vyubranému bodu
+\item Jdeme na krok 1 a vybereme nový bod
+\end{enumerate}
+
+\noindent Na konci máme síť, kde každý neuron by měl být u jednoho clusteru dat. Je to dost podobné jako $k$-means.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
