@@ -6,6 +6,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{delarray}
+\usepackage{float}
 
 % exercises and solutions
 \usepackage{mdframed}
@@ -14,7 +15,7 @@
 
 % graphs
 \usepackage{tikz}
-\usetikzlibrary[topaths]
+%\usetikzlibrary[todraws]
 
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 
@@ -108,6 +109,160 @@ V sešitě o tom nic nemám a ze slidů to moc nechápu. Podle jednoho YT videa 
 \end{enumerate}
 
 \noindent Na konci máme síť, kde každý neuron by měl být u jednoho clusteru dat. Je to dost podobné jako $k$-means.
+
+
+
+
+
+
+
+\section{Shlukování}
+
+Shlukování je zpracování dat, kdy se snažíme body rozdělit do $k>1$ tříd. Výsledkem je množina $\Omega = \{C_1, C_2, \dots, C_k\}$, kde $C_i$ jsou výsledné disjunktní shluky (množiny bodů). Vhodnou metodu budeme vybírat podle toho, jaká máme data: víme, kolik je shluků? Jak jsou shluky husté? Jaký mají shluky tvar?
+
+\subsection{K-means}
+
+\begin{enumerate}
+\item Vyberu $k$ bodů z dat, klidně náhodně. Do nich umístím středy shluků.
+\item U každého bodu v datech najdu, do kterého shluku patří (najdu nejbližší střed).
+\item Každý střed posunu tak, aby ležel uprostřed svého shluku (tj najdu medián všech bodů, které přísluší k danému středu).
+\item Opakuju body 2 a 3, dokud se středy mění.
+\end{enumerate}
+
+K-means vždycky skončí, protože součet vzdáleností bodů od středů se v kroku dva zmenší, a v kroku 3 zůstává stejný, a nemůžeme zmenšovat do nekonečna. Algoritmus může ale uváznout v lokálním minimu - to se obvykle řeší tak, že vybereme nejlepší výsledek z několika náhodně inicializovaných běhů.
+
+Můžeme použít různé vzdálenostní funkce a bude to fungovat taky. Důležité je vybrat správné $k$. To se dá dělat tak, že spustím algoritmus pro různá $k$, a počítám nehomogenitu $W(k)$ (součet vzdáleností bodů od středů). Všechna $W(k)$ zakreslím do grafu a zvolím takové $k$, na kterém nehomogenita náhle klesla a dál už neklesá - graf tam vypadá jako pata. Další možností je $W(k)$ dále zpracovat a spočítat z něj Hartiganovo kritérium.
+
+Variantou k-means je kernel k-means, kde nejprve body převedeme kernel funkcí a jejich vzdálenosti počítáme v jiném prostoru. Tím pak jdou shlukovat i data, která nejsou lineárně separovatelná.
+
+\subsection{EM - Expectation Maximization}
+
+Je složitý, vzorce nechápu, a proto sem dávám jen intuitivní popis. EM je hodně podobný algoritmu k-means co se týče postupu a kroků, ale liší se v tom, jak se body přiřazují do shluků. V k-means bylo přiřazení ostré: každý bod patří přesně do jednoho shluku, a shluk je definovaný svým středovým bodem. V EM jsou \textit{středy shluků} pravděpodobnostní rozdělení, která mají $\mu$ a rozptyly (v případě Gaussů). Pak nezjišťujeme, do kterého shluku bod patří, ale s jakou pravděpodobností patří do každého shluku (Expectation). V druhé fázi (Maximization) pak hledáme nové a lepší parametry shluků metodou MLE (Maximal Likelihood Estimation).
+
+Výhodou EM oproti k-means je to, že na konci máme rozdělení, a můžeme generovat nové vzorky dat. Shluky taky můžou mít různé tvary.
+
+
+\subsection{Hierarchické shlukování}
+
+Data shlukujeme na základě podobnosti, nemusíme předem znát počet shluků. První možnost je začít s jedním shlukem a ten dělit na menší (to je sice efektivní, ale složité, a dál se tím nebudeme zabývat). Druhá možnost je umístit každý bod do vlastního shluku, postupně spojovat podobné shluky. Vzniká přitom strom - dendrogram, kde je vidět, jak se postupně shluky spojují, dokud nemáme jeden velký shluk.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics{img/dendrogram.png}
+\end{figure}
+
+Na základě dendrogramu se můžeme rozhodnout, kde shlukování zastavíme, udělat tam svislou čáru a tím určit počet shluků. Na obrázku máme svislé čáry dvě, jednou vznikne 6 shluků, druhou pouze dva shluky. \textit{Výška} v dendrogramu znázorňuje vzdálenost shluků
+
+Pro tento typ shlukování je zásadní, jak počítáme vzdálenost shluků:
+\begin{itemize}
+\item \textbf{Single linkage} Vzdálenost shluků je rovna vzdálenosti dvou nejbližších bodů ve shlucích
+\item \textbf{Complete linkage} Vzdálenost shluků je rovna vzdálenosti dvou nejvzdálenějších bodů ve shlucích
+\item \textbf{Average linkage} Vzdálenost shluků získáme jako průměr vzdáleností všech dvojic bodů
+\item \textbf{Centroid} Vzdálenost shluků získáme jako vzdálenost jejich středů
+\end{itemize}
+
+Vliv výpočtu vzdáleností shluků je patrný na obrázku níže, kde pracujeme s jednodimenzionálními daty: 2, 12, 16, 25, 29, 45.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{img/dendrogram-example.png}
+\end{figure}
+
+\subsection{Shlukování podle hustoty}
+
+Předpokládáme, že shluky budou mít vyšší hustotu a budou odděleny místy, kde je hustota nižší. Výhodou takového algoritmu je, že nepotřebuje $k$ a umí najít i shluky, které jsou do sebe zamotané, třeba dvě spirály. Naopak problém je, pokud mají shluky různou hustotu.
+
+Shlukování podle hustoty dělá algoritmus DBSCAN. Ten potřebuje dva parametry: velikost okolí a počet sousedů v husté oblasti. Body pak dělí do tří skupin: bod uvnitř shluku (má dost sousedů), hraniční bod (nemá dost sousedů, ale jeho přímí sousedi jsou uvnitř shluku) a bod mimo shluk (nemá dost sousedů, a nesousední s body uvnitř shluku). Výstupem jsou shluky a pak seznam bodů mimo ně.
+
+\subsection{Spektrální shlukování}
+
+Z dat vytvořím síť (graf) a postupně odebírám ty nejdelší hrany. Výsledkem je několik oddělených komponent (shluků). Pro jednoduchost budu pracovat s grafem, ve kterém jsou patrné dvě komponenty (jak se pracuje s body a ne z grafem je popsané níže).
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}
+    \node[shape=circle,draw=black] (A) at (0,1) {A};
+    \node[shape=circle,draw=black] (B) at (0,0) {B};
+    \node[shape=circle,draw=black] (C) at (1, 0.5) {C};
+    \node[shape=circle,draw=black] (D) at (2.5, 0.5) {D};
+    \node[shape=circle,draw=black] (E) at (3.5, 1) {E};
+    \node[shape=circle,draw=black] (F) at (3.5, 0) {F} ;
+
+    \draw(A) to (B);
+    \draw(B) to (C);
+    \draw(A) to (C);
+    \draw(D) to (C);
+    \draw(D) to (E);
+    \draw(D) to (F);
+    \draw(E) to (F);   
+\end{tikzpicture}
+\end{figure}
+
+Nejprve určím matici $S$, kde je jednička, pokud z vrcholu $i$ do vrcholu $j$ vede hrana. Protože je graf neorientovaný, bude matice symetrická. Pokud bychom nepracovali s grafem ale s body, tak matice $S$ bude \textit{similiarity}-matrix, kde počítáme blízkost bodů Gaussovým kernelem (čím bližší body, tím vyšší hodnota) a pak prahujeme podle nějaké konstanty. Tak jako tak vznikne symetrická matice.
+
+Kromě matice $S$ sestavíme taky matici $D$, která bude mít na diagonále stupně vrcholů a jinak bude nulová (tedy je taky diagonální). Z nich spočítáme Laplacián grafu, $L = D - S$.
+
+\begin{equation}
+S = 
+\left( \begin{array}{cccccc}
+0 & 1 & 1 & 0 & 0 & 0\\
+1 & 0 & 1 & 0 & 0 & 0\\
+1 & 1 & 0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0 & 1 & 1\\
+0 & 0 & 0 & 1 & 0 & 1\\
+0 & 0 & 0 & 1 & 1 & 0\end{array} \right)
+%
+,
+%
+D = 
+\left( \begin{array}{cccccc}
+2 & 0 & 0 & 0 & 0 & 0\\
+0 & 2 & 0 & 0 & 0 & 0\\
+0 & 0 & 3 & 0 & 0 & 0\\
+0 & 0 & 0 & 3 & 0 & 0\\
+0 & 0 & 0 & 0 & 2 & 0\\
+0 & 0 & 0 & 0 & 0 & 2\end{array} \right)
+%
+,
+%
+L = 
+\left( \begin{array}{cccccc}
+2 & -1 & -1 & 0 & 0 & 0\\
+-1 & 2 & -1 & 0 & 0 & 0\\
+-1 & -1 & 3 & -1 & 0 & 0\\
+0 & 0 & -1 & 3 & -1 & -1\\
+0 & 0 & 0 & -1 & 2 & -1\\
+0 & 0 & 0 & -1 & -1 & 2\end{array} \right)
+\end{equation}
+
+K matici $L$ spočítáme vlastní čísla a vlastní vektory (postup je rozepsaný na webu v QR kódu), a vyjdou čtyři vlastní čísla a vektory:
+
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.15\textwidth}
+\centering
+\includegraphics[width=\textwidth]{img/spectral-clustering-qr}
+\end{minipage} \hfill
+\begin{minipage}{0.84\textwidth}
+
+$\lambda_1 = 0, v_1 = (1, 1, 1, 1, 1, 1)$\\
+$\lambda_2 \doteq 0.44, v_2 = (-1, -1, -0.56, 0.56, 1, 1)$\\
+$\lambda_3 = 3, v_3 = (-1, 1, 0, 0, 0, 0)$\\
+$\lambda_4 \doteq 4.56, v_4 = (-1, -1, 3.56, -3.56, 1, 1)$\\
+
+
+\end{minipage}
+\end{figure}
+
+Teď jsou dva způsoby, jak z toho dostat clustery. Na přednášce jsme si říkali, že vektory dáme jako sloupce do matice $V$, a pak v řádcích té matice máme body. Na ně spustíme nějaké rychlé shlukování, třeba k-means. V přednáškách ze Stanfordu na to jdou ještě lépe, vezmou vektor odpovídající druhému nejmenšímu vlastnímu číslu (to nejmenší je nula a to je nuda), tedy v našem případě $v_2 = (-1, -1, -0.56, 0.56, 1, 1)$. Pak řeknou, že body, kterým přísluší záporné hodnoty (A, B, C) jsou jeden shluk a zbylé body jsou druhý shluk (D, E, F). Pokud chtějí víc clusterů, tak zpracovávají vektor $v_2$, někdy tam je těch úrovní zřetelných víc.
+
+
+
+
+
+
+
 
 
 
