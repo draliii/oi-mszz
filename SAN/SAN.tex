@@ -499,6 +499,92 @@ Pravděpodobnost získáme z diskriminantu jako $P(Y=k|X=x) = \frac{e^{\delta_k(
 
 
 
+\section{Robustní statistika}
+
+Chceme, aby výsledek našeho odhadu nebyl pokažen outliery nebo špatným předpokladem rozdělení. Zápisky i slidy jsou dost stručné, takže jen v bodech různé způsoby hodnocení odhadových metod:
+
+\begin{itemize}
+\item \textbf{Breakdown point}: největší možný podíl dat, který můžeme měnit, než to úplně znehodnotí odhad. U aritmetického průměru je Breakdown Point 0\%, protože jen jeden bod dokáže výsledek posunout úplně jinam. U mediánu je potřeba změnit 50\% dat.
+\item \textbf{Influence Function}: dá se počítat přímo z dat (říká wikipedie), ale ve slidech je jiný druh. V něm se počítá, jaký vliv má na výsledek nějaké funkce změna dat v bodě $x$ o hodnotu $\varepsilon$. Na vstupu není celý dataset.
+\item \textbf{ARE} - Asymptotic relative efficiency: Kromě správnosti odhadu měříme i to, jak často se mění, tedy vlastně rozptyl odhadů. ARE je vlastně podíl rozptylů pro dvě různé metody odhadu.
+\end{itemize}
+
+\paragraph{Odhady polohy} Snažíme se zjistit \textit{střed dat}, tedy třeba střední hodnotu, to jde dělat více metodami. Názorně to je vidět na ukázce dat: $\{-39.61, -26.29, -1.07, -0.92, -0.85, -0.16, 0.93, 1.91, 2.18, 133.65\}$.
+
+\begin{itemize}
+\item \textbf{Průměr}: Použijí se všechny hodnoty, vyjde 6.97. Průměr je ideální, pokud vzorky odpovídají normálnímu rozdělení.
+\item \textbf{Medián}: Použijí se prostřední dvě hodnoty, tedy -0.85 a -0.16, a výsledek je -0.51.
+\item \textbf{q\% trimmed}: Odstaníme daný podíl dat z obou stran, na \textit{prostředku} spočítáme průměr. Pokud odebereme 2 body z každé strany, vyjde výsledek -0.41.
+\item \textbf{q\% windsorized}: Krajní body neodstraníme, ale nahradíme je za poslední hodnotu, kterou ještě použijeme. Se stejným $q$ jako v minulém bodě dostaneme data $\{-1.07, -1.07, -1.07, -0.92, -0.85, -0.16, 0.93,$ $1.91, 1.91, 1.91\}$, a z nich je průměr 0.33.
+\item \textbf{Hodges-Lehman}: Data zpracováváme po dvojicích, spočítáme průměr pro každou dvojici, a z těchto průměrů vybereme medián, vyjde -0.03.
+\end{itemize}
+
+\paragraph{Robustní regrese} U lineární regrese jsme předpokládali, že chyby $\varepsilon$ mají normální rozdělení, a jako ztrátovou funkci jsme používali $(y-\bar{y})^2$. Pokud jsou chyby z jiného rozdělení, mění se i ztrátové funkce (může použít absolutní hodnotu, Huberovu fci, Hampelovu fci, nejmenší medián atd, ve slidech jich je hodně). Pak už se to optimalizuje daleko hůř.
+
+\paragraph{Odhady rozptylu}
+\begin{itemize}
+\item \textbf{Směrodatná odchylka vzorku}: $\sigma^2 = 1/n\sum_{i=1}^n (x_i - \bar{x})^2$, kde $\bar{x}$ je průměrná hodnota vzorků (a někde je ve jmenovateli dokonce $n-1$, ale nevím, čím se to řídí).
+\item \textbf{Mediánová odchylka}: $\text{MAD} = \text{med}\{|x_i - \text{med}\{x_i\}|\}$
+\item $S_n$: Tohle je prý nejlepší a měli bychom to v praxi používat. $S_n = \text{med}_i \{\text{med}_j |x_i - x_j|\}$
+\end{itemize}
+
+\paragraph{Výpočet korelace} Korelace se počítá různě: Pearsonova korelace, Spearmanova korelace, Kendallova korelace. Každá má trochu jiný vzorec, a ani jeden sem přepisovat nebudu, stejně si to nebudu pamatovat. Kendallova korelace je nerobustnější, ale je pomalá - počítám, kolik z párů má \textit{shodu}, kde shoda tam je, pokud $x_i > x_j$ a zároveň $y_i > y_j$ (a to samé pro obě $<$). Zajímá mě počet shod mínus počet neshod.
+
+\paragraph{Neparametrické testy} To jsou takové testy, které nepředpokládají nějaké konkrétní rozdělení.
+
+\begin{itemize}
+\item \textbf{Sign test}: Máme dvojice dat $(x, y)$. Počítáme, kolikrát nastalo $y > x$, a tím můžeme zjistit změnu, např. jestli léčba pomohla nebo ne.
+\item \textbf{Wilcoxon signed U-test} Testujeme hypotézu, že jsou dvojice rovnoměrně rozložené kolem nuly. Zahodíme dvojice, kde $|y-x|=0$, zbylé vzorky seřadíme podle $|y-x|$ a zjistíme jejich umístění (rank). Pak spočítáme statistiku $W$, a pokud nulová hypotéza platí, tak průměr bude nulový a směrodatná odchylka odpovídá nějakému vzorci.
+\item \textbf{Mann-Whitney test} Testujeme hypotézu, že pravděpodobnost, že data z vzorku $X$ jsou větší než data z vzorku $Y$, je větší než 0.5. Taky se nepracuje přímo s daty, ale s jejich ranky. 
+\end{itemize}
+
+\section{Detekce anomálií}
+
+Snažíme se v datech najít body, které tam nepatří. Detekce anomálií může být \textit{supervised}, v tom případě jsou data zaručeně čistá, nebo může být \textit{unsupervised}, a pak jsou v datech anommálie, ale algoritmus neví jaké. Bod, který leží mimo, je \textit{anomálie} nebo \textit{outlier}. Anomálie mají jiné statistické vlastnosti, leží v oblastech s nižší hustotou, nebo leží daleko od většiny, přesná definice závisí na daném problému.
+
+Anomálie jsou různé: soustředěné (několik špatných dat na jednom místě) nebo rozprostřené (každá anomálie je daleko od všeho ostatního). Taky se dělí na lokální (máme dvě třídy, v jedné z nich jeden bod nezapadá), nebo globální (začíná se nám tvořit třetí třída dat).
+
+V praxi prý nejlépe funguje knn a stromy.
+
+\paragraph{Parzen window} Z trénovacích dat odhadneme hustotu pravděpodobnosti v daném bodě. V místech s nízkou hustotou pak budou anomálie. K zjištění toho, jakým dílem který bod přispívá k hustotě v daném $x$ použijeme kernel, třeba Gaussovský. Pak se stane to, že hustota závisí na tom, jestli jsou nějaké body blízko, a vzdálené body ji ovlivní jen zcela zanedbatelně.
+
+\paragraph{K nejbližších sousedů} V bodě $x$ spočítáme vzdálenost ke $k$-tému nejbližšímu prvku. Pokud je $x$ mezi ostatními body, bude i několikátý soused blízko. Pokud je $x$ anomálie, tak kolem sebe nebude mít dostatek sousedů a hodnota vyjde vysoká. I když záleží na typu anomálií, které čekáme. Pro shluknuté anomálie by to moc dobře nefungovalo.
+
+\paragraph{LOF - Local Outlier Factor} Spočítáme lokální hustotu jako robustní průměr inverzí vzdáleností ke $k$ nejbližším sousedům. Tuto hodnotu porovnáme s hustotami v sousedech.
+
+\paragraph{Angle-based outlier detection} Úhly jsou ve vyšších dimenzích stabilnější než vzdálenosti. Pokud má bod na všechny strany od sebe jiné body, pak je nejspíš normální. Pokud má body jen na jedné straně, tak asi leží na kraji shluku, nebo je to anomálie.
+
+\paragraph{Parametrická detekce} Najdeme (robustně!) parametry rozdělení, ze kterého data pochází. Pak se podíváme na jeho hustotu a najdeme anomálie v místech s nízkou hustotou. To ale nemusí vždy dobře fungovat, pokud se nám nepovede odhad parametrů.
+
+\paragraph{Odhad přes hustotu} Najdeme takovou oblast dat, která je co největší, a ve které leží předem určená část dat $\alpha$. To znamená, že většina dat ($1 - \alpha$) je v nějakém malém clusteru s velkou hustotou.
+
+\paragraph{SVM - Support Vector Machines} Chceme data rozdělit nějakou nadrovinou tak, aby vzdálenost bodů poblíž nadroviny od ní byla co největší (tedy přímku chceme v 2D grafu natočit tak, aby kolem sebe měla co nejvíc prostoru). Přitom se snažíme zajistit, aby body byly na správné straně přímky. Pokud nejsou, můžeme povolit nějaké chyby a přidat parametr shovívavosti. Pokud data v dané dimenzi nejdou lineárně separovat, můžeme použít kernel funkce.
+
+\paragraph{Isolation Forest} Sestavujeme strom, kdy postupně odřezáváme kusy dat. To, co zbyde na konci (hluboko ve stromu) jsou pravděpodobně normální data, a to, co se hned odřízlo (je mělko ve stromu) může být anomálie. Je vhodné sestavit několik stromů. Pro bod se pak sestaví \textit{anomaly score}, které určí na základě hloubek ve stromech, jestli jde o anomálii.
+
+\paragraph{Frac} Jde o \textit{supervised} přístup. Na normálních datech natrénujeme prediktory pro každou ze souřadnic na základě těch ostatních. Pak se do toho strkají nová data a pokud to nevychází, může jít o anomálie. Funguje to dobře na korelovaných datech, ale má to limity. Například pokud data leží na přímce $x=y$ na intervalu [0, 3], tak jakýkoliv bod mimo přímku bude správně odhalen jako outlier. Bohužel bod $x=4, y=4$ to neodhalí, protože odpovídá \textit{trendu}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
