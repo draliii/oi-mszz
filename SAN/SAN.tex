@@ -255,7 +255,44 @@ $\lambda_4 \doteq 4.56, v_4 = (-1, -1, 3.56, -3.56, 1, 1)$\\
 \end{minipage}
 \end{figure}
 
-Teď jsou dva způsoby, jak z toho dostat clustery. Na přednášce jsme si říkali, že vektory dáme jako sloupce do matice $V$, a pak v řádcích té matice máme body. Na ně spustíme nějaké rychlé shlukování, třeba k-means. V přednáškách ze Stanfordu na to jdou ještě lépe, vezmou vektor odpovídající druhému nejmenšímu vlastnímu číslu (to nejmenší je nula a to je nuda), tedy v našem případě $v_2 = (-1, -1, -0.56, 0.56, 1, 1)$. Pak řeknou, že body, kterým přísluší záporné hodnoty (A, B, C) jsou jeden shluk a zbylé body jsou druhý shluk (D, E, F). Pokud chtějí víc clusterů, tak zpracovávají vektor $v_2$, někdy tam je těch úrovní zřetelných víc.
+Teď jsou dva způsoby, jak z toho dostat shluky. Na přednášce jsme si říkali, že vektory dáme jako sloupce do matice $V$, a pak v řádcích té matice máme body. Na ně spustíme nějaké rychlé shlukování, třeba k-means. V přednáškách ze Stanfordu na to jdou ještě lépe, vezmou vektor odpovídající druhému nejmenšímu vlastnímu číslu (to nejmenší je nula a to je nuda), tedy v našem případě $v_2 = (-1, -1, -0.56, 0.56, 1, 1)$. Pak řeknou, že body, kterým přísluší záporné hodnoty (A, B, C) jsou jeden shluk a zbylé body jsou druhý shluk (D, E, F). Pokud chtějí víc clusterů, tak zpracovávají vektor $v_2$, někdy tam je těch úrovní zřetelných víc.
+
+
+\section{Multivariátní analýza}
+
+\subsection{ANOVA - Analýza rozptylu}
+
+Zjišťujeme, jestli můžeme zamítnout hypotézu $H_0$: průměry ve všech skupinách dat jsou stejné (např. ženy, muži i děti mají stejnou výšku v cm). Mohli bychom to dělat třeba nepárovým t-testem na dvojici vzorků (párový t-test porovnává stejná data před a po, např. náladu lidí před vypitím kafe a po něm). Problém je, že pokud budeme dělat t-test pro každou dvojici skupin, tak to bude časově náročné pro hodně skupin, a taky tam bude víc chyb.
+
+ANOVA předpokládá, že v každé skupině mají data normální rozdělení, že jsou nezávislá, a všechny skupiny mají stejný rozptyl. Zkoumáme vždy právě jednu proměnnou.
+
+Zkusím to na třech třídách dat, $A = \{1, 2, 5\}, B = \{2, 4, 2\}, C = \{2, 3, 4\}$. Nulová hypotéza je, že všechny skupiny mají stejnou střední hodnotu. Všechno v postupu počítáme dvakrát, jednou mezi třídami (between) a pak uvnitř tříd (within). Názvy Ve slidech se to značí treat a error, což mě mátlo, a tak to sem psát nebudu.
+
+Stupně volnosti jsou: $DF_{\text{between}} = k - 1 = 3-1 = 2, DF_{\text{within}} = N - k = 9 - 3 = 6$, kde $N$ je počet datových bodů, a $k$ je počet tříd. Pomocí stupňů volnosti najdeme tabulkovou $F$ hodnotu, $F_{\text{crit}} = 5.14$.
+
+Spočítáme střední hodnota pro skupiny: $\mu_A=2.67,\mu_B=2.67,\mu_C=3$ a celkový průměr $\mu=2.78$. Počítáme \textit{Sum of Squares} ($SS$). Celkový $SS$ je součet vzdáleností všech bodů od střední hodnoty, a má dvě součásti: uvnitř skupiny a mezi skupinami. Sumy nejsou korektně značené, total se počítá pro všechna data, a within pro všechna data, ale odděleně po třídách.
+
+\noindent $SS_\text{total} = \sum (x - \mu)^2 = (1-2.78)^2 + (2-2.78)^2 + (5-2.78)^2 + (2-2.78)^2 + (4-2.78)^2 + (2-2.78)^2 + (2-2.78)^2 + (3-2.78)^2 + (4-2.78)^2  = 13.6$
+
+\noindent $SS_\text{within} = \sum (x - \mu_X) = (1-2.67)^2 + (2-2.67)^2 + (5-2.67)^2 + (2-2.67)^2 + (4-2.67)^2 + (2-2.67)^2 + (2-3)^2 + (3-3)^2 + (3-4)^2 = 13.34$
+
+\noindent $SS_\text{between} = SS_\text{total} - SS_\text{within} = 13.6 - 13.34 = 0.23$
+
+Dál počítáme \textit{rozptyly}:
+
+\noindent $MS_\text{between} = \frac{SS_\text{between}}{DF_text{between}} = \frac{0.23}{2} = 0.12$
+
+\noindent $MS_\text{within} = \frac{SS_\text{within}}{DF_text{within}} = \frac{13.34}{6} = 2.22$
+
+Spočítáme $F$ hodnotu, $F=\frac{MS_\text{between}}{MS_\text{within}} = \frac{0.12}{2.22} = 0.05$
+
+Protože $F<F_\text{crit}$, tedy $0.05 < 5.14$, tak nemůžeme nulovou hypotézu zamítnout, tedy je možné, že všechny skupiny mají stejnou střední hodnotu. F rozdělení je podíl dvou $\chi^2$ rozdělení.
+
+Pokud by ANOVA nulovou hypotézu zamítla, tak pak by se třeba hodilo vědět, která ze skupin má odlišnou střední hodnotu. To nám ale ANOVA říct neumí, a musíme to zjistit jinak, třeba Tukeyho HSD testem. ANOVA umí pracovat pouze s jednou proměnnou, a pracuje s nezávislými měřeními.
+
+\subsection{MANOVA}
+
+Funguje podobně jako ANOVA, ale umožňuje víc náhodných veličin. Předpokladem je, že rozdělení jsou normální a mají napříč třídami stejné kovariační matice, jsou náhodně vzorkované atd, jako u ANOVy. Pro $p$ náhodných veličin vzniknou místo dvou hodnot $SS$ z ANOVy dvě matice $E$ a $H$ z $\mathbb{R}^p$. Pak ve vzorci není $(x - \mu)^2$, ale $(x_i - \mu_i)(x_j - \mu_j)$. Výsledek MANOVY se zpracuje Wilkovým lambda testem (nebo něčím jiným).
 
 
 
@@ -263,7 +300,82 @@ Teď jsou dva způsoby, jak z toho dostat clustery. Na přednášce jsme si ří
 
 
 
+\section{Regrese}
 
+\subsection{Lineární regrese}
+
+Chceme data proložit přímkou (nebo rovinou). Předpokládáme, že data jsou lineární a že chyba od dat má normální rozdělení. I přes to, že jsou předpoklady nereálné, to dobře funguje. Pracujeme s modelem $Y = \beta_0 + \beta_1 X + \varepsilon$, kde $\beta$ jsou parametry, které hledáme, a $\varepsilon$ je chyba nebo šum.
+
+Spočítáme RSS (Residual sum of squares) jako součet všech chyb: $RSS = \sum (y_i - \beta_0 - \beta_1x_1)^2$. RSS pak minimalizujeme, abychom dostali optimální parametry $\beta$.
+
+Např. chceme proložit body: $[1, 3], [2,4], [3,5], [4, 4], [5,4], [6,5], [7,6], [8,7]$. Pro jednoduchost přejmenujeme parametry $\beta$, takže pracujeme se vztahem $y = a + bx + \varepsilon$. Vypočítáme $RSS = \sum (y_i - a - bx_i)^2 = (3-a-b)^2 + (4-a-2b)^2 + (5-a-3b)^2 + (4-a-4b)^2 + (4-a-5b)^2 + (5-a-6b)^2 + (6-a-7b)^2 + (7-a-8b)^2 = \cdots = 192 - 76a -370b + 8a^2  + 72ab + 204b^2$.
+
+Tím máme RSS, a to chceme minimalizovat. Nejmenší hodnota bude tam, kde je nulová derivace (tam se křivka zvedá zase zpět nahoru).
+
+
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+\begin{split}
+\frac{\partial{RSS}}{\partial{a}} = 0 \\
+-76 +16a +72b = 0 \\
+16a + 72b = 76 \\
+4a + 18b = 19 \\
+a = \frac{19 - 18b}{4}
+\end{split}
+\end{equation}
+\end{minipage} \hfill
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+\begin{split}
+\frac{\partial{RSS}}{\partial{b}} = 0 \\
+-185+36a+204b=0 \\
+36a+204b=185 \\
+36\frac{19-18b}{4} + 204b = 185 \\
+171 -162b+204b = 185 \\
+42b = 14\\
+b = \frac{1}{3}\\
+a = \frac{19-\frac{18}{3}}{4} = \frac{13}{4}
+\end{split}
+\end{equation}
+\end{minipage}
+
+Dostali jsme parametry přímky: $y = \frac{x}{3} + \frac{13}{4}$. Vyznačené svislé čáry směrem k přímce jsou chyby $\varepsilon$, které jsme minimalizovali.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}
+\draw[help lines, color=gray!30, dashed] (0, 0) grid (8.9,8.9);
+\draw[->,ultra thick] (-0.2, 0)--(9,0) node[right]{$x$};
+\draw[->,ultra thick] (0,-0.2)--(0,9) node[above]{$y$};
+
+\foreach \x/\y in {1/3,2/4,3/5,4/4,5/4,6/5,7/6,8/7}{
+	\draw[color=gray!60] (\x,\y)--(\x, 13/4+\x/3);
+	\node at (\x,\y) {\textbullet};
+}
+
+% \foreach \Point in {(1, 3), (2,4), (3,5), (4, 4), (5,4), (6,5), (7,6), (8,7)}{
+%     \node at \Point {\textbullet};
+% }
+
+\draw (-0.2, 3.183)--(8.9, 6.2167);
+
+\end{tikzpicture}
+\end{figure}
+
+Jakmile máme parametry, tak můžeme měřit jejich chybu $SE$ pro každý z parametrů zvlášť, nebo RSE (residual standard error), což je odhad $\sigma$. Z hodnot $SE$ můžeme získat \textit{confidence intervaly}, které nám říkají, že s pravděpodobností $1-\alpha$ bude hodnota parametru ležet uvnitř toho intervalu. $SE(\beta_1)^2 = \frac{\sigma^2}{\sum_{i=1}^m(x_i-\bar{x})^2}$, kde jako $\sigma^2$ můžeme použít odhad $\sigma^2 = \frac{RSS}{m-2}$.
+
+Testování hypotéz: Testujeme $H_0$, že není vztah mezi $X$ a $Y$, tedy $H_0: \beta_1 = 0$. Použijeme t-statistiku: $t = \frac{\beta_1 - 0}{SE(\beta_1)}$, kde za $\beta_1$ dosadíme parametr odhadnutý lineární regresí (a mně se nad něj nechce psát pořád stříšku). Má to $m-2$ stupně volnosti.
+
+K hodnocení přesnosti modelu můžeme použít $R^2$, které nám říká, jaká část rozptylu v datech je vysvětlená modelem. $TSS = \sum_{i=1}^m(y_i - \bar{y})^2$ je celkový součet čtverců (vzdálenost od střední hodnoty), $RSS = \sum_{i=1}^m(y_i - \hat{y}_i)^2$ je vzdálenost bodů od odhadů. Pak $R^2 = \frac{TSS - RSS}{TSS}$.
+
+Pokud chceme pracovat s vícedimenzionálním vstupem, přidáme další parametr beta:  $Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon$. Pokud máme pocit, že se různé vstupy ovlivňují, např. zisk v závislosti na reklamu v televizi a reklamu v rozhlase, tak můžeme přidat ještě jeden parametr: $Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 (X_1 X_2) + \varepsilon$ a pak zjišťujeme, které $\beta$ je nejvýznamnější.
+
+\paragraph{Ridge regression}
+Neminimalizujeme jen $RSS$, ale $RSS + \lambda\sum\beta_i^2$, tedy penalizujeme velká $\beta$, a parametr $\lambda$ určuje, jak přísně. To vede k tomu, že parametry $\beta$ budou co nejnižší, a tedy neužitečné proměnné se skoro nepoužijí ($\beta$ bude nula). Než se na datech spustí ridge regression, je vhodné data standardizovat (ve slidech je na to složitý vzorec, ale předpokládám, že to prostě od dat odečte střední hodnotu, aby byly v průměru na nule). Vhodný parametr $\lambda$ najdeme třeba cross-validací.
+
+\paragraph{Lasso regression} Funguje stejně jako ridge regression, ale minimalizuje $RSS + \lambda\sum|\beta_i|$, tedy ne druhé odmocniny. Tím budou koeficienty u neužitečných prediktorů nejen malé, ale dokonce nulové, a budeme je moct úplně zahodit.
+
+\subsection{Nelineární regrese}
 
 
 
