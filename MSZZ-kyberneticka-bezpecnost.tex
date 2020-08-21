@@ -1,20 +1,42 @@
-\documentclass{article}
+\documentclass{book}
+
+\usepackage[x11names]{xcolor}
 \usepackage{pdfpages}
 \usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{delarray}
+\usepackage{float}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+% exercises and solutions
+\usepackage{mdframed}
+\newmdenv[topline=false, bottomline=false, skipabove=\topsep, rightline=false,
+  skipbelow=\topsep]{exercise}
+
+% graphs
+\usepackage{tikz}
+\usetikzlibrary[topaths]
+
 \title{Státnicové otázky oboru Kybernetická bezpečnost}
 \date{}
 \author{https://github.com/draliii/oi-mszz}
+
 \begin{document}
+
 \maketitle
-%\includepdf[pages=-]{PAL/PAL}
-%\includepdf[pages=-]{TAL/TAL}
-%\includepdf[pages=-]{KO/KO}
-%\includepdf[pages=-]{SAN/SAN}
-%\includepdf[pages=-]{ZKS/ZKS}
-%\includepdf[pages=-]{BSY/BSY}
 
-\includepdf[pages=-]{MKR/MKR}
-
-%\includepdf[pages=-]{PST/PST}
-%\includepdf[pages=-]{KBE/KBE}
+%\include{PAL/PAL}
+%\include{TAL/TAL}
+%\include{KO/KO}
+\include{SAN/SAN}
+%\include{ZKS/ZKS}
+%\include{BSY/BSY}
+\include{MKR/MKR}
+%\include{PST/PST}
+%\include{KBE/KBE}
 \end{document}

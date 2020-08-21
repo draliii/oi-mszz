@@ -1,29 +1,4 @@
-\documentclass[10pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[czech]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{delarray}
-\usepackage{float}
-\usepackage[x11names]{xcolor}
-
-% exercises and solutions
-\usepackage{mdframed}
-\newmdenv[topline=false, bottomline=false, skipabove=\topsep, rightline=false,
-  skipbelow=\topsep]{exercise}
-
-% graphs
-\usepackage{tikz}
-%\usetikzlibrary[todraws]
-
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
-
-\title{B4M36SAN - Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování.}
-\date{}
-\begin{document}
-\maketitle
+\chapter[Statistická analýza dat]{B4M36SAN \\[1ex]\Large{Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování.}}
 
 \section{Redukce dimenze}
 
@@ -149,7 +124,7 @@ Data shlukujeme na základě podobnosti, nemusíme předem znát počet shluků.
 
 \begin{figure}[ht!]
 \centering
-\includegraphics{img/dendrogram.png}
+\includegraphics{SAN/img/dendrogram.png}
 \end{figure}
 
 Na základě dendrogramu se můžeme rozhodnout, kde shlukování zastavíme, udělat tam svislou čáru a tím určit počet shluků. Na obrázku máme svislé čáry dvě, jednou vznikne 6 shluků, druhou pouze dva shluky. \textit{Výška} v dendrogramu znázorňuje vzdálenost shluků
@@ -166,7 +141,7 @@ Vliv výpočtu vzdáleností shluků je patrný na obrázku níže, kde pracujem
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=\textwidth]{img/dendrogram-example.png}
+\includegraphics[width=\textwidth]{SAN/img/dendrogram-example.png}
 \end{figure}
 
 \subsection{Shlukování podle hustoty}
@@ -243,7 +218,7 @@ K matici $L$ spočítáme vlastní čísla a vlastní vektory (postup je rozepsa
 \centering
 \begin{minipage}{0.15\textwidth}
 \centering
-\includegraphics[width=\textwidth]{img/spectral-clustering-qr}
+\includegraphics[width=\textwidth]{SAN/img/spectral-clustering-qr}
 \end{minipage} \hfill
 \begin{minipage}{0.84\textwidth}
 
@@ -384,7 +359,7 @@ Neminimalizujeme jen $RSS$, ale $RSS + \lambda\sum\beta_i^2$, tedy penalizujeme 
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.8\textwidth]{img/splines.png}
+\includegraphics[width=0.8\textwidth]{SAN/img/splines.png}
 \end{figure}
 
 \paragraph{Splines} Rozdělíme $X$ na menší intervaly, hraniční body mezi nimi jsou uzly. Hledáme polynomy takové, aby uvnitř intervalů co nejlépe seděly na datech, a v uzlech měly shodnou hodnotu  (a ideálně i derivaci, aby na sebe navazovaly). Na obrázku jsou ty samé body jako předtím proloženy dvěma parabolami s uzlem v bodě 3.5, a to tak, že v tomto bodě mají stejnou hodnotu a první derivaci.
@@ -489,7 +464,7 @@ Separuje datové třídy tím, že najde \textit{discriminant score} $\delta$, k
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.7\textwidth]{img/lda-qda.jpg}
+\includegraphics[width=0.7\textwidth]{SAN/img/lda-qda.jpg}
 \end{figure}
 
 Diskriminant je $\delta_k(x) = x\frac{\mu_k}{\sigma^2} - \frac{\mu_k^2}{2\sigma^2} + log(\pi_k)$, kde $\sigma_k$ je směrodatná odchylka ve třídě $k$, $\mu_k$ je střední hodnota ve třídě $k$, a $\pi_k$ je pravděpodobnost výskytu třídy $k$ v datech. Funguje to i na víc než 2 třídách, pak musí mít společnou kovariační matici.
@@ -624,7 +599,7 @@ Taky můžeme dělat \textbf{longitudinal studies}, tedy měření v čase. Tam 
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.7\textwidth]{img/long-studies.png}
+\includegraphics[width=0.7\textwidth]{SAN/img/long-studies.png}
 \end{figure}
 
 \subsection{Vyhodnocování výsledků experimentu}
@@ -645,18 +620,3 @@ Síla testu je pravděpodobnost, že test správně zamítne $H_0$, když platí
 
 Když je $\beta$ velká, znamená to, že test je citlivý na malé změny. Naopak malá $\beta$ znamená, že test je dlouho nerozhodný, ale když už rozhodne, jsme si jistější. Hodnotu $d$ můžeme počítat několika způsoby, a \textit{power analysis} můžeme použít v různých situacích. Můžeme spočítat, kolik lidí potřebujeme, abychom odhalili 95\% chyb (a to pro within-subject i between-subject metody). Můžeme nastavit \textit{confidence} intervaly, můžeme udržovat nějaký poměr mezi $\alpha$ a $\beta$ apod.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\end{document}
