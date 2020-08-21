@@ -565,26 +565,85 @@ V praxi prý nejlépe funguje knn a stromy.
 \paragraph{Frac} Jde o \textit{supervised} přístup. Na normálních datech natrénujeme prediktory pro každou ze souřadnic na základě těch ostatních. Pak se do toho strkají nová data a pokud to nevychází, může jít o anomálie. Funguje to dobře na korelovaných datech, ale má to limity. Například pokud data leží na přímce $x=y$ na intervalu [0, 3], tak jakýkoliv bod mimo přímku bude správně odhalen jako outlier. Bohužel bod $x=4, y=4$ to neodhalí, protože odpovídá \textit{trendu}.
 
 
+\section{Empirical studies}
 
+Porovnáváme různé hodnoty od lidí, v tomhle případě to aplikujeme na obor HCI (human-computer interaction), a budou nás zajímat uživatelská rozhraní a ovládací prvky, měříme, které jsou rychlejší, přesnější, snadnější na naučení apod. Uživatelská přívětivost se začala řešit až kolem roku 1980, kdy začaly být počítače rozšířené i mezi veřejností. Testy pracují v různých měřítkách času. Nejmenší jednotky se používají u testů vstupu (klávesnice, myš, zadávání dat do formuláře), pak jsou úkoly v řádu minut   (hledání něčeho na webové stránce, orientace v programu) a pak jsou dlouhodobé testy (jak a k čemu budou uživatelé aplikaci používat, které funkce apod). 
 
+V HCI se často využívají různé smysly: hrbolky na klávesnici (klávesy F, J a 5), odezva pípáním, vibrace, odpor/cvakání klávesy, a samozřejmě obraz.
 
+\noindent V experimentech měříme různé veličiny:
+\begin{itemize}
+\item \textbf{Reakční doba}: Jak dlouho to trvá, než člověk udělá to, co chtěl
+\item \textbf{Chyby}: Jak často se stane chyba (třeba klik mimo tlačítko)
+\item \textbf{Vliv pozornosti}: Na co se uživatel zaměřuje podle toho, jaké je zadání
+\item \textbf{Vliv tréninku}: Jak se změní měřené hodnoty, pokud má uživatel nějaký čas se s tím naučit.
+\end{itemize}
 
+\noindent Testy se hodnotí několika způsoby:
 
+\begin{itemize}
+\item \textbf{Pozorování}: Rozhovory, pozorování, ústní hodnocení. Důraz je na subjektivní dojem. Výsledky nejsou přesné, zato jsou relevantní.
+\item \textbf{Experimentální}: Měříme něco (třeba čas odezvy), máme minimálně dvě proměnné (nezávislou a závislou). Data pak nějak analyzujeme.
+\item \textbf{Korelační}: Hledáme souvislosti mezi daty, můžeme pracovat třeba s nějakým dotazníkem.
+\end{itemize}
 
+\noindent Můžeme mít různá data:
 
+\begin{itemize}
+\item \textbf{Hodnota}: Jaký je váš plat v kč?
+\item \textbf{Rozsah}: Kolik měsíčně dostanete peněz? [0-10k, 10-25k, 25-50k, více než 50k]
+\item \textbf{Interval}: Souhlasíte? [určitě ne, ne, nevím, ano, určitě ano]. Od Rozsahu se to liší tím, že všechny intervaly jsou stejně velké, např. pokud bychom měřili teplotní rozsahy. Platové třídy výše můžou být (a taky jsou)každá jinak velká.
+\item \textbf{Poměr}: 100x klikněte na tlačítko. V kolika procentech jste se trefili?
+\end{itemize}
 
+Při experimentech v HCI nás zajímají různé věci, ale bohužel na takové otázky nedokážeme našimi metodami odpovědět: Funguje UI dobře? Je to lepší než to, co bylo dřív? V čem je dobré a v čem je špatné? Jaké jsou alternativy, a která je lepší?
 
+Místo toho máme specifické otázky na konkrétní hodnotu, která sice neřekne nic o tom, proč to nějak vyšlo, zato nám dá porovnávatelné měřítko, např: Je rychlost psaní (ve slovech za minutu) po 1h psaní na naší klávesnici vyšší než stejně měřená rychlost na klávesnici QWERTY?
 
+\subsection{Jak správně postavit HCI experiment?}
 
+Porovnáváme novou metodu se starou/standardem/baseline. Chceme zjistit, jestli je přesnější, rychlejší, lepší apod, a proto volíme nejčastěji porovnávací otázky. V návrhu experimentu jsou tři části: proměnné, postupy, a účastníci.
 
+\paragraph{Proměnné} Je jich hodně:
+\begin{itemize}
+\item \textbf{Nezávislé proměnné} jsou takové, které nezávisí na chování účastníka. Jsou to třeba parametry používané metody, denní doba konání experimentu, počet lidí v místnosti, pohlaví účastníka apod.
+\item \textbf{Závisle proměnné} jsou ty, které měříme, např. rychlost, přesnost, doba trvání úkolu, počet kliknutí, pohyby očí. Důležité je mít všechno přesně zadefinované. Doporučuje se mít nejvýš tři nezávisle proměnné, protože jinak není jasné, co konkrétně ovlivnilo data.
+\item Pokud chceme mít data pro budoucí zpracování a už máme moc nezávisle proměnných, můžeme si data uložit jako \textbf{kontrolní proměnné} - tam by zapadal ten počet lidí v místnosti a další faktory, které asi nebudou přímo ovlivňovat data, ale hodí se je mít.
+\item Dalším typem proměnných jsou \textbf{náhodné proměnné}, což jsou data, která neznáme, a která mohou mít vliv (např. nálada účastníků).
+\item Taky existují \textbf{confounding} proměnné, které se mění společně se závisle proměnnou a pak je těžké určit kauzalitu.
 
+\end{itemize}
 
+\paragraph{Postupy} Součástí postupu je experiment samotný, ale zároveň návod, názorná ukázka, případně úkol nanečisto. Taky je vhodné mít na měření závisle proměnných nějaký program, aby to bylo spolehlivé, a udělat nejprve experiment na zkoušku, aby bylo jasné, zda vše funguje a lidi chápou úkol. Správně navržený experiment má všechny kombinace hodnot nezávisle proměnných, zaměřuje se na to, jak se služba pak bude používat, a zkoumá rozdíly mezi testovacími podmínkami.
 
+\paragraph{Účastníci} Účastníci se vybírají z populace uživatelů testovaného nástroje. To, kdo přijde, závisí na tom, jak budeme lidi zvát (ve škole, v práci, inzerát na nástěnce, inzerát na internetu). Proto se pak vyplňuje dotazník na věk, pohlaví atd, abychom věděli, kdo nakonec přišel. Musíme mít dostatek účastníků, vhodné číslo si buď zjistíme metodou Power Analysis (více v příští přednášce, sekce \ref{sec:vyhodnoceni}), nebo ho obšlehneme z jiného experimentu na podobné téma.
 
+Účastníci mohou mít odlišné úkoly. Zvolíme-li metodu \textit{within-sibjects}, pak každý účastník postupně vyzkouší metodu s různými parametry. Opačný přístup je metoda \textit{between-subjects}, kde uděláme pro každé parametry skupinu účastníků, a každý účastník dělá experiment jen jednou. Každý z přístupů má své výhody: pokud každý dělá jen jeden experiment, tak není ovlivněn zkušenostmi z předchozích experimentů. Na druhou stranu ale musíme zajistit, že všechny skupiny mají podobné lidi, aby volba účastníků neovlivňovala výsledek. Pokud jeden člověk zkouší víc parametrů, je zase potřeba zohlednit, že časem je zkušenější nebo naopak unavenější - záleží tedy na pořadí experimentů.
 
+Taky můžeme dělat \textbf{longitudinal studies}, tedy měření v čase. Tam se měří, jak se skóre účastníka mění v závislosti na tom, jak dlouho s nástrojem pracuje. Nová metoda sice může být těžká na naučení (a proto předchozí experimenty vyjdou nepříznivě), ale po nějaké době se s ní uživatelé naučí pracovat a je daleko rychlejší než se starou metodou. Pak měříme \textit{cenu} jako čas ztracený tím, že uživatel byl na začátku pomalý, a \textit{zisk}, totiž čas, který ušetříme, jakmile to uživatel umí používat.
 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.7\textwidth]{img/long-studies.png}
+\end{figure}
 
+\subsection{Vyhodnocování výsledků experimentu}
+\label{sec:vyhodnoceni}
 
+Data z experimentu chceme nějak vyhodnotit. Musíme si dávat pozor na následující chyby:
+\begin{itemize}
+\item Testovaný prototyp se liší od skutečného výsledku
+\item Experiment je špatně navržený (špatné úkoly, špatný výběr účastníků, nepřesné provedení) a data jsou nevýznamná nebo špatná
+\item Ten, kdo data vyhodnocuje, se bude snažit prosadit svou hypotézu, nejlépe by proto měl data vyhodnocovat někdo cizí, nezaujatý
+\end{itemize}
+
+Předem je potřeba říct, jak se zachováme k anomáliím. Zejména pokud máme rozdělení s dlouhým ocasem, třeba Gausse, tak na kraji určitě nějaké anomálie budou. Pokud budeme způsob jejich odstranění určovat až podle toho, jak data vypadají, může se nám stát, že začneme odstraňovat nepohodlná data.
+
+\paragraph{Power Analysis}
+
+Síla testu je pravděpodobnost, že test správně zamítne $H_0$, když platí $H_a$, tedy formálně $P(\text{zamítnu~} H_0/\text{platí~} H_a) = 1 - \beta$. Závisí to na hladině významnosti $\alpha$, na velikosti vzorku $n$, a na míře $d$ porušení $H_0$.
+
+Když je $\beta$ velká, znamená to, že test je citlivý na malé změny. Naopak malá $\beta$ znamená, že test je dlouho nerozhodný, ale když už rozhodne, jsme si jistější. Hodnotu $d$ můžeme počítat několika způsoby, a \textit{power analysis} můžeme použít v různých situacích. Můžeme spočítat, kolik lidí potřebujeme, abychom odhalili 95\% chyb (a to pro within-subject i between-subject metody). Můžeme nastavit \textit{confidence} intervaly, můžeme udržovat nějaký poměr mezi $\alpha$ a $\beta$ apod.
 
 
 
