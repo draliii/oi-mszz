@@ -1,6 +1,10 @@
 \chapter[Pokročilé síťové technologie]{A0M32PST \\[1ex]\Large{Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí}}
 
-Tenhle okruh obsahuje divné věci, které vůbec nesouvisí s tím, co se v předmětu dělalo. Začnu stručně těmi dvěma pojmy odzadu, a pak bude následovat to, co se fakt dělalo (a co obsahuje ty první dva pojmy). Vzhledem k tomu, že tohle je jediný síťový předmět ve státnicovém okruhu, a že jsme obor bezpečnost, tak sem přidám i věci, které v předmětu nebyly, protože je tak jako tak máme znát.
+
+
+Tenhle okruh obsahuje divné věci, které vůbec nesouvisí s tím, co se v předmětu dělalo. Začnu stručně těmi dvěma pojmy odzadu, a pak bude následovat to, co se fakt dělalo (a co obsahuje ty první dva pojmy). Vzhledem k tomu, že tohle je jediný síťový předmět ve státnicovém okruhu, a že jsme obor bezpečnost, tak sem přidám i věci, které v předmětu nebyly, protože je tak jako tak máme znát. Takže tady máme vše co potřebujeme vědět o sítích, plus dva záhadné pojmy navíc
+
+
 
 \section{Programově definované sítě}
 
@@ -12,9 +16,13 @@ SDN se to snaží řešit tak, že se přidá nová služba: \textit{SDN control
 
 SDN je druh služby, ne konkrétní protokol, existují proprietátní řešení od cisca a jiných výrobců, nebo otevřená varianta OpenSDN s algoritmem OpenFlow.
 
+
+
 \section{Virtualizace funkcí}
 
 Ve větších sítích, třeba v podnikové síti pro několik poboček, se některé síťové funkce (např. DNS) opakují. Na každé pobočce je DNS server, což je zbytečné. Virtualizace síťových funkcí dělá to, že vznikne jeden server, který umí všechny ty služby, a funkcionalita na pobočkách je minimální, třeba jen firewall. Je to tak levnější, protože všechny služby v síti běží na jednom zařízení, a není potřeba mít na každé pobočce pro každou službu oddělený hardware.
+
+
 
 \section{Úvod do sítí}
 
@@ -26,9 +34,13 @@ Sítě se dál dělí podle rozsahu (xxx area network) na lokální LAN, příst
 
 Přenosy jsou dvojího druhu: se spojením a bez spojení. Při \textbf{spojovaném přenosu} se nejprve sestaví cesta mezi koncovými body, a pak se posílají holá data. Přenos dat samotný je rychlý, ale sestavení cesty nějakou dobu trvá. Spojení navazuje třeba FrameRelay (od toho se ustupuje) a MPLS   (to budu do detailu popisovat dál). Při \textbf{přenosu bez spojení} obsahuje každý packet směrovací informace (IP adresu cíle), a do sítě se posílají hned, bez čekání na navázání cesty. Nevýhodou je, že směrování packetů za běhu je složitější.
 
+Sítě mají různé topologie (strom, hvězda, sběrnice..) a různé architektury, např. Client-Server (webová stránka), Producent-Konzument (televizní vysílání), Peer-to-Peer (BitTorrent).
+
+
+
 \section{Fyzická (lokální) vrstva}
 
-Fyzická vrstva zajišťuje samotný přenos dat. Specifikuje, po jakém médiu se budou data přenášet a jak formátovaná. Na fyzické vrstvě pracují huby (mosty/rozbočovače), které jednoduše data přepošlou, a pak switche (přepínače), které jsou v OSI modelu o vrstvu výš, a které přeposílají data do správného cíle na základě MAC adresy.
+Fyzická vrstva zajišťuje samotný přenos dat. Specifikuje, po jakém médiu se budou data přenášet a jak formátovaná. Na fyzické vrstvě pracují huby (opakovače/rozbočovače), které jednoduše data přepošlou, a pak switche (mosty/přepínače), které jsou v OSI modelu o vrstvu výš, a které přeposílají data do správného cíle na základě MAC adresy.
 
 \subsection{MAC adresy}
 MAC (media access control) adresa je identifikátor síťového rozhraní (karty). S MAC adresami pracuje wifi, kabelový ethernet i bluetooth. Adresa má 48 bitů a zapisuje se po šesti oktetech, tedy celkem 12 hex znaků, např.: \texttt{00-3E-E1-5F-4C-D7}. Adresa má dvě části. První část identifikuje výrobce (\texttt{00-3E-E1-xx-xx-xx} je Apple), a rozsahy jsou různě velké. Třeba Audi má adresy z celého rozsahu \texttt{01-B0-00} až \texttt{01-BF-FF}, a Apple má několik oddělených prefixů. Druhá část adresy se přiděluje při výrobě, a měla by být unikátní, aby nedocházelo ke kolizím. Ne vždy se to dodržuje, ale není to takový problém, protože MAC adresa jde ručně změnit.
@@ -38,13 +50,91 @@ Specifickou adresou je \texttt{FF-FF-FF-FF-FF-FF}, tedy samé jedničky, a ta se
 Switche mají typicky několik portů, z některého přijde zpráva a switch se musí rozhodnout, kam ji pošle. To se dělá třeba tak, že switch udržuje tabulku MAC adres a portů, ze kterých komunikují. Když pak má data přeposlat na nějakou konkrétní adresu, tak je pošle na port, ze kterého tato adresa komunikuje. Obyčejný switch rozumí MAC adresám, ale sám žádnou nemá. Pokročilejší switche s nějakým administračním rozhraním můžou mít nějakou MAC i IP adresu, ale to je kvůli tomu rozhraní, ne kvůli funkci switche.
 
 \subsection{Ethernet}
-standardy kabelu, délky, vzdálenosti, crc
+
+Ethernet zajišťuje samotný přenos dat. Specifikuje, jaký kabel se má použít, jak může být dlouhý, kolik může být po cestě opakovačů atd. Vznikal v Xeroxu a byl zveřejněn jako standard 802.3 v roce 1985. Datům v ethernetu se neříká packety ale rámce (frames).
+
+\paragraph{Formát rámce}
+
+Rámec má následující formát. Minimální délka je vždy 64 bytů, maximální délka je 1522 bytů. Mezi rámci se posílá 12 bytů mezera. V rámci se posílá i tag, ve kterém jsou dodatečné informace, například ID příslušné sítě VLAN. Tag lze úplně vypustit.
+
+\begin{table}[ht!]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Hlavička & Cílová MAC adresa & Zdrojová MAC adresa & Tag (VLAN ID) & Typ/velikost & Data & CRC\\
+\hline
+8 bytů & 6 bytů & 6 bytů & (4 byty) & 2 byty & 46-1500 bytů & 4 byty\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+\paragraph{CRC} Pro kontrolu dat se používá \textit{kontrolní součet} CRC. Princip je ten, že data vydělíme a zjistíme zbytek po dělení. Ten pak pošleme společně s daty a příjemce ověří, že výpočet sedí.
+
+Binární data se dají interpretovat jako polynomy, např. $1011 = x^3 + x + 1$. To se zdá jako zbytečná komplikace, ale díky tomu se dá dělení snadno spočítat pomocí XORu. Pro CRC potřebujeme data $M(x)$ (message) a generující polynom $G(x)$. Polynom $G(x)$ je to, čím data dělíme, a je vždy předem známý. Pro zjištění \textit{zbytku} vydělíme data (zde $M(x) = 1101011111 = x^9 + x^8 + x^6 + x^4 + x^3 + x^2 + x + 1$ polynomem $G(x) = 1011 = x^3 + x + 1$. Nejprve za data přidáme tolik nul, jaký je stupeň polynomu, s tím pak pracujeme (děláme XOR v každém kroku, dokud nedostaneme zbytek 11.
+
+\begin{lstlisting}
+1101011111000
+1011
+0110011111000
+ 1011
+ 011111111000
+  1011
+  01001111000
+   1011
+   0010111000
+     1011
+     00001000
+         1011
+           11
+\end{lstlisting}
+
+Pokud je zbytek po dělení 11, tak víme, že pokud 11 odečteme, bude výsledné číslo dělitelné beze zbytku. V prostoru se kterým pracujeme (finite fields) se to zase dělá XORem. Data, která pošleme do sítě (transmit) tedy budou prodloužená o nuly a budou obsahovat zbytek, který jsme spočítali: $M(x) = 1101011111000 - 11 = 1101011111011$.
+
+Příjemce si data vezme a taky je zkusí vydělit polynomem. Pokud vyjde zbytek po dělení nula, pak je pravděpodobné, že data nebyla při přenosu poškozena. Konec zprávy se jako kontrolní \textit{součet} odstraní, a zbytek jsou čistá data, která jsme chtěli poslat.
+\begin{lstlisting}
+1101011111011
+1011
+0110011111011
+ 1011
+ 011111111011
+  1011
+  01001111011
+   1011
+   0010111011
+     1011
+     00001011
+         1011
+         0000
+\end{lstlisting}
+
+Zvláštní disciplínou je výběr správného polynomu $G(x)$. Některé jsou vhodné a používané, jiné jsou zcela nefunkční. Díky tomu, jak funguje dělitelnost, můžeme pro různé polynomy matematicky ukázat, jaké chyby odhalí (kolik chybných bitů, jak daleko od sebe atd). Kromě jednotlivých chybných bitů dokáže CRC odhalit i nárazové chyby, kde je špatně celý úsek dat. V současném ethernetu se používá třeba CRC délky 32 bitů.
+
+\paragraph{Kolize} Je potřeba zařídit, aby nedocházelo ke kolizím, tedy aby vždy vysílalo jen jedno zařízení. Zařízení sice nezačne vysílat, pokud je kanál obsazený, ale může se stát, že ve stejnou chvíli začnou vysílat dvě zařízení najednou, a pak bude signál nečitelný. Některé protokoly (typicky Master-Slave, token passing) kolize vůbec nepřipustí, protože vždy má \textit{slovo} pouze jedno zařízení. V jiných přístupech vysílající zařízení kolize detekují, a pokud nastanou, tak se náhodnou dobu čeká a pak se vysílá znovu. Přitom se napříč protokoly liší, jak se s kolizemi pracuje. Někde skončí vysílání obě strany, jinde skončí vysílání jen zařízení s nižší prioritou a to silnější pokračuje.
 
 \subsection{Wi-Fi}
 kanály, zabezpeceni
 
 \subsection{VLAN}
-jak se to na switchi nastavuje
+VLAN je virtuální síť, která umožňuje, aby na jedné hardwarové síti existovalo víc nezávislých sítí, které do sebe vůbec nevidí. Nastavuje se to ve switchi. Každá síť má svoje VLAN ID, které se posílá s každým rámcem jako tag~-~odesílatel ho tam může dát sám, nebo ho tam přidává switch na základě toho, z jakého portu rámec přišel. Z pohledu vyšších vrstev jsou VLANky oddělené sítě, a fungují nezávisle - třeba i spanning tree protocol se počítá pro každou VLAN zvlášť. Hodí se to třeba v datacentrech, kde chce mít každý klient nějaké své servery a síť, ale datacentrum to nechce pro každého klienta fyzicky přepojovat a budovat oddělenou síť.
+
+Na switchích, které používají VLAN, jsou dva druhy portů: trunk port a access port. \textbf{Trunk port} je port, na kterém se \textit{míchá} provoz z více VLAN najednou, např. spojení mezi dvěma switchi. V takovém provozu jsou tagy v rámcích důležité. \textbf{Access port} je takový port, který je pevně spojený s nějakou VLAN, a provoz z jiných VLAN tam není. Může to být třeba port, do kterého je připojený nějaký stolní počítač. Rámce na access portech nepotřebují tagy.
+
+Pokud v jednom switchi jsou dvě VLANky a počítače z různých VLAN chtějí komunikovat, pak to switch sám nezvládne. Musí každou VLAN připojit do routeru, a počítače spolu budou moct komunikovat jedině přes ten router. Router nepotřebuje vědět, že je připojen dvakrát k jednomu switchi, bude to pro něj jako spojovat počítače ze dvou oddělených switchů, a o VLAN vůbec neví.
+
+\begin{lstlisting}
+SW1>                enable
+SW1#                configure terminal
+SW1(config)#        vlan 11
+SW1(config-vlan)#   name Accounting
+SW1(config-vlan)#   exit
+SW1(config)#        int fa1/0
+SW1(config-if)#     switchport mode access
+SW1(config-if)#     switchport access vlan 11
+SW1(config-if)#     end
+\end{lstlisting}
+
+Na příkladu výše je nastavení switche s označením \texttt{SW1} tak, aby vytvořil novou VLAN s id 11, jménem \textit{Accounting} a přidal rozhraní \texttt{fa1/0} jako access port pro tuto novou VLAN.
 
 \subsection{Spanning tree protokol}
 
@@ -52,13 +142,12 @@ STP se používá v sítích, kde je několik switchů, které jsou navzájem pr
 
 V STP se vybere (podle priority) jeden switch jako ten hlavní, kořenový. Sousední switche si označí port, kterým jsou spojeny s kořenem, a sdělí svým sousedům, jak je jejich spojení s kořenem rychlé/dlouhé atd). Pokud směrovač dostane od sousedů dvě cesty do kořene, vybere si tu kratší.
 
-\subsection{OSPF}
-
 \subsection{ARP}
 
 Adress resolution protocol (ARP) slouží k mapování IPv4 adres na MAC adresy. Nějaké zařízení typicky bude chtít poslat data někomu v internetu, u koho zná IP adresu. K použití nižší vrstvy je ale potřeba znát MAC adresu. ARP funguje tak, že se zařízení zeptá "Who has 192.168.0.4" MAC broadcastem, a majitel této IP adresy odpoví. Obě zařízení si pak uloží získané MAC i IP adresy do ARP tabulky pro další použití. Pro IPv6 se používá alternativa ARPu: Neighbor discovery protocol.
 
 \paragraph{ARP spoofing} ARP nemá žádné bezpečnostní mechanismy, a jde toho zneužít. Útočník může dvěma obětem podstrčit svou MAC adresu rychlou odpovědí na jejich dotaz \texttt{Who has xxx} (nebo nevyžádanou zprávou), a tím stáhnout veškerou komunikaci mezi oběťmi přes sebe (man in the middle útok). Někdy se tomu taky říká ARP poisoning.
+
 
 
 \section{Síťová vrstva}
@@ -70,6 +159,7 @@ Protokol, hlavičky, adresy, cidr, nat
 prednaska ipv6
 
 
+
 \section{Transportní vrstva}
 
 \subsection{udp}
@@ -78,10 +168,16 @@ prednaska ipv6
 prednaska 3, sockety, principy, klouzave okno, rychlost
 
 
+
 \section{Směrování IP paketů}
 hledani nejlepsi cesty, treti vrstva, hieararchie ISP, prickove spoje a nix, interni a externi smerovaci protokoly (rip, ospf, prednaska 2)
+\subsection{OSPF}
+
+
 
 \section{MPLS}
+
+
 
 \section{Multicast}
 
