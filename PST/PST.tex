@@ -1,0 +1,103 @@
+\chapter[Pokročilé síťové technologie]{A0M32PST \\[1ex]\Large{Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí}}
+
+Tenhle okruh obsahuje divné věci, které vůbec nesouvisí s tím, co se v předmětu dělalo. Začnu stručně těmi dvěma pojmy odzadu, a pak bude následovat to, co se fakt dělalo (a co obsahuje ty první dva pojmy). Vzhledem k tomu, že tohle je jediný síťový předmět ve státnicovém okruhu, a že jsme obor bezpečnost, tak sem přidám i věci, které v předmětu nebyly, protože je tak jako tak máme znát.
+
+\section{Programově definované sítě}
+
+Taková věc neexistuje. Na internetu se vyskytuje podle google přesně dvakrát, jednou v zadání otázek na webu FELu, a podruhé tady na tom githubu. Správný pojem je pravděpodobně \textit{Softwarově definované sítě} (SDN), a označuje to alternativní architekturu sítě, zejména z pohledu správy.
+
+V normální síti jsou nějaká zařízení, firewally, VPNky apod. Pokud na serveru (za všemi těmi zařízeními) přidáme novou appku, musíme změnit nastavení celé sítě, což je dost opruz. Navíc každé zařízení má svůj vlastní systém, a každý může mít úplně jiné ovládání.
+
+SDN se to snaží řešit tak, že se přidá nová služba: \textit{SDN controller}, který nastavuje jednotlivé služby. Pro správce sítě to je prostě nadstavba nad sítí jako celkem, všechna zařízení tam jsou přehledně vidět a \textit{SDN controller} se postará o komunikaci s nimi a správné nastavení. Když se pak na server přidá nová aplikace, stačí upravit nastavení sítě na jednom místě - v SDN controlleru.
+
+SDN je druh služby, ne konkrétní protokol, existují proprietátní řešení od cisca a jiných výrobců, nebo otevřená varianta OpenSDN s algoritmem OpenFlow.
+
+\section{Virtualizace funkcí}
+
+Ve větších sítích, třeba v podnikové síti pro několik poboček, se některé síťové funkce (např. DNS) opakují. Na každé pobočce je DNS server, což je zbytečné. Virtualizace síťových funkcí dělá to, že vznikne jeden server, který umí všechny ty služby, a funkcionalita na pobočkách je minimální, třeba jen firewall. Je to tak levnější, protože všechny služby v síti běží na jednom zařízení, a není potřeba mít na každé pobočce pro každou službu oddělený hardware.
+
+\section{Úvod do sítí}
+
+Tohle stejně všichni ví, takže jen stručně - komunikace na internetu se řídí OSI modelem, který dělí aplikace na sedm vrstev: Aplikační, Prezentační, Relační, Transportní, Síťová, Spojová, Fyzická. To je trochu moc, takže v praxi se používá TCP/IP model, který některé vrstvy slučuje a má vrstvy jen čtyři: Aplikační (Aplikační + Prezentační + Relační), Transportní, Internetová (Síťová), Lokální (Spojová + Fyzická).
+
+Bloky dat se na každé vrstvě označují jinak (packety, rámce, apod), ale to není podstatné. Hlavní je tzv. princip zapouzdření, kdy data z aplikační vrstvy pošlu níž, tam k nim něco přidám jako hlavičku, a tak pokračuju až do fyzické vrstvy, kde dojde k vlastnímu přenosu dat (a spousty zanořených hlaviček). Na druhém stroji se pak postupně otevírají vrstvy a na základě dat v hlavičce se to zpracuje. Např. switch se podívá jen na MAC adresu a podle toho data přeposílá dál, bez toho, aniž by zjišťoval, z jaké aplikace pochází a jak jsou formátovaná. Výhodou vrstveného modelu je, že protokol v některé z vrstev lze vyměnit bez vlivu na ostatní vrstvy.
+
+Sítě se dál dělí podle rozsahu (xxx area network) na lokální LAN, přístupové AN, metropolitní MAN, a největší (wide) WAN. Přenos dat na nejnižší (fyzické) úrovni po těchto sítích může probíhat různě, a metoda se vybere podle situace. Přesun ve volném prostoru může být směrový nebo všesměrový a může používat např. rádiové vlny nebo infračervené záření. Další možnost se přenos ve vlnovodu, např různými druhy metalických kabelů nebo optickým kabelem.
+
+Přenosy jsou dvojího druhu: se spojením a bez spojení. Při \textbf{spojovaném přenosu} se nejprve sestaví cesta mezi koncovými body, a pak se posílají holá data. Přenos dat samotný je rychlý, ale sestavení cesty nějakou dobu trvá. Spojení navazuje třeba FrameRelay (od toho se ustupuje) a MPLS   (to budu do detailu popisovat dál). Při \textbf{přenosu bez spojení} obsahuje každý packet směrovací informace (IP adresu cíle), a do sítě se posílají hned, bez čekání na navázání cesty. Nevýhodou je, že směrování packetů za běhu je složitější.
+
+\section{Fyzická (lokální) vrstva}
+
+Fyzická vrstva zajišťuje samotný přenos dat. Specifikuje, po jakém médiu se budou data přenášet a jak formátovaná. Na fyzické vrstvě pracují huby (mosty/rozbočovače), které jednoduše data přepošlou, a pak switche (přepínače), které jsou v OSI modelu o vrstvu výš, a které přeposílají data do správného cíle na základě MAC adresy.
+
+\subsection{MAC adresy}
+MAC (media access control) adresa je identifikátor síťového rozhraní (karty). S MAC adresami pracuje wifi, kabelový ethernet i bluetooth. Adresa má 48 bitů a zapisuje se po šesti oktetech, tedy celkem 12 hex znaků, např.: \texttt{00-3E-E1-5F-4C-D7}. Adresa má dvě části. První část identifikuje výrobce (\texttt{00-3E-E1-xx-xx-xx} je Apple), a rozsahy jsou různě velké. Třeba Audi má adresy z celého rozsahu \texttt{01-B0-00} až \texttt{01-BF-FF}, a Apple má několik oddělených prefixů. Druhá část adresy se přiděluje při výrobě, a měla by být unikátní, aby nedocházelo ke kolizím. Ne vždy se to dodržuje, ale není to takový problém, protože MAC adresa jde ručně změnit.
+
+Specifickou adresou je \texttt{FF-FF-FF-FF-FF-FF}, tedy samé jedničky, a ta se používá k broadcastu do celé sítě, tedy takový rámec přijmou všechna zařízení. MAC adresy lze použít i k multicastu, pak se na zařízeních nastaví \textit{skupinová} MAC adresa, a packety poslané na tuto adresu dorazí všem zařízením ve skupině.
+
+Switche mají typicky několik portů, z některého přijde zpráva a switch se musí rozhodnout, kam ji pošle. To se dělá třeba tak, že switch udržuje tabulku MAC adres a portů, ze kterých komunikují. Když pak má data přeposlat na nějakou konkrétní adresu, tak je pošle na port, ze kterého tato adresa komunikuje. Obyčejný switch rozumí MAC adresám, ale sám žádnou nemá. Pokročilejší switche s nějakým administračním rozhraním můžou mít nějakou MAC i IP adresu, ale to je kvůli tomu rozhraní, ne kvůli funkci switche.
+
+\subsection{Ethernet}
+standardy kabelu, délky, vzdálenosti, crc
+
+\subsection{Wi-Fi}
+kanály, zabezpeceni
+
+\subsection{VLAN}
+jak se to na switchi nastavuje
+
+\subsection{Spanning tree protokol}
+
+STP se používá v sítích, kde je několik switchů, které jsou navzájem propojené. Aby mohla komunikace probíhat efektivně, tak se ze všech možných spojení vyberou pouze některé (kostra grafu), a ostatní se dočasně vypnou.
+
+V STP se vybere (podle priority) jeden switch jako ten hlavní, kořenový. Sousední switche si označí port, kterým jsou spojeny s kořenem, a sdělí svým sousedům, jak je jejich spojení s kořenem rychlé/dlouhé atd). Pokud směrovač dostane od sousedů dvě cesty do kořene, vybere si tu kratší.
+
+\subsection{OSPF}
+
+\subsection{ARP}
+
+Adress resolution protocol (ARP) slouží k mapování IPv4 adres na MAC adresy. Nějaké zařízení typicky bude chtít poslat data někomu v internetu, u koho zná IP adresu. K použití nižší vrstvy je ale potřeba znát MAC adresu. ARP funguje tak, že se zařízení zeptá "Who has 192.168.0.4" MAC broadcastem, a majitel této IP adresy odpoví. Obě zařízení si pak uloží získané MAC i IP adresy do ARP tabulky pro další použití. Pro IPv6 se používá alternativa ARPu: Neighbor discovery protocol.
+
+\paragraph{ARP spoofing} ARP nemá žádné bezpečnostní mechanismy, a jde toho zneužít. Útočník může dvěma obětem podstrčit svou MAC adresu rychlou odpovědí na jejich dotaz \texttt{Who has xxx} (nebo nevyžádanou zprávou), a tím stáhnout veškerou komunikaci mezi oběťmi přes sebe (man in the middle útok). Někdy se tomu taky říká ARP poisoning.
+
+
+\section{Síťová vrstva}
+
+\subsection{IPv4}
+Protokol, hlavičky, adresy, cidr, nat
+
+\subsection{IPv6}
+prednaska ipv6
+
+
+\section{Transportní vrstva}
+
+\subsection{udp}
+
+\subsection{tcp}
+prednaska 3, sockety, principy, klouzave okno, rychlost
+
+
+\section{Směrování IP paketů}
+hledani nejlepsi cesty, treti vrstva, hieararchie ISP, prickove spoje a nix, interni a externi smerovaci protokoly (rip, ospf, prednaska 2)
+
+\section{MPLS}
+
+\section{Multicast}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
