@@ -13,6 +13,14 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 2. ⛔ Třídy složitosti úloh/jazyků a to jak vzhledem k časové složitosti jejich řešení, tak i paměťové složitosti včetně nerozhodnutelných úloh/jazyků. **B4M01TAL**
 3. ⛔ Problémy kombinatorické optimalizace zahrnující popis aplikací, formalizaci problému, rozbor složitosti a řešící algoritmy. **B4M35KO**
 
+## Okruhy oboru Kybernetická bezpečnost
+1. ✅ Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování. Analýza časových řad. **B4M36SAN**
+2. ⛔ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
+3. ⛔ Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení. **B4M36BSY**
+4. ⛏️ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
+5. ⛏️ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. **A0M32PST**
+6. ⛔ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36KBE**
+
 ## Okruhy oboru Počítačová grafika
 1. ⛔ Rastrová grafika. 3D objekty a scény, transformace. Výpočet viditelnosti, osvětlení scény, stíny. Radiometrie, osvětlovací metody, texturování. **B4M39APG**
 2. ⛔ Datové struktury pro vyhledávání ve vícerozměrných prostorech. **B4M39DPG**
@@ -60,14 +68,6 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 4. ⛔ Doménově nezávislé plánování. Vlastnosti, heuristiky a algoritmy. **B4M36PUI**
 5. ⛔ Autonomní agenti a multiagentní systémy. Nekooperativní teorie her. **B4M36MAS**
 6. ⛔ Rozhodování, plánování, a koordinace autonomních systémů s jedním nebo více roboty. **B4M36UIR**
-
-## Okruhy oboru Kybernetická bezpečnost
-1. ✅ Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování. Analýza časových řad. **B4M36SAN**
-2. ⛔ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
-3. ⛔ Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení. **B4M36BSY**
-4. ⛏️ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
-5. ⛔ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. **A0M32PST**
-6. ⛔ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36KBE**
 
 ## Okruhy oboru Počítačové inženýrství
 1. ⛔ Integrované systémy, návrh a realizace, aplikačně specifické systémy. **B4M34ISC**
