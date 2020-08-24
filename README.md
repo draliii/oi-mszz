@@ -15,7 +15,7 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 
 ## Okruhy oboru Kybernetická bezpečnost
 1. ✅ Statistická analýza, modely a jejich hodnocení. Redukce dimenze. Shlukování. Analýza časových řad. **B4M36SAN**
-2. ⛔ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
+2. ⛏️ Metodika testování software. Metody vytváření testů z modelu aplikace. Automatické testování. **B4M36ZKS**
 3. ⛔ Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení. **B4M36BSY**
 4. ⛏️ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
 5. ⛏️ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. **A0M32PST**
