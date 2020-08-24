@@ -2,7 +2,7 @@
 
 
 
-Tenhle okruh obsahuje divné věci, které vůbec nesouvisí s tím, co se v předmětu dělalo. Začnu stručně těmi dvěma pojmy odzadu, a pak bude následovat to, co se fakt dělalo (a co obsahuje ty první dva pojmy). Vzhledem k tomu, že tohle je jediný síťový předmět ve státnicovém okruhu, a že jsme obor bezpečnost, tak sem přidám i věci, které v předmětu nebyly, protože je tak jako tak máme znát. Takže tady máme vše co potřebujeme vědět o sítích, plus dva záhadné pojmy navíc
+Tenhle okruh obsahuje divné věci, které vůbec nesouvisí s tím, co se v předmětu dělalo. Začnu stručně těmi dvěma pojmy odzadu, a pak bude následovat to, co se fakt dělalo (a co obsahuje ty první dva pojmy). Vzhledem k tomu, že tohle je jediný síťový předmět ve státnicovém okruhu, a že jsme obor bezpečnost, tak sem přidám i věci, které v předmětu nebyly, protože je tak jako tak máme znát. Takže tady máme vše co potřebujeme vědět o sítích, plus dva záhadné pojmy navíc. Nevěnuju se tady moc aplikační vrstvě, to spíš zapadá do BSY.
 
 
 
@@ -51,7 +51,7 @@ Switche mají typicky několik portů, z některého přijde zpráva a switch se
 
 \subsection{Ethernet}
 
-Ethernet zajišťuje samotný přenos dat. Specifikuje, jaký kabel se má použít, jak může být dlouhý, kolik může být po cestě opakovačů atd. Vznikal v Xeroxu a byl zveřejněn jako standard 802.3 v roce 1985. Datům v ethernetu se neříká packety ale rámce (frames).
+Ethernet zajišťuje samotný přenos dat. Specifikuje, jaký kabel se má použít, jak může být dlouhý, kolik může být po cestě opakovačů atd. Vznikal v Xeroxu a byl zveřejněn jako standard IEEE 802.3 v roce 1985. Datagramům v ethernetu se neříká packety ale rámce (frames).
 
 \paragraph{Formát rámce}
 
@@ -71,7 +71,7 @@ Hlavička & Cílová MAC adresa & Zdrojová MAC adresa & Tag (VLAN ID) & Typ/vel
 
 \paragraph{CRC} Pro kontrolu dat se používá \textit{kontrolní součet} CRC. Princip je ten, že data vydělíme a zjistíme zbytek po dělení. Ten pak pošleme společně s daty a příjemce ověří, že výpočet sedí.
 
-Binární data se dají interpretovat jako polynomy, např. $1011 = x^3 + x + 1$. To se zdá jako zbytečná komplikace, ale díky tomu se dá dělení snadno spočítat pomocí XORu. Pro CRC potřebujeme data $M(x)$ (message) a generující polynom $G(x)$. Polynom $G(x)$ je to, čím data dělíme, a je vždy předem známý. Pro zjištění \textit{zbytku} vydělíme data (zde $M(x) = 1101011111 = x^9 + x^8 + x^6 + x^4 + x^3 + x^2 + x + 1$ polynomem $G(x) = 1011 = x^3 + x + 1$. Nejprve za data přidáme tolik nul, jaký je stupeň polynomu, s tím pak pracujeme (děláme XOR v každém kroku, dokud nedostaneme zbytek 11.
+Binární data se dají interpretovat jako polynomy, např. $1011 = x^3 + x + 1$. To se zdá jako zbytečná komplikace, ale díky tomu se dá dělení snadno spočítat pomocí XORu. Pro CRC potřebujeme data $M(x)$ (message) a generující polynom $G(x)$. Polynom $G(x)$ je to, čím data dělíme, a je vždy předem známý. Pro zjištění \textit{zbytku} vydělíme data (zde $M(x) = 1101011111 = x^9 + x^8 + x^6 + x^4 + x^3 + x^2 + x + 1$) polynomem $G(x) = 1011 = x^3 + x + 1$. Nejprve za data přidáme tolik nul, jaký je stupeň polynomu, s tím pak pracujeme (děláme XOR v každém kroku, dokud nedostaneme zbytek 11.
 
 \begin{lstlisting}
 1101011111000
@@ -144,7 +144,7 @@ V STP se vybere (podle priority) jeden switch jako ten hlavní, kořenový. Sous
 
 \subsection{ARP}
 
-Adress resolution protocol (ARP) slouží k mapování IPv4 adres na MAC adresy. Nějaké zařízení typicky bude chtít poslat data někomu v internetu, u koho zná IP adresu. K použití nižší vrstvy je ale potřeba znát MAC adresu. ARP funguje tak, že se zařízení zeptá "Who has 192.168.0.4" MAC broadcastem, a majitel této IP adresy odpoví. Obě zařízení si pak uloží získané MAC i IP adresy do ARP tabulky pro další použití. Pro IPv6 se používá alternativa ARPu: Neighbor discovery protocol.
+Adress resolution protocol (ARP) slouží k mapování IPv4 adres na MAC adresy. Nějaké zařízení typicky bude chtít poslat data někomu v internetu, u koho zná IP adresu. K použití nižší vrstvy je ale potřeba znát MAC adresu. ARP funguje tak, že se zařízení zeptá \texttt{Who has 192.168.0.4} MAC broadcastem, a majitel této IP adresy odpoví. Obě zařízení si pak uloží získané MAC i IP adresy do ARP tabulky pro další použití. Pro IPv6 se používá alternativa ARPu: Neighbor discovery protocol.
 
 \paragraph{ARP spoofing} ARP nemá žádné bezpečnostní mechanismy, a jde toho zneužít. Útočník může dvěma obětem podstrčit svou MAC adresu rychlou odpovědí na jejich dotaz \texttt{Who has xxx} (nebo nevyžádanou zprávou), a tím stáhnout veškerou komunikaci mezi oběťmi přes sebe (man in the middle útok). Někdy se tomu taky říká ARP poisoning.
 
@@ -153,12 +153,53 @@ Adress resolution protocol (ARP) slouží k mapování IPv4 adres na MAC adresy.
 \section{Síťová vrstva}
 
 \subsection{IPv4}
-Protokol, hlavičky, adresy, cidr, nat
+IPv4 se používá od roku 1982. Zajišťuje směrování, tedy posílání packetu vždy o jeden router blíž k cíli. Je bezspojový a negarantuje doručení - to musí zajišťovat protokoly vyšších vrstev (TCP). Adresy v IPv4 mají 32 bitů a zapisují se jako 4 dekadická čísla 0-255 oddělená tečkou. Adresy jsou rozdělené autoritám podle kontinentů, a tyto autority pak přidělují adresní rozsahy firmám.
+
+\begin{itemize}
+\item AFRINIC: Afrika
+\item APNIC: Jihovýchodní Asie, Austrálie
+\item ARIN: Severní Amerika
+\item LACNIC: Jižní Amerika až po Mexiko
+\item RIPE NCC: Evropa, Rusko, Blízký Východ
+\end{itemize}
+
+\paragraph{CIDR} Původně se adresní rozsahy dělily po osmi bitech, ale i ty nejmenší sítě pak byly moc velké, a adresy začaly docházet. Proto se začaly sítě dělit na menší (subnets) tak, že se jim určila maska, tj kolik bitů na začátku adresy označuje síť (a zbytek označuje konkrétní zařízení). Síť se definuje tak, že za nejnižší adresu sítě se napíše počet bitů masky. Běžná domácí síť je 192.168.0.0/24, a jsou v ní adresy 192.168.0.0 - 192.168.0.255. Někdy se maska sítě zapisuje trochu nepřehledně ne jako počet bitů, ale jako skutečná maska, tedy síť 192.168.0.0/24 bychom reprezentovali jako 192.168.0.0/255.255.255.0.
+
+Nejnižší adresa v podsíti je označení (název) podsítě (a kvůli jednoznačnosti se nesmí použít pro žádné zařízení) a nejvyšší adresa je broadcast. Počet adres pro zařízení v nějaké podsíti získáme tak, že nejprve spočítáme počet bitů pro adresy jako 32-(počet bitů masky), a na to umocníme dvojku. Navíc musíme odečíst dvě adresy pro název sítě a broadcast.
+
+Některé adresy mají speciální význam - je jich hodně a stejně nemá cenu to sem dávat. Nejznámější jsou soukromé sítě 192.168.0.0/16 a loopback 127.0.0.0/8.
+
+\paragraph{IP hlavička} Hlavička má 13 nebo 14 polí:
+\begin{itemize}
+\item \textbf{Version}: Vždycky 4 pro IPv4
+\item \textbf{IHL}: Délka hlavičky
+\item \textbf{DSCP}: Differentiated Services Code Point, specifikuje typ dat. Teď se to používá u real-time a streamování
+\item \textbf{Total length}: Délka packetu (hlavička i data dohromady)
+\item \textbf{Identification}: ID packetu pro případy, že data byla rozdělena na víc packetů
+\item \textbf{Flags}: Informuje, zda byla data rozdělena, případně že dělena být nesmí
+\item \textbf{Fragment offset}: Offset dat, pokud jsou rozdělena na víc částí
+\item \textbf{Time to live}: TTL, tedy kolik routerů po cestě smí packet poslat, než bude zahozen. Slouží k tomu, aby packety nekroužily sítí. Každý router sníží TTL o jedna, ten poslední packet zahodí.
+\item \textbf{Protocol}: Identifikátor protokolu z vyšší vrstvy (TCP, UDP, ICMP, EIGRP...)
+\item \textbf{Header checksum}: Kontroluje integritu hlavičky
+\item \textbf{Source address}: IP adresa odesílatele
+\item \textbf{Destination address}: IP adresa cíle
+\item \textbf{Options}: Lze vypustit, a v praxi tam často není. Může obsahovat informace k dělení packetů, streamování atd. 
+\end{itemize}
+
+\paragraph{NAT} Network Address Translation je metoda, která částečně řeší problém s nedostatkem adres. Některé IP adresy jsou veřejné, jiné jsou definované jako soukromé (třeba rozsah 192.168.0.0/16). Ke komunikaci přes internet je potřeba veřejná adresa, protože soukromé adresy budou routery zahazovat.
+
+NAT běží v hraničním routeru soukromé sítě. Zařízení v soukromé síti chce poslat žádost serveru v Internetu. Komunikace od zařízení jde do routeru, a router si zapamatuje, které zařízení komunikuje. Pak vyšle komunikaci do Internetu se svou veřejnou IP adresou. Server žádost zpracuje a odpoví routeru, a router komunikaci přepošle správnému zařízení. Router může současně obsluhovat více zařízení, každé bude mít oddělený datový tok, ale navenek shodnou IP adresu.
+
+Tím, že domácí zařízení mají soukromé adresy, může mít víc zařízení shodnou adresu, a není tedy potřeba tak velký adresní rozsah. NAT sice umožní zařízením uvnitř sítě komunikovat směrem ven, ale není možné z internetu kontaktovat zařízení uvnitř sítě - jeho IP adresa totiž vede jen na router, a ten pak neví, komu dál to poslat, protože soukromá IP adresa zařízení nejde zvenku zjistit (ani použít).
+
+
 
 \subsection{IPv6}
 prednaska ipv6
 
+\subsection{DNS}
 
+DNS patří do aplikační vrstvy, ale uvedu ho tady, protože úzce souvisí s IP adresami.
 
 \section{Transportní vrstva}
 
@@ -166,6 +207,7 @@ prednaska ipv6
 
 \subsection{tcp}
 prednaska 3, sockety, principy, klouzave okno, rychlost
+
 
 
 
