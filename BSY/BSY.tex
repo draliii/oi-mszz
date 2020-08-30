@@ -1,0 +1,126 @@
+\chapter[Bezpečnost systémů]{B4M36BSY \\[1ex]\Large{Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení.}}
+
+Bezpečnost má tři části, říká se jim CIA:
+\begin{description}
+\item[Confidentiality] Služba nesmí odhalit soukromá data
+\item[Integrity] Data nesmí jít změnit 
+\item[Availability] Služba musí být stabilní a dostupná
+\end{description}
+
+Návrh systému - nejprve navrhneme směrnice (policies), tj pravidla, která chceme dodržovat. Směrnice určují, kdo má k čemu přístup, kdo může co dělat atd. Pokud jsou směrnice správně navržené, pak by měl být systém bezpečný. Navrhnout správnou směrnici je těžké - např. Amazon umožňoval komukoliv přidat k účtu další kreditní kartu bez jakéhokoliv ověření identity, a pak umožňoval na základě znalosti čísla jedné karty zjistit část čísla jiné karty, což je špatně.
+
+
+
+
+\section{Bezpečný vývoj software}
+
+Začínáme tím, že si ujasníme, co to je za aplikaci, co má dělat a pro koho má být (tedy funkcionalita). Pak je potřeba vědět, z jaké strany přijde útok, jak závažné ty útoky můžou být (což je hrozně těžké odhadnout). A na základě toho se pak určíme, jestli a jak se budeme bránit - někdy je prostě nejjednodušší nedělat nic, protože dopad je malý a prevence je drahá.
+
+Aplikaci naplánujeme, nakreslíme si diagram, a pak se snažíme najít všechny možné způsoby, jak na to půjde útočit (hrozby). Ty jsou dělené do šesti tříd - STRIDE:
+\begin{description}
+\item[Spoofing] Manipulace, např. s identitou (říkám, že jsem někdo jiný)
+\item[Tampering] Manipulace s daty nebo s kódem
+\item[Repudiation] Popření toho, že se něco stalo (např. můžu tvrdit e-shopu, že mi to ještě nedorazilo, ačkoliv už mám zboží doma)
+\item[Information disclosure] Únik informací (přečtu něco, co by mi nemělo být viditlené)
+\item[Denial of service] Zablokování služby
+\item[Escalation of privilege] Zvýšení práv (dělám víc, než by můj účet měl mít možnost dělat)
+\end{description}
+
+Hrozby taky můžeme sepsat do \textit{attack tree}, což je sekvence akcí, které může útočnik dělat, a co tím může získat. Hrozby pak nějak ohodnotím, což je ale těžké - zajímá nás, s jakou pravděpodobností útok nastane, kolik bude stát prevence, kolik bude stát oprava následků, a my žádné z těchto čísel neumíme určit.
+
+K tomu se vytvořily metody hodnocení, třeba DREAD od Microsoftu. Tam se v každé kategorii dává skóre na škále od 0 do 10:
+\begin{description}
+\item[Damage] Jak velká je škoda?
+\item[Reproducibility] Jak složité je ten útok zopakovat?
+\item[Exploitability] Jak zkušený musí útočník být?
+\item[Affected users] Na kolik uživatelů to dopadne?
+\item[Discoverability] Jak složité je to pro útočníka najít?
+\end{description}
+
+\noindent Na základě hodnocení se rozhodneme, co uděláme s každou hrozbou:
+\begin{itemize}
+\item Neuděláme nic, protože škoda je malá a oprava by byla drahá
+\item Komponentu smažeme, protože je extra děravá, a stejně to nikdo nepoužívá
+\item Opravíme to
+\end{itemize}
+
+Celkově je při vývoji vhodné kontrolovat kód (motivuje to lidi, aby ho psali hezky), spouštět appku s co nejmenšími právy (když se to vysype, bude menší škoda), mít bezpečné výchozí nastavení (většina uživatelů to nechce vůbec řešit), mělo by to být pohodlné, protože jinak to lidi začnou obcházet (místo firewallu se připojí z mobilu, do hesla si dají counter protože má být složité a často měněné), důkladně testovat, nemíchat kód a data (to dělá bordej v XSS, SQLi atd).
+
+
+
+\section{Postranní kanály}
+
+Dva procesy (třeba ve virtuálních strojích) chtějí komunikovat, a vuyžívají datové kanály, které nejsou určeny k přenosu dat. To je problém, protože nemůžeme kontrolovat, že vše odpovídá směrnici. Jsou dva druhy:
+\begin{itemize}
+\item Storage: Dokážeme něco změnit, třeba bit v metadatech, a na základě toho přenášet informaci (např. dva procesy sdílejí disk a mohou nastavit, kde zastaví čtecí hlava, a tím komunikovat)
+\item Timing: Dokážeme manipulovat, jak dlouho něco trvá, a tím přenášet informaci 
+\end{itemize}
+
+Postranní kanály nejde nikdy úplně odstranit. Ale přenesou jen malé množství dat, takže se dá třeba říct, že se chceme zbavit všech postranních kanálů, které mají větší kapacitu než 1bit za sekundu. Kanály mohou být se šumem nebo bez, ale i když tam je šum, tak se ho můžeme zbavit nějakým kódováním, i když tím ztratíme rychlost přenosu.
+
+
+\subsection{Útoky na postranní kanály}
+
+Útočník přistupuje ke službě a chce z ní vytáhnout nějaká data. Využívá toho, že služba se chová různě (různě se větví), podle toho, jaká data do ní dáme. Např. funkce kontroluje uživatelovo heslo, a vrátí \texttt{False} hned, jakmile narazí na špatné písmenko. Pak můžeme jednoduše hádat hesla tak, že vyzkoušíme všechna možná jednoznaková hesla, a jedno z nich bude trvat déle - to je to, ve kterém se začal porovnávat i další znak, a to je to, ve kterém máme správný  první znak. To rapidně zjednodušuje hádání hesel, pro desetiznakové heslo byla složitost $27^{10}$ a teď je $27\cdot 10$.
+
+Kromě časových útoků jsou i útoky na spotřebu (čipové karty), na zvuk, chybové hlášky, odraz monitoru na zeď za uživatelem atd. Postranní útoky se těžko hledají - je to jeden z důvodů, proč se silně nedoporučuje implementovat si vlastní kryptografii. 
+
+\paragraph{Steganografie} Posíláme tajná data tak, aby nikdo nevěděl, že je vůbec posíláme. Např. vytetované pod vlasy otroků, v least significant bitu v barvách obrázku, mrkání na videu (zpráva "torture" během vietnamské války).
+
+
+
+
+\section{Modely řízení přístupu}
+
+Matice přístupu je tabulka, ve které jsou zdroje (např. soubory) a kdo (procesy, uživatelé) k nim má jaký přístup.
+
+\paragraph{Discretional Access Control (DAC)} Je metoda řízení přístupu na Unixu, soubor má vlastníka a daná práva pro čtení/zápis/spouštění pro vlastníka, skupinu a ostatní. Vznikl, když počítače začaly mít víc uživatelů, a ti si chtěli být jistí, že si omylem navzájem nesmažou data. Nevýhodou je, že když uživatel spustí program, tak ten program běží s právy toho uživatele. Druhou nevýhodou je, že ve velkých firmách to neumožňuje dostatečnou kontrolu. Další nevýhodou je, že vlastník souboru může přístupová práva ostatních měnit, to se nehodí zejména v armádě. Používá se spíš z historickou kontrolou.
+
+\paragraph{Access Control list} Každý zdroj má majitele, a majitel může se zdrojem dělat nějaké činnosti dle seznamu. DAC se na pozadí implementuje jako tenhle seznam.
+
+\paragraph{Tokeny} Konkurentem pro ACL jsou tokeny, kde každý zdroj dá přístup (nebo jiné právo) každému, kdo má správný token. Vlastností tokenů je, že si je uživatelé mohou předávat a někomu tak věnovat přístup.
+
+\paragraph{Mandatory Access Control} vzniklo jako náhrada DAC pro armádu. Kontrolu nad právy nemají vlastníci souborů, ale někdo centrální. V armádě (USA) jsou různé úrovně tajnosti:
+
+\begin{itemize}
+\item \textbf{Unclassified}
+\item \textbf{Classified}
+\item \textbf{Secret} - pokud toto unikne, způsobí to ztrátu několika životů
+\item \textbf{Top Secret} - pokud toto unikne, způsobí to ztrátu mnoha životů
+\end{itemize}
+
+Chceme zajistit, aby tajné dokumenty nemohl číst někdo, kdo na to nemá právo. Druhé omezení se týká zápisu: uživatelé, kteří mají přístup na úrovni Top Secret, budou vytvářet pouze soubory na úrovni Top Secret (tedy nikdo pod nimi si to nepřečte). To je tam proto, aby nešly vynášet přísně tajné informace.
+
+Je to dost těžké naimplementovat, protože systém má současně otevřeno víc souborů, a pokud je jeden z nich top secret, tak by se měly všechny nastavit jako top secret. Jednodušší je to dělat přes virtuální stroje, kde každý běží na jedné bezpečnostní úrovni, a mohou komunikovat (posílat si soubory) přes hlídané kanály.
+
+\paragraph{SE (Security Enhanced) Linux} Zdroje a spotřebitelé mají značky (labels). Spotřebitel může použít zdroj jen tehdy, pokud má správnou značku. Tím lze zajistit to, že zlý proces, ačkoliv běží s právy uživatele, nemůže napáchat žádnou škodu.
+
+\paragraph{Role-based} je systém, který se víc hodí ve firmách. Přístup se povoluje na základě role - zaměstnanec na pozici sekretářky má přístup jinam, než zaměstnanec na pozici programátora. Je to podobné jako skupiny na Unixu, ale Unix umožňuje, aby jeden uživatel byl ve více skupinách.
+
+
+
+
+
+
+\section{Operační systémy}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
