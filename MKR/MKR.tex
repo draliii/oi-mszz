@@ -1152,3 +1152,13 @@ dešifruje zprávu: $m = m' \cdot s^{-1} = (m\cdot s) \cdot s^{-1} = m$.
 
 \section{Hashování}
 
+Hashovací funkce by měla mít následující vlastnosti:
+\begin{itemize}
+\item Nejde zpětně získat to, co jsme hashovali
+\item Pro libovolný vstup dá výstup konstantní délky
+\item Pro stejný vstup dá vždy stejný výstup
+\item Malá změna na vstupu udělá velkou změnu na výstupu
+\item Pokud známe výstup, neměli bychom být schopní najít něco, co dá stejný výstup
+\end{itemize}
+
+Některé hashovací funkce jsou rychlé a slouží ke kontrole souborů (SHA), jiné jsou na hesla, třeba BCrypt - ten je záměrně pomalý, aby bylo těžké hesla hádat.
