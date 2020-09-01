@@ -100,23 +100,121 @@ Je to dost těžké naimplementovat, protože systém má současně otevřeno v
 
 
 
-
-
 \section{Operační systémy}
 
 
+\paragraph{Privilege escalation}
+
+Útočník získává přístup k obyčejnému uživateli, a z něj se pak dostane dál (horizontálně k jinému uživateli, a vertikálně na vyšší úroveň přístupu). To nastává kvůli chybám nebo špatnému vynucování směrnic.
+
+\paragraph{Požadavky na operační systém}
+\begin{itemize}
+\item Musíme správně vyžadovat sběrnice
+\item Procesy mimo kernel nesmí mít možnost ovlivnit kernel
+\item Verifikace
+\end{itemize}
+
+\textbf{Time of check / time of use} je typ útoku, kdy se kontrola dělá jen jednou, a pak už ne, což lze zneužít. Např. v linuxu když chci zapisovat do souboru, tak se ověří, jestli smím. Já si pak soubor otevřu, a pak mi root odebere právo na zápis. Ale protože už mám soubor otevřený, můžu zapisovat dál.
+
+\textbf{Virtualizace paměti:} každý proces si myslí, že má vlastní prostor, že adresy se kterými pracuje jsou skutečné HW adresy. A kernel mapuje procesy na skutečnou paměť. K tomu používá page tables (resp. více tabulek v sobě), a to má hw podporu, jmenuje se memory management unit.
+
+Každý proces má vlastní page table, a když se přepíná mezi procesy, tak se musí přepnout i obsah - jinak by si procesy navzájem mohly číst data. K tomu vznikly dvě úrovně přístupu, běžná a chráněná, a jen chráněná může přepínat mezi procesy, a procesy samotné běží na běžné úrovni. Tedy, pro bezpečný systém je potřeba mít minimálně dvě úrovně v hw.
+
+Teoreticky se vytvořily \textbf{kruhy}, kde uprostřed běží kernel, a na kraji je běžný režim. Ovladače měly běžet někde mezi tím, ale časem se posunuly do kernelu, takže se typicky mluví jen o úrovních 0 a 3.
+
+Kdy potřebuje běžný proces přepnout do kruhu 0? Kdykoliv, když dělá nějaký syscall. Implementuje se to tak, že proces uloží do nějakých registrů číslo syscallu a parametry a zavolá software interrupt. Tím se spustí routine, ta najde příslušnou funkci, kontrola se přepne do kernelu, a kernel udělá syscall, nastaví registry a přepne zpátky do procesu.
+
+Rychlost předání kontroly kernelu a zpět je zásadní - dřív byly linuxy oproti win pomalé, protože win běžely celé v kernel módu, a linux měl grafické rozhraní v user mode.
+
+\textbf{Trusted computer base} je všechno, čemu musím věřit, aby byl systém bezpečný (výrobce hw, prodejce, operační systém, všechny procesy v kernelu...). Čím je menší, tím je to pro bezpečnost lepší.
+
+Existují různé možnosti, jak psát OS a kernel:
+\begin{itemize}
+\item \textbf{Monolitický kernel}: Je jeden velký kernel, běží v něm všechny ovladače atd. Tenhle přístup měly dřív Windows. Bylo to rychlé, ale je těžké zaručit bezpečnost, nebo to dokonce formálně verifikovat, protože cokoliv (třeba ovladače k myši) běží v kernelu.
+\item \textbf{Modulární kernel}: Současný linux i windows, kernel je docela velký, ale obsahuje jen to, co se používá
+\item \textbf{Mikrokernel}: Co nejmenší kernel, jaký je vůbec možný. Musí umět: správu paměti, scheduling (přidělování času procesoru procesům), komunikaci mezi procesy. Příkladem mikrokernelu je \textit{seL4}, což je snad jediný formálně verifikovaný kernel. Mikrokernely jsou pomalejší, protože musí často předávat kontrolu mezi kruhy 0 a 3. 
+\end{itemize}
+
+Vývoj kernelu seL4 se držel správnými postupy návrhu: nejprve navrhli všechno na papíře, udělali přesnou specifikaci, a pomocí strojových nástrojů dokázali, že to je bezpečné (tj dodržuje to směrnice). Pak to napsali v haskellu, který se dobře dokazuje, a opět dokázali, že to odpovídá specifikaci. Pak přepsali funkce do C, a dokázali, že ty funkce dělají to samé, co ty v haskellu. A pak to zkompilovali do assembleru. Bezpečnost závisí na tom, že HW funguje správně, a že C kompiler funguje správně.
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.5\textwidth]{BSY/img/kernel-rings.png}
+\end{figure}
+
+Buffer overflow: Připravíme si nějaký prostor v paměti a necháme ho uživatelem naplnit. Přitom nehlídáme, kolik dat uživatel zapisuje. Může se tedy stát, že útočník přepsal kus paměti, do kterého už by se psát nemělo, a tím třeba přepsal ukazatel na funkci, která se měla spouštět - mohl tedy spustit tu, kterou sám chtěl. Obrana proti tomu byla, že za čtenými daty se daly speciální tokeny a pak se kontrolovalo, jestli nebyly změněny.
+
+Heap overflow: Přijde mi to stejné, musím to prozkoumat
+
+Return oriented programming: TODO
+
+Structured exception handling: Funkce ošetřující výjimky jsou seřazené v linked listu. V případě chyby se postupně zkouší, jestli už jsme ve správné funkci, a ta se zavolá. Pokud je útočník schopný přepsat ukazatel na některou z funkcí a pak vyvolat chybu, může spustit vlastní kód (funkci). Obrana je taková, že se na konkrétní místo dá \textit{default handler}, a pak se zkontroluje, jestli řetězec funkcí končí v tomto handleru - pokud ne, tak někdo manipuloval s funkcemi.
+
+
+\section{Izolace procesů}
+
+Virtualizace
+
+Sandboxing (kontejnery jako docker, a app-specific kontejnery jako v prohlížečích)
+
+Airgap - not entirely secure, because USB sticks are still brought in
+
+Stateless OS
+
+
+
+\section{Bezpečnost prohlížeče}
+
+Prohlížeče se rozsáhlostí blíží linuxovému kernelu, původně nebyly moc bezpečné, ale teď je to dost kritické, protože se hodně používají a umí skoro všechno.
+
+Plugin: Něco, co běží mimo prohlížeč, a v prohlížeči se to jen vykresluje
+Extension: Rozšíření, má přístup k porhlížeči, stránkám atd
+
+DOM: struktura doumentu (Document Object Model)	
+
+Same origin policy: Origin je doména, protokol (http/htps) a port.
+
+CSRF: Cross site request forgery. Přihlásíme se do banky, dostaneme cookie. Pak jdeme na web útočníka, a ten požádá prohlížeč, aby udělal request na web banky "proveď platbu". Prohlížeč zodpovědně vyplní naši cookie, pošle to bance, a banka platbu provede. Zabrání se tomu tak, že s každým formulářem pro platbu banka pošle nějaký token (ne jako cookie), a ten token se pak ověřuje. Útočník token nemá, takže se platba neprovede.
+
+DNS rebinding: Bezpečnost Same-origin policy závisí na bezpečnosti DNS. Pokud jsme schopní podstrčit jinou IP adresu, pak můžeme získat cookie.
+
+HTML5 sandboxing: Dáme iframe se speciálním parametrem sandbox, a pak se obsah to iframu jen zobrazí, ale nemůže nic dělat
+
+Content security policy: Specifikuje, z jakých zdrojů smíme stahovat obrázky, javascript atd. Jde tím třeba zakázat inline javascript. CSP specifikuje server a posílá je prohlížeči jako hlavičky. Prohlížeč pak hlídá, jestli se to dodržuje.
+
+Strict transport security: HSTS. Po prvním HTTP requestu server řekne, že umí i HTTPS. Od té doby bude (na určitou dobu) prohlížeč umožňovat komunikaci s daným serverem pouze přes HTTPS.
 
 
 
 
+\section{Chyby v návrhu protokolů}
+
+ARP spoofing: věříme první mac adrese, která nám přijde, a tím jde udělat man in the middle.
+
+IP sender spoofing: Můžeme libovolně měnit odesílatele v IP packetu, tím jde dělat DDoS: Několik počítačů odešle ping, kde jako odesílatel je budoucí oběť, a adresáti jsou nějaké živé stroje v síti. Ty stroje odpoví, ale budou odpovídat tomu, kdo se zeptal (to poznají podle adresy odesílatele), a tím pádem ten stroj zcela zahltí vlnou odpovědí na ping. Tomu lze předcházet tak, že poskytovatelé internetu budou kontrolovat, jestli odchozí adresy v IP hlavičkách jsou z jejich sítě, a pokud ne, jde o falešný packet a měl by se zahodit.
+
+TCP specifikuje, jak se mají měnit výchozí sekvenční čísla v čase. Některé implementace to braly doslova, a tím šlo hádat budoucí hodnoty. A v kombinaci s manipulací s IP adresami šlo ukrást spojení. Vyřešilo se to tak, že se to číslo mírně zašumí, aby nešlo hádat.
+
+DNS: DNS nijak nehlídá, kdo odpovídá. Nějak šlo přesvědčit server, aby přeposílal dotazy na útočníka místo na správný nadřazený DNS server.
+
+BGP: BGP slouží k výměně informací o routování mezi autonomními systémy. Dává přednost kratším cestám (přes méně AS) a specifičtějším cestám (přesnější maska cílové sítě). BGP nijak nekontroluje, jestli je informace pravdivá, a užitečné cesty rychle posílá dál - tím jenou Pákistán shodil část internetu, když se snažil zablokovat youtube.
+
+DNSsec: Zachovává hierarchii serverů, ale snaží se o integritu. Každý server má dva klíče: zone signing key a key signing key. Odpověď ze serveru \texttt{.cvut.cz} serveru bude podepsaná zone klíčem, a bude obsahovat ten zone klíč. Abychom ověřili zone klíč, potřebuju key signing key toho serveru, a ten mám posepsaný od serveru pro \texttt{.cz}. Klíče jsou dva proto, aby mohl server vygenerovat nový, kdyby bylo potřeba - a zone key si vygeneruje a podepíše sám, bez pomoci od \texttt{.cz} serveru.
 
 
 
+\section{HTTPS}
+
+Certificate pinning: Zveřejníme (skrz prohlížeč), jaké konkrétní autority můžou pro náš web vydávat certifikát.
 
 
 
+\section{Obrana lokální sítě}
 
+Firewall: Filtruje provoz Stateful/stateless
 
+Bastion: Zařízení uvnitř sítě nemůžou komunikovat s internetem samy o sobě, ale musí použít bastion (specifické zařízení) jako proxy.	 		
 
 
 
