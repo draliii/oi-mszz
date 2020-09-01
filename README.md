@@ -19,7 +19,7 @@ Seznam otázek je dostupný na [webu FELu](http://www.fel.cvut.cz/cz/education/m
 3. ⛏️ Bezpečnostní analýza operačních systémů, bezpečný vývoj software a bezpečnost webových aplikací. Analýza útoků a škodlivého kódu. Bezpečnost mobilních zařízení. **B4M36BSY**
 4. ⛏️ Symetrická a asymetrická kryptografie. Základní kryptosystémy. Faktorisace čísel. Hashování. **B4M01MKR**
 5. ⛏️ Směřování IP paketů. Transportní protokoly. Programově definované sítě. Virtualizace funkcí. **A0M32PST**
-6. ⛔ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36KBE**
+6. ⛏️ Zásady návrhu bezpečných systémů. Design a analýza bezpečnosti komunikačních protokolů a komunikačních médií. Bezpečnost distribuovaných systémů. **B4M36KBE**
 
 ## Okruhy oboru Počítačová grafika
 1. ⛔ Rastrová grafika. 3D objekty a scény, transformace. Výpočet viditelnosti, osvětlení scény, stíny. Radiometrie, osvětlovací metody, texturování. **B4M39APG**
