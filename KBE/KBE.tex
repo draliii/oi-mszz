@@ -179,11 +179,80 @@ GCM zároveň šifruje a podepisuje, používá transformace na Galoisových tě
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=0.5\textwidth]{KBE/img/gcm.png}
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{KBE/img/gcm.png}
+  \caption{GCM pro blokové šifry}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{KBE/img/needham-schroeder.png}
+  \caption{Needham Schroederova výměna klíče}
+  \label{fig:test2}
+\end{minipage}
 \end{figure}
 
 
+\section{Needham-Schroederova výměna klíče}
+
+DH, El Gamal, RSA a podobně jsou rozepsané v MKR, takže tady ukážu jen Needham-Shroederovu výměnu klíče, která je základem pro Kerberos. NS využívá toho, že obě strany důvěřují nějakému serveru. Každý účastník má vlastní klíč (symetrický), a jeho kopie je uložená na serveru. Alice, která chce komunikovat s Bobem, pošle serveru žádost, a server odpoví zašifrovaně (aby to nemohl přečíst nikdo jiný než Alice), a pošle v tom i klíč SK a token pro Boba. Alice pošle Bobovi token, ten je ho schopný dešifrovat svým klíčem, a pak jsou schopni komunikovat pomocí klíče SK.
+
+Nevýhodou je, že tokeny posílané Bobovi platí věčně, není tam žádná kontrola času. Odcházející pracovník banky (Alice) si může vygenerovat několik set tokenů, uložit si je a Bob nemůže vědět, že Alice už v bance nepracuje. Dnes to je problém, ale v době vzniku NS protokolu byly počítače halové a bylo jich málo.
 
 
+
+
+
+\section{Bitcoin a jiné měny}
+
+\subsection{Vznik peněz}
+Peníze se prvně objevily ve staré Číně nebo v Mezopotámii 2k př. n. l. Ohledně vzniku peněz jsou dvě teorie. První z nich říká, že některá z obchodovaných komodit se stala natolik významnou, že se stala použitelnou jako platidlo. Druhá teorie říká, že peníze vznikly společně s vypalovanými destičkami. Ty totiž mohly obsahovat ověřené (zapečetěné) sliby, směnky, dluhy, a tedy příslib platby. Přirozeně se pak příslib platby mohl přesunout někomu jinému.
+
+Často byly penězi mince, které vydávala mincovna řízená panovníkem. Mince byly ražené, aby zajistily integritu. I přesto se ale s mincemi manipulovalo - lidé je ořezávali a ze získaného kovu odlévali nové mince. Mincovny v době krize šidily odlévaný kov a přidávaly do něj levnější příměsi.
+
+\subsection{Inflace}
+Moderní peníze vydávané centrálními bankami podléhají inflaci, tedy znehodnocení. To je dané tím, že objem peněz v oběhu se stále zvětšuje, jednak tiskem nových peněz, jednak půjčkami jiným bankám. Za stejný objem peněz se tedy s postupujícím časem dá koupit méně a méně zboží.
+
+U kryptoměn se inflace nevyskytuje, protože jsou navrženy tak, aby nešly vydávat další peníze.
+
+\subsection{Kryptoměny jako směnky}
+
+Kryptoměny jsou založené na shodě komunity spíš než na centrální autoritě. Vypadají podobně jako směnky ze středověké Francie: \textit{Já, X, slibuji zaplatit částku Y panu Z.}
+
+Při obchodování mohl pan Z zaplatit směnkou panu W, pokud pan W věřil tomu, že X peníze splatí. Na směnku se pak připisovali noví vlastníci. Po zaplacení byla směnka zničena. \textit{Já, Z, si přeji, aby peníze byly vyplaceny panu W.}
+
+Obdobně v kryptoměnách vzniká blockchain, což je vlastně sekvence plateb a závazků. Kryptoměny jsou směnky, lze je dělit a dávat někomu jinému (platit).
+
+\subsection{Eliptické křivky pro podpisy}
+
+Pro výpočet podpisu je dán veřejný klíč $a, b, p, G, N$, kde $a, b$ jsou parametry křivky, ze které vznikla grupa, $p$ je modul, $G$ je generátor a $N$ je počet prvků v grupě (bodů na křivce).
+
+Zvolíme náhodný soukromý klíč $d_a$ (v bitcoinu má 256bitů), a spočítáme veřejný klíč $Q_a$ jako opakované přičítání generátoru: $Q_a = d_a * G$. To je podobné jako v DSA, kde se počítalo $g^{d_a}$. Všechno počítání probíhá v modulu $p$.
+
+Pak pro podepsání zprávy z hashem $m$ vygenerujeme nonce $k$. Spočítáme $P = k * G$, a přečteme $R$ jako x-ovou souřadnici bodu $P$. Pak podpis je $s$: $s = (m + d_a * R) * k^{-1}$.
+
+Adresátovi se pak posílá zpráva s příslušným hashem, veřejné parametry $(a, b, p, G, N)$, klíč $Q_a$.
+TODO
+
+Při verifikaci se spočítá $P = s^{-1} * m * G + s^{-1} * R * Q_a$.
+
+\paragraph{Důkaz správnosti}
+$
+P = s^{-1} m G + s^{-1} R Q_a
+P = s^{-1} m G + s^{-1} R d_a G
+P = s^{-1} G m + s^{-1} G R d_a
+P = s^{-1} G (m + R d_a)
+k = s^{-1} (m + R d_a)$
+
+\subsection{EC a Bitcoin}
+
+hash Q_a je adresa peněženky
+transakce má na vstupu předchozí transakce
+na výstupu jsou transakce a poplatek
+
+Blockchain se skládá z bloků, blok je sbírka transakcí (merkelovy stromy). Každý blok obsahuje hash předchozího bloku, tím jsou seřazeny jasně za sebe.
+
+Další článek do bloku přidávají mineři, kteří sbírají transakce do bloku a pak se snaží najít hodnotu, která s hashem poslendího uzavřeného bloku vyjde "nějak hezky". Ten miner, kterému se to podaří nejrychleji, přidá za blockchain nový blok, a ostatní mineři nově začnou počítat s tímto blokem. Ten, kdo blok uzavře, dostane odměnu z poplatků transakcí.
 
 
