@@ -342,12 +342,13 @@ soustava rovnic $x_i \equiv a_i \mod n_i, i = 1,\ldots,k$ má právě jedno ře�
 modulo $n = \prod_{i=1}^{k}n_i$.
 
 Řešení se najde tak, že pro každou rovnici najdeme takové $q_i$, aby platil
-vztah $q_i \equiv 1 \mod q_i$ a zároveň $q_i \equiv 0 \mod q_j, j \neq i$ (tedy
+vztah $q_i \equiv 1 \mod n_i$ a zároveň $q_i \equiv 0 \mod n_j, j \neq i$ (tedy
 $q_i$ je nulové ve všech modulech vyjma svého vlastního, kde má hodnotu jedna).
 
 Takové $q_i$ můžeme najít tak, že vynásobíme všechny moduly (vyjma $n_i$),
-výsledek označme $m_i$, a najdeme nějaké $t_i$ tak, aby $m_iq_i \equiv 1 \mod
+výsledek označme $m_i$, a najdeme nějaké $t_i$ tak, aby $m_it_i \equiv 1 \mod
 n_i$. Tato soustava určitě bude mít řešení, protože $n_i$ jsou nesoudělná.
+Tím získáme $q_i = m_it_i \mod n$.
 
 Řešení soustavy pak je $x = \sum_{i=1}^{k}q_ia_i$.
 
@@ -390,11 +391,14 @@ různými svědky.
 
 \subsection{Fermatův test}
 Fermatův test zavádí pro testované $n$ množinu svědků prvočíselnosti $K_n$, ve
-které jsou ty prvky, které po umocnění na $n-1$ vrátí jedničku.
+které jsou ty prvky, které po umocnění na $n-1$ vrátí jedničku. To vychází z toho,
+že dle Euler-Fermatovy věty platí $a^{|G|} = 1$, a pokud je $n$ opravdu prvočíslo,
+tak musí platit $a^{|G|} = a^{\varphi(n)} = a^{n-1} = 1 \mod n$.
 
- Pokud je $n$ prvočíslo, pak $K_n$ je shodná s $\mathbb{Z}_n^*$. Pokud $n$
- prvočíslo není, pak rozdělíme $\mathbb{Z}_n^*$ na třídy (podgrupy). Počet tříd
- $k$ nutně dělí velikost grupy.
+Pokud je $n$ prvočíslo, pak $K_n$ je shodná s $\mathbb{Z}_n^*$ - to znamená, že 
+množina svědků je stejná jako množina, ze které bereme, a test vždycky projde.
+Pokud $n$ není prvočíslo, pak se rozdělí $\mathbb{Z}_n^*$ na třídy (podgrupy). Počet tříd
+$k$ nutně dělí velikost grupy.
 \begin{itemize}
 \item Pro $k = 1$ nastává výjimečná situace, totiž že $|\mathbb{Z}_n^*| =
 |K_n|$. Takové složené $n$ se nazývá Carmichaelovo a platí pro něj, že $a^{n-1}
@@ -402,7 +406,9 @@ které jsou ty prvky, které po umocnění na $n-1$ vrátí jedničku.
 čísla jako složená.
 \item Pro $k \geq 2$ platí, že  $|K_n| = \frac{1}{k}|\mathbb{Z}_n^*|$.  Obecně
 můžeme říct, že $|K_n| \leq \frac{1}{2}|\mathbb{Z}_n^*|$, ale to je hrubý odhad,
-častěji bude $K_n$ daleko menší.
+častěji bude $K_n$ daleko menší. Tohle nám říká, že jen $\frac{1}{k}$ ze zkoušených 
+čísel budou svědci, tedy bude to falešně vypadat, že máme prvočíslo. V $\frac{k-1}{k}$
+případech nám mocnění nevyjde a budeme moci $n$ označit za složené.
 \end{itemize}
 
 Fermatův test bere na vstupu testované číslo $n$ a svědka $a$.
@@ -417,7 +423,7 @@ fermat-test(n, a):
 
 \begin{exercise}
 \textbf{Př.:} Fermatovým testem ověřte, zda 21 je prvočíslo. Použijte svědky 8,
-6 a 2.
+6 a 2. 
 \begin{itemize}
 \item \texttt{fermat-test(21, 8) = "asi prvočíslo"}, protože $8^{20} = \cdots =
 1 \mod 21$.  Pravděpodobnost chyby je nejvýš 1/2. Pokud bychom si to spočítali
@@ -473,7 +479,7 @@ a nebo použitím SubExponenciálního faktorizačního algoritmu (SEF).
 
 \subsubsection{Faktorizace, když víme něco navíc}
 
-Faktorizovat "lépe" se dá se znalostí násobku $\lambda(n)$. O exponentu grupy
+Faktorizovat \textit{lépe} se dá se znalostí násobku $\lambda(n)$. O exponentu grupy
 platí, že každý prvek grupy umocněný na exponent grupy je jedna, proto to bude
 platit i o násobku exponentu grupy. Faktorizujeme tak, že najdeme netriviální
 odmocninu z jedné, tj $c^2 = 1$. Jiné zjednodušení využívá znalosti $\varphi(n)
@@ -515,8 +521,8 @@ tedy $161 = 23 \cdot 7$. Faktorizovali jsme $1771 = 7 \cdot 11 \cdot 23$.
 
 Poznámka k té soudělnosti. Budeme řešit třeba $3^x = 1 \mod 15$. To upravíme na
 $3\cdot 3^{x-1} = 1 \mod 15$, pak označíme $3^{x-1} = m$ a získáme diofantickou
-rovnici $3m + 15k = 1$. A u diofantických rovnic platí, že levá strana musí být
-násobkem gcd koeficientů na pravé straně.
+rovnici $3m + 15k = 1$. A u diofantických rovnic platí, že pravá strana musí být
+násobkem gcd koeficientů na levé straně.
 \end{exercise}
 
 \subsubsection{Subexponenciální faktorizace (SEF)}
@@ -542,7 +548,7 @@ Algoritmus pracuje ve dvou fázích:
 
 \begin{enumerate}
 \item Najdeme $k$, totiž počet y-hladkých prvočísel, a označíme je $p_i$. Pak
-volíme různá $a$ a ověřujeme, zda jejich čtverce $a^2$ jsou y-hladké. Celkem
+volíme různá $a$ a ověřujeme, zda jejich čtverce $a^2 \mod n$ jsou y-hladké. Celkem
 potřebujeme získat $k+1$ takových čtverců.
 \item Čtverce rozložíme na prvočísla a uložíme si pro každý z nich vektor
 exponentů $\vec{v_i}$, a to nad $\mathbb{Z}_2$. Pak najdeme vektor koeficientů
@@ -615,7 +621,7 @@ Faktor pak najdeme jako gcd(34+1, 77) = 7, nebo gcd(34-1, 77) = 11.
 Kvadratické síto urychluje algoritmus SEF tím, že v první fázi dokáže lépe
 generovat dobré čtverce. Pokud bychom generovali pouze čísla menší než
 $\sqrt{n}$, pak nikdy nepoužijeme modulo a SEF skončí s triviálním řešením.
-Označíme $m = \sqrt{n}$/ Chceme tedy generovat čísla z intervalu $\langle m, m +
+Označíme $m = \sqrt{n}$. Chceme tedy generovat čísla z intervalu $\langle m, m +
 z \rangle$, kde $z$ je parametr síta. 
 
 V algoritmu budeme pracovat s číslem $s$, zajímá nás $F(s) = (s + m)^2 - n$,
@@ -636,13 +642,13 @@ $n=403$ s parametry $y = 8$ a $z=8$.
 
 Vztah pro $F(s)$ je v tomto případě $F(s) = (s +\lfloor \sqrt{403} \rfloor)^2 -
 403= (s + 20)^2 - 403$. Pro všechna $s$ si spočítáme hodnoty $V = F(s)$ a
-zapíšeme si je do pracovního řádku tabulky. V druhém řádku D si budeme udržovat
+zapíšeme si je do pracovního řádku tabulky ($V$). V řádku D si budeme udržovat
 prvočíselné rozklady. Vždy platí, že $F(s) = V(s) \cdot D(s)$.
 
 \begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
-i & 1 & 2 &3 & 4 & 5 & 6 & 7 & 8\\
+s & 1 & 2 &3 & 4 & 5 & 6 & 7 & 8\\
 \hline
 \hline
 $F(s)$ & 38 & 81 & 126 & 173 & 222 & 273 & 326 & 381\\
@@ -656,14 +662,14 @@ D &  &   &  &   &   &  &   &  \\
 
 Prvním prvočíslem je 2. V $\mathbb{Z}_2$ bude rovnice vypadat takto: $F(s) = (s
 + 0)^2 - 1$, a chceme najít, kde je nulová. Řešíme rovnici $x^2 = 1$, řešením je
-$\pm1$. Z našich $s$ jsou kořeny $1 + 2i$, což jsou $\{1, 3, 5, 7\}$. Tato čísla
-tedy zkoušíme dělit dvěma, rozklad píšeme do řádku D a výsledek podílu do řádku
+$\pm1$. Z našich $s$ jsou kořeny $1 + 2k$, což jsou lichá čísla, tedy $s \in \{1, 3, 5, 7\}$. Pro tato čísla $s$
+tedy zkoušíme dělit $V$ dvěma, rozklad píšeme do řádku D a výsledek podílu do řádku
 V.
 
 \begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
-i & \textbf{1} & 2 &\textbf{3} & 4 & \textbf{5} & 6 & \textbf{7} & 8\\
+s & \textbf{1} & 2 &\textbf{3} & 4 & \textbf{5} & 6 & \textbf{7} & 8\\
 \hline
 \hline
 $F(s)$ & 38 & 81 & 126 & 173 & 222 & 273 & 326 & 381\\
@@ -683,7 +689,7 @@ $2 + 3j$.  To znamená, že čísla dělitelná třemi nalezneme ve sloupcích $
 \begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
-i & 1 & \textbf{2} &\textbf{3} & 4 & \textbf{5} & \textbf{6} & 7 & \textbf{8}\\
+s & 1 & \textbf{2} &\textbf{3} & 4 & \textbf{5} & \textbf{6} & 7 & \textbf{8}\\
 \hline
 \hline
 $F(s)$ & 38 & 81 & 126 & 173 & 222 & 273 & 326 & 381\\
@@ -710,7 +716,7 @@ To znamená, že čísla dělitelná sedmi nalezneme ve sloupcích 3 a 6.
 \begin{center}
 \begin{tabular}{|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
-i & 1 & 2 &\textbf{3} & 4 & 5 & \textbf{6} & 7 & 8\\
+s & 1 & 2 &\textbf{3} & 4 & 5 & \textbf{6} & 7 & 8\\
 \hline
 \hline
 $F(s)$ & 38 & 81 & 126 & 173 & 222 & 273 & 326 & 381\\
@@ -723,10 +729,10 @@ D & 2  & $3^4$ & $2\cdot 3^2 \cdot 7$  &         & $2\cdot 3$   &   $3 \cdot 7$
 \end{tabular}
 \end{center}
 
-Prošli jsme všechna 8-hladká prvočísla, a 8-hladké čtverce jsou ty, které byly
-ve sloupcích, kde je teď $V = 1$, což jsou sloupce 2 a 3, $F(2) = 81$, $F(3) =
-126$. K nim máme taky vektory exponentů $v_1 = (0, 4, 0, 0)$ a $v_2 = (1, 2, 0,
-1)$. pro faktorizaci SEF ale potřebujeme takových vektorů pět. To bychom
+Prošli jsme všechna 8-hladká prvočísla a tím jsme získali 8-hladké čtverce. Jsou
+to ty, které se podařilo celé rozložit, tedy, $F(2) = 81$, $F(3) = 126$. K nim máme 
+taky vektory exponentů $v_1 = (0, 4, 0, 0)$ a $v_2 = (1, 2, 0, 1)$. pro faktorizaci
+SEF ale potřebujeme takových vektorů pět. To bychom
 normálně řešili rozšířením tabulky o sloupce 9-16, ale to v tomto případě již
 nejde, protože $F(9) > 403$, a tedy rovnice, kde jsme dosud měli daný zbytek po
 dělení pouze odečtením, by neplatily. Nezbývá nám, než zkoušet generovat další
@@ -742,10 +748,10 @@ libovolné $a \in G$, ne nutně generátor. Pak pokud $b \notin \langle a \rangl
 není $\text{dlog}_a (b)$ definován.
 
 V kryptografii se dlog používá tam, kde to je exponenciální nebo
-subexponenciální problém, tj v $\mathbb{Z}_p^*$ a jejich podgrupy, nebo pro
+subexponenciální problém, tj pro $\mathbb{Z}_p^*$ a jejich podgrupy, nebo pro
 grupy eliptických křivek. V aditivních grupách jde dlog vyjádřit jako lineární
 rovnici a řešit rozšířeným euklidem, proto se k šifrování nepoužívá. Nejznámější
-algoritmy na principu dlog je Diffie-Hellmanova výměna klíče a ElGamalovo
+algoritmy na principu dlog jsou Diffie-Hellmanova výměna klíče a ElGamalovo
 šifrování.
 
 Diskrétní logaritmus jde řešit hrubou silou se složitostí $O(2^{len(n)})$,
@@ -897,7 +903,7 @@ je y-hladkých čísel $k$, pak budeme hledat $k+1$ hodnot a pracovat s nimi.
 a^{s_i}\cdot b^{t_i}\cdot h_i$. Přitom $a$, $b$ máme dané (dlog$_a(b)$), $s_i$,
 $t_i$ volíme náhodně ze  $\mathbb{Z}_q$ a $h_i$ volíme náhodně z $H$. Pokud
 nevíme, jak $H$ vypadá, můžeme vzít libovolný prvek z  $\mathbb{Z}_p^*$ a
-umocnit ho na $q$, tím se dostaneme do $H$. Pokud máme y-hladké $z_i$, vyjádříme
+umocnit ho na $q$ (velikost $G$), tím se dostaneme do $H$. Pokud máme y-hladké $z_i$, vyjádříme
 si ho jako vektor exponentů, stejně jako se to dělalo u SEFu: $z_i =
 p_1^{e_{i1}}p_2^{e_{i2}}\cdots p_k^{e_{ik}}$, $\vec{v_i} = (e_{i1}, e_{i2},
 \cdots, e_{ik})$.
@@ -993,8 +999,8 @@ získáme řešení: $x = -s\cdot t^{-1} = -1 \cdot 2^{-1} = -1 \cdot 6 = -6 = 5
 převedou tak, aby šly reprezentovat jako čísla menší než $N$. Následně se zvolí
 dvě prvočísla $p, q$ tak, aby $p \cdot q = n, n > N$. Spočítá se $\varphi(n) =
 (p-1)\cdot (q-1)$ a zvolí se $e \in \mathbb{N}$ tak, aby gcd$(e, \varphi(n)) =
-1$. Tak zvolené $e$ má v$\mod \varphi(n)$ inverzi, kterou snadno spočítáme:
-$e^(-1) = d \mod \varphi(n)$.
+1$. Tak zvolené $e$ má v mod $\varphi(n)$ inverzi, kterou snadno spočítáme:
+$e^{-1} = d \mod \varphi(n)$.
 
 Získali jsme tak hodnoty, které jdou použít pro šifrování:
 \begin{itemize}
@@ -1002,7 +1008,7 @@ Získali jsme tak hodnoty, které jdou použít pro šifrování:
     V praxi se volí $e = 65537$, což je prvočíslo (takže je určitě nesoudělné s
     $\varphi(n)$), a navíc je jeho binární zápis \texttt{0b10000000000000001},
     což usnadňuje výpočty (např. v algoritmu opakovaných čtverců).
-    \item Soukormý klíč: $(n, e)$, kde $n$ je modulus a $d$ se soukromý
+    \item Soukromý klíč: $(n, d)$, kde $n$ je modulus a $d$ se soukromý
     exponent.
 \end{itemize}
 
@@ -1011,7 +1017,7 @@ $b = a^e \mod n$. Pro dešifrování se naopak používá soukromý klíč k op�
 získání zprávy: $a = b^d \mod n$. Přitom platí, že zpráva se procesem
 zašifrování a dešifrování nezmění.
 
-Využijeme Euler-Fermatovy věty, krá říká, že pro $a$ nesoudělná s $n$ platí
+Využijeme Euler-Fermatovy věty, která říká, že pro $a$ nesoudělná s $n$ platí
 $a^{\varphi(n)} = 1 \mod n$, neboli v exponentu počítáme modulo $\varphi(n)$.
 Námi zvolené $e, d$ přitom splňují $ed = 1 \mod \varphi(n)$, a můžeme proto
 provést následující úpravu:
@@ -1028,7 +1034,7 @@ byla zvolena nevhodně, nebo že máme nějakou znalost navíc.
 
 \paragraph{Útok se znalostí některé z tajných hodnot}
 Pokud známe $\varphi(n)$, můžeme faktorizovat $n$ stejně, jako to je v příkladu
-u faktorizace. Pokud známe $d$, můžeme také faktorizovat $n$ a to podobně, jako
+u faktorizace. Pokud známe $d$ i $e$, můžeme také faktorizovat $n$ a to podobně, jako
 tomu bylo u Miller-Rabinova testu - víme, že $a^{k(ed - 1)} = 1$, a se znalostí
 $d$ můžeme snadno volit různá $a$ a hledat netriviální odmocninu z jedné.
 
@@ -1045,7 +1051,7 @@ přečíst.
 
 \begin{exercise}
     \textbf{Př.:} Eva zachytila v síti s modulem $n = 703$ zprávy ze stejného
-    otevřeného těxtu $b_1 = 694, b_2 = 78$, určené uživatelům s exponenty $e_1 =
+    otevřeného textu $b_1 = 694, b_2 = 78$, určené uživatelům s exponenty $e_1 =
     11, e_2 = 7$. Zjistěte, jaká zpráva byla odeslána.
 
     Protože jsou exponenty nesoudělné, můžeme pomocí nich vyjádřit jedničku: $1
@@ -1105,15 +1111,15 @@ Výsledný tajný klíč je $s = a^{xy}$ a každá strana ho získá jako hodnot
 druhé strany umocněnou na svůj tajný klíč. Někdo, kdo komunikaci odposlechl, ale
 nedokáže klíč spočítat.
 
+\begin{itemize}
+    \item Alice: $s_A = c^x = (a^y)^x = a^{yx} = a^{xy}$
+    \item Bob: $s_B = b^y = (a^x)^y = a^{xy}$
+\end{itemize}
+
 Je nutné zmínit, že DH výměna je odolná proti odposlechu, ale útočník v pozici
 Man-in-the-Middle ji dokáže obejít a tajný klíč získat - jeden klíč domluví s
 Alicí, druhý klíč s Bobem a oba účastníci nemohou zjistit, že mezi nimi je někdo
 třetí.
-
-\begin{itemize}
-    \item Alice: $s_A = c^x = (a^y)^x = a^{yx} = a^{xy}$
-    \item Alice: $s_B = b^y = (a^x)^y = a^{xy}$
-\end{itemize}
 
 \begin{exercise}
     \textbf{Př.:} Proveďte DH domluvu na klíči na grupě $\mathbb{Z}_{37}^*$ s
@@ -1133,22 +1139,41 @@ třetí.
 
 \subsection{ElGamal}
 Algoritmus ElGamal umožňuje asymetrickou kryptografii založenou na diskrétním
-logaritmu.
+logaritmu. Dá se použí pro šifrování i pro podpisy. V obou případech Alice
+zvolí grupu $G$ řádu $n$ s generátorem $g$, v ní zvolí soukromý klíč $x$ a
+veřejný klíč $y=g^x$. Grupu i veřejný klíč zveřejní.
 
-Alice zvolí grupu $G$ řádu $n$ s generátorem $a$, v ní zvolí soukromý klíč $x$ a
-veřejný klíč $b=a^x$. Grupu i veřejný klíč zveřejní.
+\paragraph{Šifrování} Bob chce poslat Alici zprávu $m$. Zvolí jednorázový klíč $k$
+a spočítá $r=g^k$, $s=y^k$. Pak spočítá zašifrovanou zprávu $\bar{m} = m \cdot s$.
+Alici pošle dvojici $(r, \bar{m})$.
 
-Bob chce poslat Alici zprávu $m$. Zvolí jednorázový klíč $y$ a spočítá $c=a^y,
-s=b^y$. Pak spočítá zašifrovanou zprávu $m' = m \cdot s$. Alici pošle dvojici
-$(c, m')$.
+Alice si spočítá $s = r^x = g^{xk}$, najde inverzi: $s^{-1} = r^{n-x}$. Pak
+dešifruje zprávu: $m = \bar{m} \cdot s^{-1} = (m\cdot s) \cdot s^{-1} = m$.
 
-Alice si spočítá $s = c^x = a^{xy}$, najde inverzi: $s^{-1} = c^{n-x}$. Pak
-dešifruje zprávu: $m = m' \cdot s^{-1} = (m\cdot s) \cdot s^{-1} = m$.
+\paragraph{Podpisy (DSA)} Alice chce podepsat hash zprávy $m$. Zvolí jednorázový klíč $k$
+a spočítá $r=g^k$, $s=(m + x\cdot r)/k$. Tomu, s kým chci komunikovat, pošlu $(r, m, s)$,
+nonce $k$ se nikam neposílá.
 
-% TODO: pridat priklad na elgamala, a podivat se, co se stane, kdyz y pouziju
-% vickrat
+Pro ověření podpisu musí platit $s=(m + x\cdot r)/k$, tedy $m = rx + sk$. To
+samé bude platit i v exponentech: $g^m = g^{rx} * g^{sk}$ - ale tohle ještě příjemce
+nemůže použít, protože nezná $x$ ani $k$. Musí použít veřejný klíč $y=g^x $ a jednorázovou
+hodnotu $r = g^k$, tím získá $g^m = y^{r} * r^{s}$. Pokud tato rovnost platí, je
+podpis platný.
+
+\paragraph{Opakované použití $k$} Alice musí být opatrná, aby nepoužila při
+podepisování jeden nonce $k$ dvakrát, protože se tím vystaví riziku odhalení
+soukromého klíče. Útočník, který podpisy od Alice pozoruje, si opakování nonce
+všimne, protože uvidí dva různé podpisy $(r, m_1, s_1)$ a $(r, m_2, s_2)$ se
+shodným $r=g^k$.
+
+Pak útočník ví, že platí výrazy $s_1=(m_1 + x\cdot r)/k$ a $s_2=(m_2 + x\cdot r)/k$.
+Pokud je od sebe odečte, dostane $s_1 - s_2 = (m_1 - m_2)/k$, což dále upraví
+na $k = (m_1 - m_2)\cdot(s_1 - s_2)$, a z toho dokáže vyčíslit $k$. Pak si může ze
+vztahu $s_1=(m_1 + x\cdot r)/k$ vyjádřit $x$ a tím má Alicin soukromý klíč.
 
 \subsection{Eliptické křivky}
+
+
 
 \section{Hashování}
 
