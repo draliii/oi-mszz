@@ -1173,7 +1173,46 @@ vztahu $s_1=(m_1 + x\cdot r)/k$ vyjádřit $x$ a tím má Alicin soukromý klí�
 
 \subsection{Eliptické křivky}
 
+Eliptická křivka nad tělesem $\mathbb{R}$ je množina všech bodů $(x,y)$ v rovině
+$\mathbb{R}^2$ splňujících rovnici $y^2=x^3+ax+b$, kde navíc kubický polynom
+$x^3+ax+b$ má pouze jednoduché kořeny v $\mathbb{C}$, což nastane, právě když
+diskriminant $D=4a^3+27b^2\neq0$. Tato podmínka nám zaručuje, že křivka bude
+hezká a nebude mít ostrý zlom.
 
+Pro představu, eliptické křivky se dají nakreslit od ruky tak, že nakreslíme
+$y=x^3+ax+b$, tedy nějaký kubický polynom, a jeho kladné části odmocníme -
+tím dostaneme symetrii podle osy $x$.
+
+Nad $\mathbb{Z}_p$ je křivka definovaná obdobně, ale koeficienty $a, b$ musí být
+celočíselné.
+
+\begin{exercise}
+    \textbf{Př.:} Máme $E(\mathbb{Z}_{17})$ s rovnicí $y^2 = x^3 + 7x + 13$.
+    Jaké prvky leží na této křivce?
+    
+    \noindent Půjdeme postupně přes $x$ a budeme počítat $y$.
+    
+    \begin{description}
+    \item[$x=0$] Řešíme $y^2 = 13$ v $\mathbb{Z}_{17}$, to má řešení $y=\pm 8$ a získali jsme body $(0, 8)$ a $(0, 9)$.
+    \item[$x=1$] Řešíme $y^2 = 4$ v $\mathbb{Z}_{17}$, to má řešení $y=\pm 2$ a získali jsme body $(1, 2)$ a $(1, 15)$.
+    \item[$x=2$] Řešíme $y^2 = 1$ v $\mathbb{Z}_{17}$, to má řešení $y=\pm 1$ a získali jsme body $(2, 1)$ a $(2, 16)$.
+    \item[$x=3$] Řešíme $y^2 = 10$ v $\mathbb{Z}_{17}$. Dle Eulerova kritéria to nemá řešení.
+    \item[...] Pokračujeme dále pro všechna $x$
+    \end{description}
+    
+	\noindent Našli jsme body: $E(\mathbb{Z}_{17}) = \{(0, 8), (0, 9), (1, 2), (1, 15), (2, 1), (2, 16), (6, 4), (6, 13), (14, 4), (14, 13), (15, 5), (15, 12)\}$
+\end{exercise}
+
+Na eliptických křivkách lze provádět různé operace, jednodušší je to graficky:
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=\textwidth]{MKR/img/ec-graficky.png}
+\end{figure}
+
+Kromě toho platí $P+O=P$, $O+P=P$, $O+O=O$. Pro sčítání bodů na křivkách numericky se nejprve vyjádří vzniklá přímka jako $y = \lambda\cdot x + k$. Parametry $\lambda$ a $k$ se pak použijí ve vzorcích pro výpočet výsledného bodu - vzorce se odvodí s pomocí Vietových vzorců pro kořeny polynomů z vzorce pro křivku.
+
+Na eliptických křivkách funguje třeba Diffie-Hellman: Alice vybere křivku a na ní bod $A$. Zvolí si klíč $x$ a Bobovi pošle $B=x\cdot A$. Bob si zvolí vlastní klíč $y$ a Alici pošle $C = y\cdot A$. Pak si oba spočítají společný klíč $S = x\cdot y \cdot A$.
 
 \section{Hashování}
 
